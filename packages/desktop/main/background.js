@@ -1,11 +1,13 @@
 import { app } from 'electron'
 import serve from 'electron-serve'
+import Store from 'electron-store'
 import { createMainWindow } from './helpers'
 
 // IPC MAIN RESOLVERS
-import './ipc/save&load'
-import './ipc/image'
-import './ipc/deckServer'
+import { loadIPCs, deckServer, saveAndLoad, image } from './ipc'
+// import './ipc/save&load'
+// import './ipc/image'
+// import './ipc/deckServer'
 
 let mainWin
 // , serverWin, serverProc
@@ -20,6 +22,19 @@ if (isProd) {
 
 (async () => {
   await app.whenReady()
+
+  const store = new Store({
+    defaults: {
+      server: null,
+      currentBoard: null,
+
+    }
+  })
+  loadIPCs({ store }, [
+    deckServer,
+    saveAndLoad,
+    image
+  ])
 
   mainWin = await createMainWindow({
     prefs: {

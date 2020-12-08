@@ -6,15 +6,20 @@ import QRCode from 'qrcode'
 // import logger from 'morgan'
 // import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
+import { loadBoard, saveBoard } from '../helpers'
 // import routes from './routes.js'
 
-const startDeckServer = async () => {
+const startDeckServer = async ({store}) => {
     const deckServer = express()
     const port = 832
     const localIP = await iIP.v4()
     const ipQRCode = await QRCode.toString(`http://${localIP}:${port}`, {type: 'utf8'})
     // const publicPath = path.resolve(__dirname, '../dist')
     
+    deckServer.use((req, res, next) => {
+        res.setHeader('Content-Type', 'application/json')
+        next()
+    })
     // point for static assets
     // deckServer.use(express.static(publicPath))
     
@@ -35,7 +40,12 @@ const startDeckServer = async () => {
             .send('hello world')
     })
 
-    deckServer.get('/connect', (req, res) => { res.status(200) })
+    deckServer.get('/companion', (req, res) => {
+        let currentBoard = store.get('currentBoard')
+        const board = loadBoard(currentBoard)
+        res.status(200)
+            .send(JSON.stringify({board}))
+    })
     deckServer.get('/getBoard', (req, res) => {
         // ipcMain.send()
         const board = []
@@ -45,6 +55,8 @@ const startDeckServer = async () => {
     })
     
     deckServer.post('/action', (req, res) => {
+        const { position, action } = req.body
+        console.log(`fire action from button @position ${position}`)
         res.status(200).send('ok')
     })
     
