@@ -1,15 +1,55 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react'
+import { StatusBar } from 'expo-status-bar'
+import { StyleSheet, Text, View } from 'react-native'
+import { Button, TextInput } from 'react-native-paper'
 
-export default function App() {
+import { Deck } from './ui'
+
+const ConnectTo = ({ setIPLan }) => {
+  const [ IP, setIP] = useState('')
+
+  const scanQRCode = () => {
+    setIPLan('192.168.1.50:832')
+  }
+  const inputIPLan = () => {
+    setIPLan(IP)
+  }
+
   return (
     <View style={styles.container}>
-      <Text>MyDeck</Text>
-      <Text>Companion App</Text>
+      <Text>MyDeck - not connected</Text>
+      <Text>Companion status is: ok</Text>
+      <Text />
+      <View style={styles.div}>
+        <TextInput
+          label="IPLan"
+          value={IP}
+          onChangeText={newIP => setIP(newIP)}
+        />
+      </View>
+      <Text />
+      <Button onPress={() => inputIPLan()} mode='outlined'>Connect to LAN IP</Button>
+      <Text />
+      <Button onPress={() => scanQRCode()} mode='contained'>Scan QR Code</Button>
       <StatusBar style="auto" />
     </View>
-  );
+  )
+}
+
+export default function App() {
+  const [ IPLan, setIPLan ] = useState(false)
+
+  if(!IPLan) {
+    return (
+      <ConnectTo setIPLan={setIPLan} />
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <Deck serverIP={IPLan} />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -19,4 +59,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+  div: {
+    // flex: 1,
+    width: '80%',
+    backgroundColor: '#fff',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+})

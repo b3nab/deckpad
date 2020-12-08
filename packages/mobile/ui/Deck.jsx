@@ -1,40 +1,87 @@
-import React from 'react'
-import { Text, View } from 'react-native'
-import { DeckBtn } from 'DeckBtn'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet } from 'react-native'
+import styled from 'styled-components'
+import { DeckBtn } from './DeckBtn'
+import Frisbee from 'frisbee'
+import { ActivityIndicator, FAB } from 'react-native-paper'
 
-
-const DeckWrapper = styled.div`
+const DeckWrapper = styled.View`
   width: 100%;
   height: 100%;
   display: flex;
   align-content: center;
   flex-wrap: wrap;
+  flex-direction: row;
 `
 
-const DeckRow = styled.div`
+const DeckRow = styled.View`
   display: flex;
   flex: 1 1 100%;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 `
 
-export const Deck = ({ params }) => {
-    
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+})
+
+export const Deck = ({ serverIP }) => {
+  const [ board, setBoard ] = useState()
+  const [ actual, setActual ] = useState(0)
+
+  const api = new Frisbee({
+    baseURI: `http://${serverIP}`, // optional
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+
+  async function initCompanion() {
+    const companionRes = await api.get(`/companion`)
+    // console.log(companionRes.body)
+    setBoard(companionRes.body.board)
+  }
+
+  useEffect(() => {
+    initCompanion()
+  }, [serverIP])
+  
+  if(!board) {
     return (
-        <DeckWrapper>
-        {[...Array(deck.row)].map((e,r) => (
-            <DeckRow key={`row-${r}`}>
-            {[...Array(deck.col)].map((e,c) => (
-                <DeckBtn 
-                    key={`${r}-${c}`}
-                    {...deck.buttons[r][c]}
-                    position={`${r}-${c}`}
-                    onSwitchPosition={switchPosition}
-                    showModal={() => openModalDeckBtn(deck.buttons[r][c], r, c)}
-                />
-            ))}
-            </DeckRow>
-        ))}
-        </DeckWrapper>
+      <DeckWrapper>
+        <ActivityIndicator />
+      </DeckWrapper>
+    )
+  }
+
+  return (
+    <DeckWrapper>
+      <FAB
+        style={styles.fab}
+        small
+        icon="plus"
+        onPress={() => initCompanion()}
+      />
+      {/* <Text>Board name: {board && board[0].name}</Text> */}
+      {[...Array(board[actual].row)].map((e,r) => (
+        <DeckRow key={`row-${r}`}>
+          {[...Array(board[actual].col)].map((e,c) => (
+            <DeckBtn 
+              api={api}
+              key={`${r}-${c}`}
+              position={`${r}-${c}`}
+              {...board[actual].buttons[r][c]}
+            />
+          ))}
+        </DeckRow>
+      ))}
+    </DeckWrapper>
 )}
 
