@@ -10,3 +10,8 @@ files:
       - package.json
       - app
 publish: null
+fileAssociations:
+  -
+    ext: board
+    name: MyDeck Board File
+    role: Editor

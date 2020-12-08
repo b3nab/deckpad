@@ -4,13 +4,32 @@
 
 *TODO*:
 
--publish to github
-- Button
-  - Action for obs-websocket
-- Plugins for actions?
+- Mobile components (Deck and DeckBtn)
+- API layer for mobile app to talk with desktop
+- Plugins for buttons' actions
+  - MyDeck Base
+    - open app
+    - open url with default browser
+    - media controls (play,pause,mute,vol+,vol-)
+    - change deck page (only effects on companion app)
+  - OBS
+    - switch scenes
+    - toggle studio mode
+    - toggle single source visibility
+    - toggle filters on sources
+    - toggle filters on scenes
 
 ---
----
+
+## Plugin System
+
+Implementation of this plugin system is still a wip. Looking at these npm modules:
+
+- live-plugin-manager
+- electron-package-manager
+- plug-and-play
+- architect
+
 ---
 
 ### Parts

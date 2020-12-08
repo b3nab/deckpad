@@ -91,8 +91,10 @@ export default function Home() {
   }
   const [decks, setDecks] = useState([defaultDeck])
   const [actual, setActual] = useState(0)
-
+  const [ serverStatus, setServerStatus ] = useState(false)
   const [ showSaved, setSavedNotification ] = useState(false)
+
+  const serverStartStopText = serverStatus ? 'STOP ' : 'START '
 
   useEffect(() => {
     if(ipc) {
@@ -103,6 +105,11 @@ export default function Home() {
         setSavedNotification(false)
       })
       ipc.on('loaded-board', (event, data) => { setDecks(data) })
+      ipc.on('started-server', (event, data) => { setServerStatus(true)})
+      ipc.on('stopped-server', (event, data) => { setServerStatus(false)})
+      ipc.on('companion-request-board', (event, data) => {
+        ipc.send('companion-change-board', decks)
+      })
     }
     return () => {
       if(ipc) {
@@ -130,6 +137,15 @@ export default function Home() {
   const saveBoardAs = () => {
     if(ipc) {
       ipc.send('save-board-as', decks)
+    }
+  }
+  const serverStartStop = () => {
+    if(ipc) {
+      if(serverStatus) {
+        ipc.send('stop-server')
+      } else {
+        ipc.send('start-server')
+      }
     }
   }
 
@@ -190,6 +206,7 @@ export default function Home() {
           <Button onClick={() => loadBoard()}>LOAD</Button>
           <Button onClick={() => saveBoard()}>SAVE</Button>
           <Button onClick={() => saveBoardAs()}>SAVE AS..</Button>
+          <Button onClick={() => serverStartStop()}>{serverStartStopText} SERVER</Button>
         </div>
         <Divider />
         <List>

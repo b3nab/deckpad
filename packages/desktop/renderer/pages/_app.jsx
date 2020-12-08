@@ -10,7 +10,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DeckProvider } from '../components/DeckContext'
 
 
-export default function(props) {
+export default function _app(props) {
   const { Component, pageProps } = props
 
   React.useEffect(() => {

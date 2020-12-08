@@ -1,11 +1,11 @@
 import { app } from 'electron'
 import serve from 'electron-serve'
 import { createMainWindow } from './helpers'
-import '../server'
 
 // IPC MAIN RESOLVERS
 import './ipc/save&load'
 import './ipc/image'
+import './ipc/deckServer'
 
 let mainWin
 // , serverWin, serverProc

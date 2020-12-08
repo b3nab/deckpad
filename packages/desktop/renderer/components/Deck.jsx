@@ -6,7 +6,7 @@ import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
 // import DragItem from './DragItem'
 
-export const DeckWrapper = styled.div`
+const DeckWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;

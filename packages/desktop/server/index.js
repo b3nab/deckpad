@@ -1,3 +1,4 @@
+import { ipcMain } from 'electron'
 import express from 'express'
 import path from 'path'
 import iIP from 'internal-ip'
@@ -29,7 +30,22 @@ const startDeckServer = async () => {
     }))
     
     deckServer.get('/hello', (req, res) => {
-        res.status(200).send('hello world')
+        res
+            .status(200)
+            .send('hello world')
+    })
+
+    deckServer.get('/connect', (req, res) => { res.status(200) })
+    deckServer.get('/getBoard', (req, res) => {
+        // ipcMain.send()
+        const board = []
+        res
+            .status(200)
+            .send(board)
+    })
+    
+    deckServer.post('/action', (req, res) => {
+        res.status(200).send('ok')
     })
     
     // deckServer.use('/', routes)
@@ -38,11 +54,15 @@ const startDeckServer = async () => {
     
     const server = deckServer.listen(port, '0.0.0.0', () => console.log(`
         deckServer listening on port ${port}
-        It's accessible on LAN at address http://${localIP}:${port}
-        You can also scan this QRCode from the mobile app: \n${ipQRCode}`))
+        It's accessible on LAN at address http://${localIP}:${port}`))
+
+    return {
+        server: server,
+        qrCode: ipQRCode,
+    }
 }
 
-startDeckServer()
+// startDeckServer()
 
 export {
     startDeckServer
