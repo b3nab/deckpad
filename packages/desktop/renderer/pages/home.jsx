@@ -80,10 +80,11 @@ export default function Home() {
     buttons: Array(maxRow).fill().map(() => Array(maxCol).fill({
       bgColor: "#000000",
       label: "",
-      labelColor: "#ffffff",
+      labelColor: "#FFFFFF",
       shape: "square", // [ circle, square, none ]
       image: "",
       action: {
+        plugin: null,
         type: null,
         options: {}
       }
@@ -107,14 +108,13 @@ export default function Home() {
       ipc.on('loaded-board', (event, data) => { setDecks(data) })
       ipc.on('started-server', (event, data) => { setServerStatus(true)})
       ipc.on('stopped-server', (event, data) => { setServerStatus(false)})
-      ipc.on('companion-request-board', (event, data) => {
-        ipc.send('companion-change-board', decks)
-      })
     }
     return () => {
       if(ipc) {
         ipc.removeAllListeners('saved-board')
         ipc.removeAllListeners('loaded-board')
+        ipc.removeAllListeners('started-server')
+        ipc.removeAllListeners('stopped-server')
       }
     }
   }, [])

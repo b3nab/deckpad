@@ -6,17 +6,23 @@ import { loadBoard, saveBoard } from '../helpers'
 // -------------------
 export const saveAndLoad = ({store}) => {
   
-  ipcMain.on('load-board', (event, arg) => {
-    const myBoard = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
-      properties: ['openFile'],
-      filters: [
-        {name: 'MyDeck Board Configuration', extensions: ['board']}
-      ]
-    })
+  ipcMain.on('load-board', (event, useLastBoard) => {
+    let myBoard
+    if(useLastBoard) {
+      myBoard = store.get('currentBoard')
+    } else {
+      myBoard = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
+        properties: ['openFile'],
+        filters: [
+          {name: 'MyDeck Board Configuration', extensions: ['board']}
+        ]
+      })
+      myBoard = myBoard ? myBoard[0] : null
+    }
     console.log(`result from "load-board" ==>\n ${myBoard}`)
     if(myBoard) {
-      store.set('currentBoard', myBoard[0])
-      const board = loadBoard(myBoard[0])
+      store.set('currentBoard', myBoard)
+      const board = loadBoard(myBoard)
       event.sender.send('loaded-board', board)
     }
   })
