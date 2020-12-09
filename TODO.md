@@ -4,14 +4,13 @@
 
 *TODO*:
 
-- Mobile components (Deck and DeckBtn)
-- API layer for mobile app to talk with desktop
 - Plugins for buttons' actions
+  - Companion Actions
+    - change deck page
   - MyDeck Base
     - open app
     - open url with default browser
     - media controls (play,pause,mute,vol+,vol-)
-    - change deck page (only effects on companion app)
   - OBS
     - switch scenes
     - toggle studio mode

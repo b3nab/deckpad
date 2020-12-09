@@ -1,7 +1,15 @@
 {
   "name": "mydeck",
   "private": true,
-  "devDependencies": {
-    "lerna": "^3.22.1"
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react-native", "**/react-native/**",
+      "**/electron", "**/electron/**",
+      "**/jest", "**/jest/**",
+      "**/electron-builder", "**/electron-builder/**"
+    ]
   }
 }

@@ -1,31 +1,40 @@
-# MyDeck - Virtual Macro Board
+# MyDeck 📱
 
-Fully Customizable Deck Button Board w/ Actions and Plugins for Windows/MacOS/Linux.
-
----
 <p align="center"><img src="./mydeck-github-banner.png"></p>
----
 
-> **b3nab**: I'm developing this app live on Twitch! You can follow my adventures at: https://twitch.tv/b3nab
+## Virtual Macro Board
 
----
+Easily control your computer with this fully customizable Deck Buttons Board w/ Actions and Plugins for Windows/MacOS/Linux (desktop) and Android/iOS (companion app).
 
-## Download
 
-**MyDeck Configurator** - Desktop App (download soon)
-**MyDeck Companion** - Mobile App (download soon)
+> **b3nab**: I'm developing this app on a live stream! You can follow my adventures on Twitch at: https://twitch.tv/b3nab
 
 ---
 
 ## Features
 
-- Save/Load .board MyDeck configuration files
-- Drag&Drop Buttons to switch position
-- Customize and Configure Deck Buttons
-  - Label
+- Configurable dimensions (numbers of rows and columns)
+- Up to 150 buttons per page
+- Customize Buttons
+  - Colors
   - Image (supports: png, jpg and jpeg, webp and even GIFs!)
-  - Colors for background and labels
   - Shape (circle, squared or transparent)
+  - and more..
+- Easily save and load .board files
+- Switch buttons' position with drag and drop
+- Extendable with plugins, write your custom action!
+
+---
+
+## Download
+
+### **MyDeck Configurator** - Desktop App
+
+(download soon)
+
+### **MyDeck Companion** - Mobile App
+
+(download soon)
 
 ### Structure
 
