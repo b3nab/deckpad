@@ -10,6 +10,7 @@ const DeckWrapper = styled.View`
   height: 100%;
   display: flex;
   align-content: center;
+  align-items: center;
   flex-wrap: wrap;
   flex-direction: row;
 `
@@ -17,6 +18,7 @@ const DeckWrapper = styled.View`
 const DeckRow = styled.View`
   display: flex;
   flex: 1 1 100%;
+  width: 100%;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -43,6 +45,16 @@ export const Deck = ({ serverIP }) => {
     }
   })
 
+  const changeDeck = (options) => {
+    const { id } = options
+    let toIndex = 0
+    // find index from id
+    board.forEach((deck, i) => {
+      toIndex = deck.id === id ? i : toIndex
+    })
+    setActual(toIndex)
+  }
+
   async function initCompanion() {
     const companionRes = await api.get(`/companion`)
     // console.log(companionRes.body)
@@ -66,7 +78,7 @@ export const Deck = ({ serverIP }) => {
       <FAB
         style={styles.fab}
         small
-        icon="plus"
+        icon="reload"
         onPress={() => initCompanion()}
       />
       {/* <Text>Board name: {board && board[0].name}</Text> */}
@@ -77,6 +89,7 @@ export const Deck = ({ serverIP }) => {
               api={api}
               key={`${r}-${c}`}
               position={`${r}-${c}`}
+              changeDeck={changeDeck}
               {...board[actual].buttons[r][c]}
             />
           ))}

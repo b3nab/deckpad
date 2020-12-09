@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Image } from 'react-native'
+import { Vibration, Image } from 'react-native'
 import { Caption } from 'react-native-paper'
 import styled from 'styled-components/native'
 
@@ -30,17 +30,24 @@ const DeckBtnWrapper = styled.TouchableHighlight`
   }
 `
 
-export const DeckBtn = ({api, position, ...props}) => {
+export const DeckBtn = ({api, position, changeDeck, ...props}) => {
   const { label, labelColor, shape, bgColor, image, action } = props
 
   const fireAction = () => {
+      Vibration.vibrate([0, 50])
       console.log('fire btn @position ', position)
-      api.post('/action', {
-          body: {
-              position,
-              action,
-          }
-      })
+      if(action.plugin === 'companion') {
+        if(action.type === 'change-deck') {
+            changeDeck(action.options)
+        }
+      } else {
+          api.post('/action', {
+              body: {
+                  position,
+                  action,
+              }
+          })
+      }
   }
 
   return (
@@ -50,10 +57,12 @@ export const DeckBtn = ({api, position, ...props}) => {
       onPress={() => fireAction()}
     >
         <Fragment>
-            {image && (
-            <Image source={{uri: image}} alt="btnImage" style={{width: 70, height: 70, position: 'absolute'}}/>
-            )}
-            <Caption style={{color: labelColor, zIndex: 1}}>{label}</Caption>
+            {!!image && 
+                <Image source={{uri: image}} alt="btnImage" style={{width: 70, height: 70, position: 'absolute'}}/>
+            }
+            {!!label &&
+                <Caption style={{color: labelColor, zIndex: 1}}>{label}</Caption>
+            }
         </Fragment>
     </DeckBtnWrapper>
   )
