@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
+    "release": "nextron build",
     "build:all": "nextron build --all",
     "postinstall": "electron-builder install-app-deps"
   },
