@@ -32,16 +32,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
-
-      - name: Install Desktop dependencies
-        uses: borales/actions-yarn@v2.0.0
-        with: 
-          cmd: install # will run `yarn install` command
       
-      - name: Build and Release MyDeck
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: release # will run `yarn install` command
+      - run: npm install
+      - run: npm release
       
       # - name: Upload Release Assets
       #   uses: svenstaro/upload-release-action@v1-release
