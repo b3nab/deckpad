@@ -1,13 +1,12 @@
 import electron from 'electron'
-import React, { useState, useContext, useEffect } from 'react'
+import {v4 as uuid } from 'uuid'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { 
   CssBaseline,
   AppBar,
   Toolbar,
   Drawer,
-  Grid,
-  Modal,
   List,
   ListItem,
   ListItemText,
@@ -25,8 +24,6 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons'
 import { Deck } from '../components/Deck'
-import { DeckBtn } from '../components/DeckBtn'
-import DeckContext from '../components/DeckContext'
 
 // Preventing NextJS SSR webpacking
 const ipc = electron.ipcRenderer || false
@@ -70,10 +67,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles()
-  const { items, moveItem, setItems } = useContext(DeckContext)
   const maxCol = 15
   const maxRow = 10
   const defaultDeck = {
+    id: uuid(),
     name: 'Deck Page',
     col: 4,
     row: 3,
@@ -98,6 +95,12 @@ export default function Home() {
   const serverStartStopText = serverStatus ? 'STOP ' : 'START '
 
   useEffect(() => {
+    if(ipc){
+      ipc.send('update-board', decks)
+    }
+  }, [decks])
+
+  useEffect(() => {
     if(ipc) {
       ipc.on('saved-board', (event, data) => { 
         setTimeout(() => {
@@ -105,12 +108,14 @@ export default function Home() {
         }, 500)
         setSavedNotification(false)
       })
-      ipc.on('loaded-board', (event, data) => { setDecks(data) })
-      ipc.on('started-server', (event, data) => { setServerStatus(true)})
-      ipc.on('stopped-server', (event, data) => { setServerStatus(false)})
+      ipc.on('mydeck-ready', (event, data) => { loadBoard(true) })
+      ipc.on('loaded-board', (event, data) => { setDecks(validateBoard(data)) })
+      ipc.on('started-server', (event, data) => { setServerStatus(true) })
+      ipc.on('stopped-server', (event, data) => { setServerStatus(false) })
     }
     return () => {
       if(ipc) {
+        ipc.removeAllListeners('mydeck-ready')
         ipc.removeAllListeners('saved-board')
         ipc.removeAllListeners('loaded-board')
         ipc.removeAllListeners('started-server')
@@ -119,14 +124,20 @@ export default function Home() {
     }
   }, [])
 
+  const validateBoard = (board) => {
+    let oldFormat = false
+    board.map(deck => {
+      if(!deck.id) {
+        oldFormat = true
+        deck.id = uuid()
+      }
+    })
+    return board
+  }
 
-  // load saved configurations
-  // otherwise use default
-
-
-  const loadBoard = () => {
+  const loadBoard = (latest=false) => {
     if(ipc) {
-      ipc.send('load-board')
+      ipc.send('load-board', latest)
     }
   }
   const saveBoard = () => {
@@ -151,22 +162,23 @@ export default function Home() {
 
   const addPage = () => {
     let newPage = {...defaultDeck}
+    newPage.id = uuid()
     newPage.name += ` ${decks.length+1}`
     setDecks([...decks, newPage])
     setActual(decks.length)
   }
   const deletePage = () => {
     if(decks.length > 1) {
-      let newPages = decks.filter(item => item !== decks[actual])
-      setDecks(newPages)
+      let pages = decks.filter(item => item !== decks[actual])
+      setDecks(pages)
       setActual(actual === 0 ? 0 : actual-1)
     }
   }
 
   const updateActualDeck = (newPage) => {
-    let newPages = [...decks]
-    newPages[actual] = newPage
-    setDecks(newPages)
+    let pages = [...decks]
+    pages[actual] = newPage
+    setDecks(pages)
   }
   const updateCol = (n) => {
     const newCol = Number(n)
@@ -176,20 +188,6 @@ export default function Home() {
     const newRow = Number(n)
     updateActualDeck({...decks[actual], row: newRow})
   }
-
-  // const createDeck = (pageDeck) => {
-  //   return (
-  //     [...Array(pageDeck.row)].map((e,r) => (
-  //       <Grid container item xs={12} style={{justifyContent: 'center', marginBottom: '2em'}}>
-  //           {[...Array(pageDeck.col)].map((e,c) => (
-  //             <Grid item style={{textAlign: 'center'}} xs={`${Math.floor(12/decks[actual].col)}`}>
-  //               <DeckBtn {...pageDeck.buttons[r][c]} />
-  //             </Grid>
-  //           ))}
-  //         </Grid>
-  //     ))
-  //   )
-  // }
 
   return (
     <div className={classes.root}>

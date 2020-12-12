@@ -2,7 +2,7 @@ import electron from 'electron'
 import React, { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import { 
-  fieldToTextField,
+  Select,
   TextField,
 } from 'formik-material-ui'
 import {
@@ -15,6 +15,8 @@ import {
   DialogContent,
   DialogContentText,
   FormControl,
+  InputLabel,
+  MenuItem,
 } from '@material-ui/core'
 import {
   ToggleButton,
@@ -37,7 +39,22 @@ import { DeckBtn } from './DeckBtn'
 const ipc = electron.ipcRenderer || false
 
 export const DeckBtnModal = ({ show, close, btnSettings, saveDeckBtn }) => {
-  const [ btnImage, setBtnImage ] = useState(btnSettings.image)
+  const [ plugins, setPlugins ] = useState()
+  
+  useEffect(() => {
+    if(ipc) {
+      // ipc.send('plugins-list')
+      ipc.on('plugins-list-update', (event, data) => { 
+        console.log(`plugins are: ${JSON.stringify(data, null, 2)}`)
+        setPlugins(data)
+      })
+    }
+    return () => {
+      if(ipc) {
+        ipc.removeAllListeners('plugins-list-update')
+      }
+    }
+  }, [show])
 
   return (
     <Dialog fullWidth open={show} onClose={close} aria-labelledby="form-dialog-title">
@@ -102,6 +119,61 @@ export const DeckBtnModal = ({ show, close, btnSettings, saveDeckBtn }) => {
                   <NoneIcon />
                 </ToggleButton>
               </Field>
+
+              {plugins && (
+                <FormControl>
+                  <InputLabel htmlFor="action.plugin">Plugin</InputLabel>
+                  <Field
+                    component={Select}
+                    name="action.plugin"
+                    inputProps={{
+                      id: 'action.plugin',
+                    }}
+                  >
+                    {Object.keys(plugins).map((plugin, i) => (
+                      <MenuItem key={i} value={plugin}>{plugin.toUpperCase()}</MenuItem>
+                    ))}
+                  </Field>
+                </FormControl>
+              )}
+
+              {plugins && values.action.plugin && (
+                <FormControl>
+                  <InputLabel htmlFor="action.type">Action</InputLabel>
+                  <Field
+                    component={Select}
+                    name="action.type"
+                    inputProps={{
+                      id: 'action.type',
+                    }}
+                  >
+                    {Object.keys(plugins[values.action.plugin]).map((action, i) => (
+                      <MenuItem key={i} value={action}>
+                        {plugins[values.action.plugin][action].label}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </FormControl>
+              )}
+
+              {plugins && values.action.plugin && values.action.type && (
+                <FormControl>
+                  <InputLabel htmlFor="action.options">Options</InputLabel>
+                  <Field
+                    component={Select}
+                    name="action.options"
+                    inputProps={{
+                      id: 'action.options',
+                    }}
+                  >
+                    {plugins[values.action.plugin][values.action.type].options.map((option, i) => (
+                      <MenuItem key={i} value={option.value}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </FormControl>
+              )}
 
               {isSubmitting && <LinearProgress />}
             </DialogContent>

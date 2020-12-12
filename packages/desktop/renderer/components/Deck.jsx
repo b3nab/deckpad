@@ -1,10 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import styled from 'styled-components'
-// import GridLayout from 'react-grid-layout'
-// import DeckContext from './DeckContext'
 import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
-// import DragItem from './DragItem'
 
 const DeckWrapper = styled.div`
   width: 100%;
@@ -20,23 +17,7 @@ const DeckRow = styled.div`
   justify-content: center;
   align-items: center;
 `
-// export const Deck = ({ deck }) => {
-//   // const { items, moveItem, setItems } = useContext(DeckContext)
-//   const layout = [
-//     {i: 'a', x: 0, y: 1, w: 2, h: 2},
-//     {i: 'b', x: 1, y: 1, w: 2, h: 2},
-//     {i: 'c', x: 4, y: 1, w: 2, h: 2}
-//   ]
-//   return (
-//     <DeckWrapper>
-//       <GridLayout className='layout' layout={layout} cols={deck.col}>
-//         <div key="a"><DeckBtn /></div>
-//         <div key="b"><DeckBtn /></div>
-//         <div key="c"><DeckBtn /></div>
-//       </GridLayout>
-//     </DeckWrapper>
-//   )
-// }
+
 export const Deck = ({ deck, updateDeck }) => {
   // const { items, moveItem } = useContext(DeckContext)
   const [ btnSettings, setBtnSettings] = useState({settings: {}})
@@ -77,11 +58,21 @@ export const Deck = ({ deck, updateDeck }) => {
       {[...Array(deck.row)].map((e,r) => (
         <DeckRow key={`row-${r}`}>
           {[...Array(deck.col)].map((e,c) => (
-            <DeckBtn key={`${r}-${c}`} {...deck.buttons[r][c]} position={`${r}-${c}`} onSwitchPosition={switchPosition} showModal={() => openModalDeckBtn(deck.buttons[r][c], r, c)} />
+            <DeckBtn key={`${r}-${c}`}
+              {...deck.buttons[r][c]}
+              position={`${r}-${c}`}
+              onSwitchPosition={switchPosition}
+              showModal={() => openModalDeckBtn(deck.buttons[r][c], r, c)}
+            />
           ))}
         </DeckRow>
       ))}
-      <DeckBtnModal show={showDeckBtnModal} close={() => setShowDeckBtnModal(false)} btnSettings={btnSettings.settings} saveDeckBtn={btnProps => onSaveDeckBtn(btnProps)} />
+      <DeckBtnModal
+        show={showDeckBtnModal}
+        close={() => setShowDeckBtnModal(false)}
+        btnSettings={btnSettings.settings}
+        saveDeckBtn={btnProps => onSaveDeckBtn(btnProps)}
+      />
     </DeckWrapper>
   )
 }
