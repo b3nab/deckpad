@@ -24,5 +24,10 @@
   "devDependencies": {
     "@babel/core": "~7.9.0"
   },
+  "workspaces": {
+    "nohoist": [
+      "**/*"
+    ]
+  },
   "private": true
 }

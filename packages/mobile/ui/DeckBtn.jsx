@@ -36,18 +36,18 @@ export const DeckBtn = ({api, position, changeDeck, ...props}) => {
   const fireAction = () => {
       Vibration.vibrate([0, 50])
       console.log('fire btn @position ', position)
+      console.log(`action => ${JSON.stringify(action,null,2)}`)
       if(action.plugin === 'companion') {
         if(action.type === 'change-deck') {
             changeDeck(action.options)
         }
-      } else {
-          api.post('/action', {
-              body: {
-                  position,
-                  action,
-              }
-          })
       }
+      api.post('/action', {
+          body: {
+              position,
+              action,
+          }
+      })
   }
 
   return (

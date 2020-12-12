@@ -45,8 +45,7 @@ export const Deck = ({ serverIP }) => {
     }
   })
 
-  const changeDeck = (options) => {
-    const { id } = options
+  const changeDeck = (id) => {
     let toIndex = 0
     // find index from id
     board.forEach((deck, i) => {
