@@ -1,17 +1,23 @@
-# MyDeck 📱
+<div align="center">
+  <img src="packages/desktop/resources/logo.png" height="120">
+  <h1>MyDeck</h1>
+  <strong>remote macro board with companion app</strong>
+  <br/>
+  <br/>
+  <img src="mydeck-github-banner.png" width="100%" alt="Banner">
+</div>
 
-<p align="center"><img src="./mydeck-github-banner.png"></p>
+## Virtual Macro Board  - What is MyDeck? 📱
 
-## Virtual Macro Board
+Easily control your computer with this fully customizable Deck Buttons Board (like a macro keyboard but configurable). Support custom Actions extendable with Plugins. Available on Windows, MacOS, Linux (desktop) and Android, iOS (companion app).
 
-Easily control your computer with this fully customizable Deck Buttons Board w/ Actions and Plugins for Windows/MacOS/Linux (desktop) and Android/iOS (companion app).
-
+#### Developer notes
 
 > **b3nab**: I'm developing this app on a live stream! You can follow my adventures on Twitch at: https://twitch.tv/b3nab
 
 ---
 
-## Features
+# Features
 
 - Configurable dimensions (numbers of rows and columns)
 - Up to 150 buttons per page
@@ -26,7 +32,7 @@ Easily control your computer with this fully customizable Deck Buttons Board w/ 
 
 ---
 
-## Download
+# Download
 
 ### **MyDeck Configurator** - Desktop App
 
@@ -36,7 +42,9 @@ Easily control your computer with this fully customizable Deck Buttons Board w/ 
 
 (download soon)
 
-### Structure
+---
+
+### Project Structure
 
 MyDeck has the main desktop app that act as a server on LAN and then there is a mobile app (like a companion app) that let you interact with your configured board.
 Repo structure:
@@ -51,4 +59,4 @@ Repo structure:
 
 ### CONTRIBUTE
 
-If you are a developer and you know javascript and nodejs you can came on board! Feel free to submit any Pull Request/Issue/or any other kind of contribution you want to submit. Really apprecciate!
+If you are a developer and you know javascript and nodejs you can came on "board"! Feel free to submit any Pull Request/Issue/or any other kind of contribution you want to submit. Really apprecciate!

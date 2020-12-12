@@ -5,13 +5,13 @@ directories:
   output: dist
   buildResources: resources
 files:
+  - 'resources/**/*'
   - from: .
     filter:
       - package.json
       - app
 publish: null
 fileAssociations:
-  -
-    ext: board
+  - ext: board
     name: MyDeck Board File
     role: Editor
