@@ -93,13 +93,20 @@ export default function Home() {
   const [ showSaved, setSavedNotification ] = useState(false)
 
   const serverStartStopText = serverStatus ? 'STOP ' : 'START '
-
+  
+  // send default board (first opening)
+  if(ipc){
+    ipc.send('update-board', decks)
+  }
+  
+  // send board (on updates)
   useEffect(() => {
     if(ipc){
       ipc.send('update-board', decks)
     }
   }, [decks])
-
+  
+  // ipc communications with main process
   useEffect(() => {
     if(ipc) {
       ipc.on('saved-board', (event, data) => { 
