@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest] #, ubuntu-latest, windows-latest]
         # include:
         #   - os: macos-latest
         #     artifact\_name: MyDeck\_1.0.1\MacOS.dmg
@@ -31,7 +31,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 14
       
       - run: npm install
       - run: npm run release

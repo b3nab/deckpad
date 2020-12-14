@@ -1,5 +1,5 @@
 {
-  "name": "@mydeck/desktop",
+  "name": "desktop",
   "private": true,
   "description": "A powerful deck board app for your streaming needs! This is the desktop app, use it as a configurator for your companion mobile app (soon MyDeck on majors Stores).",
   "version": "0.0.0",
