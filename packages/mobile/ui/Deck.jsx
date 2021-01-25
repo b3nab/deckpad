@@ -33,12 +33,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export const Deck = ({ serverIP }) => {
+export const Deck = ({ serverAddress, goToHome }) => {
+  console.log(`[DECK] server address is ${serverAddress}`)
   const [ board, setBoard ] = useState()
   const [ actual, setActual ] = useState(0)
 
   const api = new Frisbee({
-    baseURI: `http://${serverIP}`, // optional
+    baseURI: `${serverAddress}`, // optional
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -55,14 +56,19 @@ export const Deck = ({ serverIP }) => {
   }
 
   async function initCompanion() {
-    const companionRes = await api.get(`/companion`)
-    // console.log(companionRes.body)
-    setBoard(companionRes.body.board)
+    try {
+      const companionRes = await api.get(`/companion`)
+      // console.log(companionRes.body)
+      setBoard(companionRes.body.board)
+    } catch (error) {
+      console.error('Deck.initCompanion : ', error)
+      goToHome()
+    }
   }
 
   useEffect(() => {
     initCompanion()
-  }, [serverIP])
+  }, [serverAddress])
   
   if(!board) {
     return (
