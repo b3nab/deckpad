@@ -6,6 +6,7 @@ import {
   TextField,
 } from 'formik-material-ui'
 import {
+  Grid,
   Button,
   Typography,
   LinearProgress,
@@ -77,48 +78,57 @@ export const DeckBtnModal = ({ show, close, btnSettings, saveDeckBtn }) => {
                 Button Preview
               </DialogContentText>
 
-              <DeckBtn {...values} />
+              <Grid container direction="row">
+                <Grid item xs={4}>
+                  <DeckBtn {...values} clickAction={() => { if(ipc) { ipc.send('open-image') } }} />
+                  <Field component={ImageField}
+                    name="image"
+                    type="text"
+                    label="Image"
+                  />
+                  <Typography as="h6">Text</Typography>
+                  <Field component={TextField}
+                    name="label"
+                    type="text"
+                    label="Label"
+                    autoFocus
+                    fullWidth
+                  />
+                </Grid>
 
-              <Field component={ImageField}
-                name="image"
-                type="text"
-                label="Image"
-              />
-              <Field component={TextField}
-                name="label"
-                type="text"
-                label="Label"
-                autoFocus
-                fullWidth
-              />
-              <Field component={ColorField}
-                name="labelColor"
-                type="text"
-                label="Text"
-              />
-              <Field component={ColorField}
-                name="bgColor"
-                type="text"
-                label="Background"
-              />
-              <Typography as="h6">Shape</Typography>
-              <Field component={ToggleButtonGroup}
-                id="shape"
-                name="shape"
-                type="checkbox"
-                label="Shape"
-                exclusive
-              >
-                <ToggleButton value="circle" aria-label="circle">
-                  <CircleIcon />
-                </ToggleButton>
-                <ToggleButton value="square" aria-label="square">
-                  <SquareIcon />
-                </ToggleButton>
-                <ToggleButton value="none" aria-label="none">
-                  <NoneIcon />
-                </ToggleButton>
-              </Field>
+                <Grid item xs={8}>
+                  <Typography as="h6">Shape</Typography>
+                  <Field component={ToggleButtonGroup}
+                    id="shape"
+                    name="shape"
+                    type="checkbox"
+                    label="Shape"
+                    exclusive
+                  >
+                    <ToggleButton value="circle" aria-label="circle">
+                      <CircleIcon />
+                    </ToggleButton>
+                    <ToggleButton value="square" aria-label="square">
+                      <SquareIcon />
+                    </ToggleButton>
+                    <ToggleButton value="none" aria-label="none">
+                      <NoneIcon />
+                    </ToggleButton>
+                  </Field>
+                  <Typography as="h6">Colors</Typography>
+                  <Field component={ColorField}
+                    name="labelColor"
+                    type="text"
+                    label="Text"
+                  />
+                  <Field component={ColorField}
+                    name="bgColor"
+                    type="text"
+                    label="Background"
+                  />
+                </Grid>
+              </Grid>
+
 
               {plugins && (
                 <FormControl>

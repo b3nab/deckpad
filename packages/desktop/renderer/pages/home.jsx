@@ -2,6 +2,8 @@ import electron from 'electron'
 import {v4 as uuid } from 'uuid'
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import QRCode from 'react-qr-code'
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
 import { 
   CssBaseline,
   AppBar,
@@ -15,7 +17,9 @@ import {
   Typography,
   TextField,
   Button,
-  Fab 
+  Popover,
+  Fab,
+  Box
 } from '@material-ui/core'
 import { 
   MoveToInbox as InboxIcon,
@@ -90,6 +94,7 @@ export default function Home() {
   const [decks, setDecks] = useState([defaultDeck])
   const [actual, setActual] = useState(0)
   const [ serverStatus, setServerStatus ] = useState(false)
+  const [ serverIP, setServerIP ] = useState(false)
   const [ showSaved, setSavedNotification ] = useState(false)
 
   const serverStartStopText = serverStatus ? 'STOP ' : 'START '
@@ -117,7 +122,7 @@ export default function Home() {
       })
       ipc.on('mydeck-ready', (event, data) => { loadBoard(true) })
       ipc.on('loaded-board', (event, data) => { setDecks(validateBoard(data)) })
-      ipc.on('started-server', (event, data) => { setServerStatus(true) })
+      ipc.on('started-server', (event, data) => { setServerStatus(true); setServerIP(data) })
       ipc.on('stopped-server', (event, data) => { setServerStatus(false) })
     }
     return () => {
@@ -158,6 +163,15 @@ export default function Home() {
     }
   }
   const serverStartStop = () => {
+    if(ipc) {
+      if(serverStatus) {
+        ipc.send('stop-server')
+      } else {
+        ipc.send('start-server')
+      }
+    }
+  }
+  const showQRCode = () => {
     if(ipc) {
       if(serverStatus) {
         ipc.send('stop-server')
@@ -212,6 +226,36 @@ export default function Home() {
           <Button onClick={() => saveBoard()}>SAVE</Button>
           <Button onClick={() => saveBoardAs()}>SAVE AS..</Button>
           <Button onClick={() => serverStartStop()}>{serverStartStopText} SERVER</Button>
+          <PopupState variant="popover" popupId="qrcode-popup">
+            {(popupState) => (
+              <div>
+                <Button {...bindTrigger(popupState)}>
+                  QRCode
+                </Button>
+                <Popover
+                  {...bindPopover(popupState)}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
+                  <Box p={2}>
+                    {serverIP ? 
+                      <QRCode value={serverIP} />
+                      :
+                      <Typography>Please start the server first.</Typography>
+                    }
+                  </Box>
+                </Popover>
+              </div>
+            )}
+          </PopupState>
+
+
         </div>
         <Divider />
         <List>
@@ -221,15 +265,19 @@ export default function Home() {
               <ListItemText primary={page.name} />
             </ListItem>
           ))}
+            <Divider />
+            <ListItem button key='add-page' onClick={() => addPage()}>
+              <ListItemIcon><AddIcon /></ListItemIcon>
+              <ListItemText primary={'New Page'} />
+            </ListItem>
         </List>
-        <Divider />
-        <Fab 
+        {/* <Fab 
           color="secondary"
           aria-label="add"
           className={classes.fab}
           onClick={() => addPage()}>
           <AddIcon />
-        </Fab>
+        </Fab> */}
       </Drawer>
       <main className={classes.content}>
         <AppBar position="sticky" className={classes.appBar}>

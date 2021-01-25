@@ -43,7 +43,7 @@ const DeckBtnWrapper = styled.div`
 `
 
 
-export const DeckBtn = ({position, onSwitchPosition, showModal, ...props}) => {
+export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => {
   const [{ isDragging }, connectDrag] = useDrag({
     item: {position, type: 'DECKBTN'},
     canDrag: () => true,
@@ -81,7 +81,7 @@ export const DeckBtn = ({position, onSwitchPosition, showModal, ...props}) => {
       shape={shape}
       background={bgColor}
       ref={ref}
-      onClick={() => showModal()}
+      onClick={() => clickAction()}
     >
       {/* <Button style={{width: 70, height: 70, borderRadius: 10, border: '3px solid black'}}> */}
         

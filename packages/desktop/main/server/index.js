@@ -11,6 +11,7 @@ const startDeckServer = async ({store}) => {
   const deckServer = express()
   const port = 832
   const localIP = await iIP.v4()
+  const address = `http://${localIP}:${port}`
   const ipQRCode = await QRCode.toString(`http://${localIP}:${port}`, {type: 'utf8'})
   
   deckServer.use((req, res, next) => {
@@ -44,7 +45,7 @@ const startDeckServer = async ({store}) => {
   
   return {
     server: server,
-    qrCode: ipQRCode,
+    address: address,
   }
 }
 

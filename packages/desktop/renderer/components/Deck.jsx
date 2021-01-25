@@ -62,7 +62,7 @@ export const Deck = ({ deck, updateDeck }) => {
               {...deck.buttons[r][c]}
               position={`${r}-${c}`}
               onSwitchPosition={switchPosition}
-              showModal={() => openModalDeckBtn(deck.buttons[r][c], r, c)}
+              clickAction={() => openModalDeckBtn(deck.buttons[r][c], r, c)}
             />
           ))}
         </DeckRow>
