@@ -4,6 +4,7 @@
 
 *TODO*:
 
+- migrate deckServer to WebSockets (using socket.io)
 - Plugins for buttons' actions
   - Companion Actions
     - change deck page
@@ -52,3 +53,10 @@ Features:
 #### Mobile App (Android/iOS)
 
 Mobile app visualizer for the configured decks.
+
+Features:
+
+- View Board and send button action (on tap)
+- Connect to MyDeck
+  - Auto Connect with QRCode
+  - Manually insert lan IP Address
