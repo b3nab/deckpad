@@ -19,7 +19,9 @@ const DeckBtnWrapper = styled.div`
   align-items: center;
   transition: all .3s linear;
   overflow: hidden;
-  margin: .3em;
+  margin: 10px;
+  border: 1px solid #ffffff60;
+  box-shadow: #000000 -3px 4px 0px 1px, #5c5c5c -4px 5px 0px 1px;
   
   ${props => props.background ? `
     background: ${props.background};
@@ -44,13 +46,14 @@ const DeckBtnWrapper = styled.div`
 
 
 export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => {
-  const [{ isDragging }, connectDrag] = useDrag({
-    item: {position, type: 'DECKBTN'},
+  const [{ isDragging }, connectDrag] = useDrag(() => ({
+    type: 'DECKBTN',
+    item: {position},
     canDrag: () => true,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     })
-  })
+  }))
 
   const [{isOver, canDrop, item, dropRes}, connectDrop] = useDrop({
     accept: 'DECKBTN',
@@ -75,19 +78,24 @@ export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => 
   connectDrop(ref)
   const { label, labelColor, shape, bgColor, image } = props
 
+  const rgba = color => 
+    typeof(color) == 'object' ? 
+      `rgba(${color.r},${color.g},${color.b},${color.a})`
+      : color
+
   return (
     <DeckBtnWrapper 
       isDragging
       shape={shape}
-      background={bgColor}
+      background={rgba(bgColor)}
       ref={ref}
       onClick={() => clickAction()}
     >
       {/* <Button style={{width: 70, height: 70, borderRadius: 10, border: '3px solid black'}}> */}
         
-        <Typography variant='caption' style={{color: labelColor, zIndex: "1"}}>{label}</Typography>
+        <Typography variant='caption' style={{color: rgba(labelColor), zIndex: "1"}}>{label}</Typography>
         {image && (
-          <img src={image} alt="btnImage" style={{width: '70px', height: '70px', position: 'absolute'}}/>
+          <img src={image} alt="btnImage" style={{width: '100%', height: '100%', position: 'absolute'}}/>
         )}
         {!(image || label) && (
           <AddIcon color="primary" />

@@ -5,7 +5,8 @@ const DragItem = memo(({ id, onMoveItem, children }) => {
   const ref = useRef(null)
 
   const [{ isDragging }, connectDrag] = useDrag({
-    item: { id, type: "DECKBTN" },
+    type: 'DECKBTN',
+    item: { id },
     collect: monitor => {
       return {
         isDragging: monitor.isDragging()

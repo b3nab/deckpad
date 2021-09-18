@@ -1,22 +1,40 @@
 import React, { useState } from 'react'
-import { fieldToTextField } from 'formik-material-ui'
-import ColorPicker from 'react-input-color'
-import { ChromePicker } from 'react-color'
+import { RgbaColorPicker } from 'react-colorful'
 import { Typography, Popover } from '@material-ui/core'
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
 import styled from 'styled-components'
 
 export const ColorField = (props) => {
-  const  [displayColorPicker, setDisplayColorPicker] = useState(false)
   const {
     form: { setFieldValue },
     field: { name, value: valueColor },
     label
   } = props
+  console.log('arrived ', valueColor)
+  
+  const rgba = color => {
+    if(typeof color === 'object') {
+      return {
+        r: color.r,
+        g: color.g,
+        b: color.b,
+        a: color.a,
+      }
+    } else return hexToRGB(color)
+  }
+
+  const hexToRGB = (hex, alpha=1) => {
+    hex   = hex.replace('#', '')
+    var r = parseInt(hex.length == 3 ? hex.slice(0, 1).repeat(2) : hex.slice(0, 2), 16)
+    var g = parseInt(hex.length == 3 ? hex.slice(1, 2).repeat(2) : hex.slice(2, 4), 16)
+    var b = parseInt(hex.length == 3 ? hex.slice(2, 3).repeat(2) : hex.slice(4, 6), 16)
+    return {r,g,b,a:alpha}
+  }
+
   const onChange = color => {
-    // const rgba = `${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a}`
+    // const rgba = `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`
     // console.log('COLOR FIELD CHANGE TO => ', rgba, color)
-    setFieldValue(name, color ? color.rgb : 'transparent')
+    setFieldValue(name, color)
   }
   
   return (
@@ -26,7 +44,7 @@ export const ColorField = (props) => {
         {(popupState) => (
           <div>
             <Swatch {...bindTrigger(popupState)}>
-              <SwatchColor rgba={valueColor} />
+              <SwatchColor rgba={rgba(valueColor)} />
             </Swatch>
             <Popover
               {...bindPopover(popupState)}
@@ -39,7 +57,7 @@ export const ColorField = (props) => {
                 horizontal: 'center',
               }}
             >
-              <ChromePicker color={valueColor} onChange={onChange} />
+              <RgbaColorPicker color={valueColor} onChange={onChange} />
             </Popover>
           </div>
         )}

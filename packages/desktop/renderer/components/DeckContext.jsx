@@ -1,5 +1,4 @@
 import React, { Component, createContext, useState } from "react"
-import sampleItems from './sampleItems'
 
 // ----------------
 // Helper functions
@@ -26,7 +25,7 @@ const DeckContext = createContext({ items: [] })
 
 export const DeckProvider = (props) => {
   const [deckState, setState] = useState({
-    items: [], // sampleItems,
+    items: [],
     // moveItem: moveItem,
     // setItems: setItems
   })
