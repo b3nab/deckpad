@@ -2,7 +2,7 @@ import { dialog, ipcMain } from 'electron'
 import isDev from 'electron-is-dev'
 import { PluginManager } from 'live-plugin-manager'
 import PluginClerk from 'pluginclerk'
-import pubsubElectron from 'electron-pubsub'
+import pubsub from 'electron-pubsub'
 import { companion } from '../plugins'
 
 const manager = new PluginManager()
@@ -19,7 +19,7 @@ const clerk = new PluginClerk({
 // ---------------------------------
 //          Plugins System
 // ---------------------------------
-export const plugins = ({ store, pubsub, sendMessageToRenderer }) => {
+export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   let plugins = {}
   
   
@@ -29,7 +29,7 @@ export const plugins = ({ store, pubsub, sendMessageToRenderer }) => {
   // ---- INIT -----
   const initPlugin = (pluginName, plugin) => {
     console.log(`init plugin: ${pluginName}`)
-    const newPlugin = plugin({ store, pubsub, sendMessageToRenderer, updateProps })
+    const newPlugin = plugin({ store, toIO, sendMessageToRenderer, updateProps })
     newPlugin.start()
     plugins[pluginName] = resolvePlugin(newPlugin)
     return plugins
@@ -82,7 +82,7 @@ export const plugins = ({ store, pubsub, sendMessageToRenderer }) => {
   // ---- PubSub Listeners -----
   // ---------------------------
   // with deckServer to call fire() on plugin
-  pubsubElectron.subscribe('fire-plugin', async (event, action) => {
+  pubsub.subscribe('fire-plugin', async (event, action) => {
     console.log(`fire with action => ${action}`)
     const { plugin, type, options } = action
     const fire = plugins[plugin].props[type].fire
