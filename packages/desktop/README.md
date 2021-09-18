@@ -17,3 +17,5 @@ Fully Customizable Deck Button Board w/ Actions and Plugins for Windows/MacOS/Li
   - Shape (circle, squared or transparent)
 
 ### WIP
+
+Run with `lerna --scope @mydeck/desktop run dev`
