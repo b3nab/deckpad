@@ -32,6 +32,7 @@ dmg:
 # Linux configuration
 linux:
   category: Development
+  # icon: "resources/icon.ico"
   target:
     - "AppImage"
     - "deb"

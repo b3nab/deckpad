@@ -3,5 +3,3 @@ node_modules
 .next
 app
 dist
-
-package-lock.json
