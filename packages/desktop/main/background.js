@@ -1,12 +1,10 @@
-import { app, Tray, Menu } from 'electron'
-import path from 'path'
+import { app } from 'electron'
 import serve from 'electron-serve'
 import Store from 'electron-store'
-import { createMainWindow } from './helpers'
+import pubsub from 'electron-pubsub'
+import { createMainWindow, buildMenu, buildTray } from './helpers'
 // IPC MAIN RESOLVERS
 import { loadIPCs, plugins, deckServer, saveAndLoad, image } from './ipc'
-
-let mainWin
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -20,12 +18,14 @@ if (isProd) {
   await app.whenReady()
   // ---- Start Window ----
   // ----------------------
-  mainWin = await createMainWindow({
+  const mainWin = await createMainWindow({
     prefs: {
       name: 'main',
       options: {
         width: 1000,
-        height: 650,
+        height: 720,
+        minWidth: 665,
+        minHeight: 450,
       }
     },
     port: process.argv[2]
@@ -35,30 +35,22 @@ if (isProd) {
   // ---- Load App Modules ----
   // --------------------------
   const store = new Store()
-  const sendMessageToMain = (channel, msg) => mainWin.webContents.send(channel, msg)
+  const sendMessageToRenderer = (channel, msg) => mainWin.webContents.send(channel, msg)
+  const toIO = (...params) => pubsub.publish('io', ...params)
   
-  loadIPCs({ store, sendMessageToMain }, [
+  loadIPCs({ store, toIO, sendMessageToRenderer }, [
     saveAndLoad,
     deckServer,
     plugins,
     image
   ])
   
-  // ---- Tray Icon ----
-  // -------------------
-  // const iconLogo = app.isPackaged ? `${path.join(app.getPath('appData'),'resources','logo.png')}` : `${path.join(__dirname,'..','resources','logo.png')}`
-  // const tray = new Tray(iconLogo)
-  // const contextMenu = Menu.buildFromTemplate([
-  //   { label: 'Item1', type: 'radio' },
-  //   { label: 'Item2', type: 'radio' },
-  //   { label: 'Item3', type: 'radio', checked: true },
-  //   { label: 'Item4', type: 'radio' }
-  // ])
-  // tray.setToolTip('MyDeck Configurator App')
-  // tray.setContextMenu(contextMenu)
+  // ---- Window Decorations ----
+  buildMenu()
+  buildTray()
   
   // Inform App that all MyDeck modules are ready
-  sendMessageToMain('mydeck-ready', true)
+  sendMessageToRenderer('mydeck-ready', true)
 })()
 
 app.on('window-all-closed', () => {

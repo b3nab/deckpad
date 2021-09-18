@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 
-const companion = ({ store, updateProps }) => {
+const companion = ({ store, toIO, sendMessageToRenderer, updateProps }) => {
   let pages = []
 
   const start = () => {
@@ -12,6 +12,7 @@ const companion = ({ store, updateProps }) => {
       })
       pages = newPages
       updateProps()
+      toIO('board', board)
     })
   }
 
@@ -20,7 +21,14 @@ const companion = ({ store, updateProps }) => {
   const actions = () => ({
     'change-deck': {
       label: 'Change Deck Page',
-      fire: async () => {},
+      fire: async (data) => {
+        // console.log(`[FIRE ACTION] change-deck log`, data)
+        
+        const actualMobile = pages.findIndex(p => p.value == data.options)
+        console.log(`[FIRE ACTION] change-deck log actualMobile is `, actualMobile)
+
+        actualMobile != -1 && sendMessageToRenderer('switch-deck', actualMobile)
+      },
       // probably it will not change "pages" because it's a variable
       // can try with a function (maybe general for actions or for a single action)
       options: pages
