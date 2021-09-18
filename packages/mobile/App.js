@@ -4,11 +4,14 @@ import * as Permissions from 'expo-permissions'
 import { StatusBar } from 'expo-status-bar'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { Button, TextInput } from 'react-native-paper'
+// import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 
 import { Deck } from './ui'
 
 const ConnectTo = ({ setIPLan }) => {
   const [hasPermission, setHasPermission] = useState(null)
+  // const { getItem, setItem } = useAsyncStorage('@mydeck.address')
+  // const [ lastIP, setLastIP] = useState('')
   const [ IP, setIP] = useState('')
   const [ scanQR, setScanQR] = useState(false)
 
@@ -16,6 +19,8 @@ const ConnectTo = ({ setIPLan }) => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync()
       setHasPermission(status === 'granted')
+      // const savedLastIP = await getItem()
+      // if (savedLastIP) setLastIP(savedLastIP)
     })()
   }, [])
 
@@ -25,7 +30,12 @@ const ConnectTo = ({ setIPLan }) => {
     setScanQR(false)
   }
   const inputIPLan = () => {
+    // setItem(IP)
     setIPLan(IP)
+  }
+
+  const buildIP = (ip, port=defaultPort) => {
+    return `${ip}:${port}`
   }
 
   return (
@@ -38,12 +48,12 @@ const ConnectTo = ({ setIPLan }) => {
           />
         </View>
       }
-      <Text>MyDeck - not connected</Text>
-      <Text>Companion status is: ok</Text>
+      {/* <Text>MyDeck - not connected</Text> */}
+      {/* <Text>Companion status is: ok</Text> */}
       <Text />
       <View style={styles.div}>
         <TextInput
-          label="IPLan"
+          label="protocol://ip:port"
           value={IP}
           onChangeText={newIP => setIP(newIP)}
         />
@@ -52,6 +62,12 @@ const ConnectTo = ({ setIPLan }) => {
       <Button onPress={() => inputIPLan()} mode='outlined'>Connect to LAN IP</Button>
       <Text />
       <Button onPress={() => setScanQR(true)} mode='contained'>Scan QR Code</Button>
+      <Text />
+      <Text />
+      <Text />
+      {/* {!!lastIP && 
+        <Button onPress={() => setIPLan(lastIP)} mode='contained'>Connect to last IP</Button>
+      } */}
       {/* {hasCameraPermission === null ? 
         <Text>Requesting for camera permission</Text>
         : hasCameraPermission === false ? 
@@ -90,17 +106,18 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     zIndex: 0,
+    display: 'flex',
     flex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#151520',
     alignItems: 'center',
     justifyContent: 'center',
   },
   div: {
     // flex: 1,
     width: '80%',
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     // alignItems: 'center',
     // justifyContent: 'center',
   },
