@@ -10,9 +10,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DeckProvider } from '../components/DeckContext'
 
 
-export default function _app(props) {
-  const { Component, pageProps } = props
-
+function MyApp({Component, pageProps}) {
   React.useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
@@ -38,3 +36,6 @@ export default function _app(props) {
     </React.Fragment>
   )
 }
+
+
+export default MyApp
