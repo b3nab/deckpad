@@ -1,65 +1,104 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet } from 'react-native'
+import { Animated, StyleSheet, Text } from 'react-native'
+import * as Device from 'expo-device'
 import styled from 'styled-components'
 import { DeckBtn } from './DeckBtn'
 import Frisbee from 'frisbee'
+import io from 'socket.io-client'
 import { ActivityIndicator, FAB } from 'react-native-paper'
 
-const DeckWrapper = styled.View`
+const BoardWrapper = styled.View`
   width: 100%;
   height: 100%;
   display: flex;
-  align-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-direction: row;
-`
-
-const DeckRow = styled.View`
-  display: flex;
-  flex: 1 1 100%;
-  width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `
+const DeckWrapper = styled(Animated.View)`
+  width: 100%;
+  height: 100%;
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: center;
+  display: ${props => props.visible ? 'flex' :  'none'};
+`
 
-const styles = StyleSheet.create({
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-  },
-})
+const DeckRow = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+// const styles = StyleSheet.create({
+//   fab: {
+//     position: 'absolute',
+//     margin: 16,
+//     right: 0,
+//     bottom: 0,
+//   },
+// })
 
 export const Deck = ({ serverAddress, goToHome }) => {
-  console.log(`[DECK] server address is ${serverAddress}`)
+  // console.log(`[DECK] server address is ${serverAddress}`)
   const [ board, setBoard ] = useState()
   const [ actual, setActual ] = useState(0)
-
-  const api = new Frisbee({
-    baseURI: `${serverAddress}`, // optional
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  })
+  const [api, setAPI] = useState()
 
   const changeDeck = (id) => {
-    let toIndex = 0
+    // console.log('[SWITCH-DECK] to id: ', id)
+    // console.log('[SWITCH-DECK] actual index: ', actual)
     // find index from id
-    board.forEach((deck, i) => {
-      toIndex = deck.id === id ? i : toIndex
-    })
+    const toDeck = board.findIndex(deck => deck.id === id)
+    // console.log('[SWITCH-DECK] to toDeck: ', toDeck)
+    const toIndex = toDeck != -1 ? toDeck : actual
     setActual(toIndex)
+    api.emit('switch-deck', toIndex)
   }
 
+  // async function initCompanion() {
+  //   try {
+  //     const companionAPI = new Frisbee({
+  //       baseURI: `${serverAddress}`, // optional
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json'
+  //       }
+  //     })
+  //     const companionRes = await companionAPI.get(`/companion`)
+  //     console.log(companionRes.body)
+  //     setBoard(companionRes.body.board)
+  //     setAPI(companionAPI)
+  //   } catch (error) {
+  //     console.error('Deck.initCompanion : ', error)
+  //     goToHome()
+  //   }
+  // }
   async function initCompanion() {
     try {
-      const companionRes = await api.get(`/companion`)
-      // console.log(companionRes.body)
-      setBoard(companionRes.body.board)
+      console.log(`[DECK] server address is ${serverAddress}`)
+      console.log('[DECK] initCompanion()')
+      const socket = io(serverAddress)
+      setAPI(socket)
+      
+      console.log('[IO] build listeners')
+      socket.on("connect", () => {
+        console.log('[IO] connected to socket server! Device is: ', Device.deviceName)
+        socket.emit('companion', Device.deviceName)
+      });
+
+      socket.on("disconnect", () => {
+        console.log('[IO] MyDeck disconnected')
+        goToHome()
+        setAPI()
+        setBoard()
+      });
+      
+      socket.on("board", (boardObject) => {
+        console.log(`[IO] update board`)
+        setBoard(boardObject)
+      });
     } catch (error) {
       console.error('Deck.initCompanion : ', error)
       goToHome()
@@ -67,39 +106,41 @@ export const Deck = ({ serverAddress, goToHome }) => {
   }
 
   useEffect(() => {
+    // if(serverAddress) {
     initCompanion()
-  }, [serverAddress])
+    // }
+  }, [])
   
-  if(!board) {
-    return (
-      <DeckWrapper>
-        <ActivityIndicator />
-      </DeckWrapper>
-    )
-  }
-
   return (
-    <DeckWrapper>
-      <FAB
+    <BoardWrapper>
+      {/* <FAB
         style={styles.fab}
         small
         icon="reload"
         onPress={() => initCompanion()}
-      />
-      {/* <Text>Board name: {board && board[0].name}</Text> */}
-      {[...Array(board[actual].row)].map((e,r) => (
-        <DeckRow key={`row-${r}`}>
-          {[...Array(board[actual].col)].map((e,c) => (
-            <DeckBtn 
-              api={api}
-              key={`${r}-${c}`}
-              position={`${r}-${c}`}
-              changeDeck={changeDeck}
-              {...board[actual].buttons[r][c]}
-            />
-          ))}
-        </DeckRow>
-      ))}
-    </DeckWrapper>
+      /> */}
+
+      {board ? 
+        // <Text key={`btn-r${r}-c${c}`}>[BTN!]</Text>
+        board.map((deck, i) => (
+          <DeckWrapper key={deck.id} visible={actual == i}>
+            {deck.buttons.slice(0,deck.row).map((row, r) => (
+              <DeckRow key={`row-${r}`}>
+                {row.slice(0,deck.col).map((btn, c) => (
+                  <DeckBtn key={`btn-r${r}-c${c}`}
+                    api={api}
+                    position={`${r}-${c}`}
+                    changeDeck={changeDeck}
+                    {...btn}
+                  />
+                ))}
+              </DeckRow>
+            ))}
+          </DeckWrapper>
+        ))
+      : <ActivityIndicator />
+      }
+
+    </BoardWrapper>
 )}
 
