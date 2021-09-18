@@ -5,6 +5,6 @@ export { image } from './image'
 
 export const loadIPCs = (configProps, ipcs) => {
     ipcs.map((fn, i) => {
-        fn(configProps)
+        const value = fn(configProps)
     })
 }

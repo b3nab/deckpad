@@ -4,14 +4,15 @@ import { startDeckServer } from '../server'
 // ---------------------------------
 //    MyDeck Server in Background
 // ---------------------------------
-export const deckServer = ({ store }) => {
+export const deckServer = (ipcProps) => {
+  const { store, sendMessageToRenderer } = ipcProps
   let deckServerOBJ = {}
   
   ipcMain.on('start-server', async (event, arg) => {
     console.log(`fire "start-server"`)
-    deckServerOBJ = await startDeckServer({store})
+    deckServerOBJ = await startDeckServer(ipcProps)
     // store.set('server', deckServerOBJ)
-    console.log(`result from "start-server" ==>\n ${deckServerOBJ}`)
+    // console.log(`result from "start-server" ==>\n ${JSON.stringify(deckServerOBJ, null, 2)}`)
     if(deckServerOBJ) {
       event.sender.send('started-server', deckServerOBJ.address)
     }
@@ -21,6 +22,7 @@ export const deckServer = ({ store }) => {
     console.log(`fire "stop-server"`)
     // deckServerOBJ = store.get('server')
     if(deckServerOBJ) {
+      deckServerOBJ.io.disconnectSockets()
       deckServerOBJ.server.close(() => {
         event.sender.send('stopped-server', true)
       })

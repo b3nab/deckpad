@@ -2,8 +2,9 @@ import { dialog, ipcMain } from 'electron'
 import isDev from 'electron-is-dev'
 import { PluginManager } from 'live-plugin-manager'
 import PluginClerk from 'pluginclerk'
-import pubsub from 'electron-pubsub'
+import pubsubElectron from 'electron-pubsub'
 import { companion } from '../plugins'
+
 const manager = new PluginManager()
 const clerk = new PluginClerk({
   // keyword specified inside package.json:keywords property
@@ -18,24 +19,9 @@ const clerk = new PluginClerk({
 // ---------------------------------
 //          Plugins System
 // ---------------------------------
-export const plugins = ({ store, sendMessageToMain }) => {
+export const plugins = ({ store, pubsub, sendMessageToRenderer }) => {
   let plugins = {}
   
-  
-  // ---- PubSub -----
-  // -----------------
-  // with deckServer to call fire() on plugin
-  pubsub.subscribe('fire-plugin', async (event, action) => {
-    console.log(`fire with action => ${action}`)
-    const { plugin, type, options } = action
-    const fire = plugins[plugin].props[type].fire
-    try {
-      await fire(action)
-    } catch (error) {
-      console.log(error)
-      return false
-    }
-  })
   
   // ---- Plugin Helpers -----
   // -------------------------
@@ -43,7 +29,7 @@ export const plugins = ({ store, sendMessageToMain }) => {
   // ---- INIT -----
   const initPlugin = (pluginName, plugin) => {
     console.log(`init plugin: ${pluginName}`)
-    const newPlugin = plugin({ store, updateProps })
+    const newPlugin = plugin({ store, pubsub, sendMessageToRenderer, updateProps })
     newPlugin.start()
     plugins[pluginName] = resolvePlugin(newPlugin)
     return plugins
@@ -63,8 +49,7 @@ export const plugins = ({ store, sendMessageToMain }) => {
     Object.keys(plugins).map(plugin => {
       plugins[plugin] = resolvePlugin(plugins[plugin].fn)
     })
-    let serialized = serializePlugins()
-    sendMessageToMain('plugins-list-update', serialized)
+    sendMessageToRenderer('plugins-installed', serializePlugins())
   }
 
   // ---- UPDATE FOR PLUGIN -----
@@ -81,33 +66,54 @@ export const plugins = ({ store, sendMessageToMain }) => {
     return JSON.parse(JSON.stringify(serialized))
   }
   
+  // ------------------------------
+  // ------------------------------
   // ---- Load Default Plugins ----
+  // ------------------------------
+  // -------------Main-------------
   // ------------------------------
   initPlugin("companion", companion)
   // initPlugin("mydeckBase", mydeckBase)
+  // ------------------------------
+  // ------------------------------
+  // ------------------------------
   
-  
-  // ---- Listeners ----
-  // -------------------
+
+  // ---- PubSub Listeners -----
+  // ---------------------------
+  // with deckServer to call fire() on plugin
+  pubsubElectron.subscribe('fire-plugin', async (event, action) => {
+    console.log(`fire with action => ${action}`)
+    const { plugin, type, options } = action
+    const fire = plugins[plugin].props[type].fire
+    try {
+      await fire(action)
+    } catch (error) {
+      console.log(error)
+      return false
+    }
+  })
+  // ---- IPC Listeners ----
+  // -----------------------
+  ipcMain.on('plugins-installed', async (event, arg) => {
+    sendMessageToRenderer('plugins-installed', serializePlugins())
+  })
   ipcMain.on('plugins-available', async (event, arg) => {
     const res = await clerk.fetchPlugins({})
-    event.sender.send('plugins-available', res)
+    sendMessageToRenderer('plugins-available', res)
   })
-  
   ipcMain.on('install-plugin', async (event, {name: pluginName, options}) => {
     await manager.install(pluginName)
     const plugin = manager.require(pluginName)
     const plugins = initPlugin(pluginName, plugin)
-    event.sender.send('plugins-list-update', serializePlugins())
+    sendMessageToRenderer('plugins-list-update', serializePlugins())
   })
-  
   ipcMain.on('remove-plugin', async (event, pluginName) => {
     if(plugins[pluginName].fn.stop) {
       plugins[pluginName].fn.stop()
     }
     await manager.uninstall(pluginName)
     delete plugins[PluginName]
-    event.sender.send('plugins-list-update', serializePlugins())
+    sendMessageToRenderer('plugins-list-update', serializePlugins())
   })
-
 }

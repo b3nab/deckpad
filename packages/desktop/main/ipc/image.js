@@ -18,6 +18,7 @@ export const image = (props) => {
       const extension = extname(image[0])
       const base64 = readFileSync(image[0]).toString('base64')
       const out = `data:image/${extension};base64,${base64}`
+      // console.log('[IPC] image out => ', out)
       event.sender.send('selected-btn-image', out)
     }
   })
