@@ -30,6 +30,13 @@ Implementation of this plugin system is still a wip. Looking at these npm module
 - plug-and-play
 - architect
 
+### Plugins to develop
+
+- obs
+- vmix
+- streamlabs
+- gopro open api 
+
 ---
 
 ### Parts
