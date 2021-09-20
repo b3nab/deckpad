@@ -50,10 +50,10 @@ jobs:
         with:
           node-version: 14
       
-      - name: Yarn install
-        run: yarn install
-      - name: Yarn release - Build nextron desktop app
-        run: yarn release
+      - name: NPM install
+        run: npm install
+      - name: NPM release - Build nextron desktop app
+        run: npm run release
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
