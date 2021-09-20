@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
-          path: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          path: ./dist/MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
 
   # create release tag from version
