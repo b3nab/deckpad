@@ -28,37 +28,37 @@ jobs:
   artifacts:
     runs-on: ${{ matrix.target.os }}
     needs: version
-      defaults:
-        run:
-          working-directory: ./packages/desktop
+    defaults:
+      run:
+        working-directory: ./packages/desktop
 
-      strategy:
-        matrix:
-          target: [ 
-            { 'os': 'windows-latest', 'system': 'win', 'arch': 'amd64', 'ext': 'exe' },
-            { 'os': 'macos-latest', 'system': 'mac', 'arch': 'amd64', 'ext': 'dmg' },
-            # { 'os': 'macos-latest', 'system': 'mac', 'arch': 'arm64', 'ext': 'dmg' },
-            { 'os': 'ubuntu-latest', 'system': 'linux', 'arch': 'amd64', 'ext': 'deb' },
-            # { 'os': 'ubuntu-latest', 'system': 'linux', 'arch': '386', 'ext': 'dmg' },
-          ]
-      steps:
-        - name: Check out Git repository
-          uses: actions/checkout@v1
+    strategy:
+      matrix:
+        target: [ 
+          { 'os': 'windows-latest', 'system': 'win', 'arch': 'amd64', 'ext': 'exe' },
+          { 'os': 'macos-latest', 'system': 'mac', 'arch': 'amd64', 'ext': 'dmg' },
+          # { 'os': 'macos-latest', 'system': 'mac', 'arch': 'arm64', 'ext': 'dmg' },
+          { 'os': 'ubuntu-latest', 'system': 'linux', 'arch': 'amd64', 'ext': 'deb' },
+          # { 'os': 'ubuntu-latest', 'system': 'linux', 'arch': '386', 'ext': 'dmg' },
+        ]
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
 
-        - name: Install Node.js, NPM and Yarn
-          uses: actions/setup-node@v1
-          with:
-            node-version: 14
-        
-        - name: Yarn install
-          run: yarn install
-        - name: Yarn release - Build nextron desktop app
-          run: yarn release
-        - name: Upload Artifact
-          uses: actions/upload-artifact@v2
-          with:
-            name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
-            path: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      
+      - name: Yarn install
+        run: yarn install
+      - name: Yarn release - Build nextron desktop app
+        run: yarn release
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          path: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
 
   # create release tag from version
