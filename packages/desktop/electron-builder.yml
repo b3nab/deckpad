@@ -1,6 +1,6 @@
 appId: b3nab.mydeck.desktop
 productName: MyDeck
-copyright: Copyright © 2020 b3nab
+copyright: Copyright © 2021 b3nab
 
 artifactName: ${productName}_v${version}_${os}.${ext}
 

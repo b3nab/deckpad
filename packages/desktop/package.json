@@ -3,13 +3,17 @@
   "description": "A powerful deck board app for your streaming needs! This is the desktop app, use it as a configurator for your companion mobile app (soon MyDeck on majors Stores).",
   "author": "Benedetto Abbenanti b3nab <benedetto.abbenanti@gmail.com>",
   "homepage": "https://github.com/b3nab/mydeck",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
     "release": "nextron build",
     "build:all": "nextron build --all",
+    "build:win32": "nextron build --win --ia32",
+    "build:win64": "nextron build --win --x64",
+    "build:mac": "nextron build --mac --x64",
+    "build:linux": "nextron build --linux",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
