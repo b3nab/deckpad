@@ -54,11 +54,26 @@ jobs:
         run: npm install
       - name: NPM release - Build nextron desktop app
         run: npm run release
+
+      - name: Sanity check (win)
+        run: |
+          echo The current directory is %CD%
+          dir -s
+          dir -s .\dist
+        if: matrix.target.system === 'win'
+      - name: Sanity check (mac+linux)
+        run: |
+          pwd
+          ls -l
+          ls -l ./dist
+        if: matrix.target.system !== 'win'
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
+        working-directory: ./dist
         with:
           name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
-          path: ./dist/MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          path: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
 
   # create release tag from version
@@ -77,8 +92,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ needs.version.output.v }}
-        release_name: Release ${{ needs.version.output.v }}
+        tag_name: ${{ needs.version.outputs.v }}
+        release_name: Release ${{ needs.version.outputs.v }}
         draft: false
         prerelease: false
         
