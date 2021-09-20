@@ -32,12 +32,15 @@ dmg:
 
 # Linux configuration
 linux:
+  executableName: mydeck
   category: Development
   # icon: "resources/icon.ico"
   target:
     - "AppImage"
-    - "deb"
-    - "rpm"
+    # - "snap"
+    # - "deb"
+    # - "rpm"
+    # - "pacman"
 
 # deb:
 #   depends:
