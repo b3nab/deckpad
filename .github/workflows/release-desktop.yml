@@ -86,7 +86,7 @@ jobs:
   # Add all the builds as assets to the release
   add:
     runs-on: ${{ matrix.target.os }}
-    needs: [ artifacts, release ]
+    needs: [ version, artifacts, release ]
     strategy:
       matrix:
         target: [ 
