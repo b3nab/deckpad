@@ -31,7 +31,7 @@ jobs:
   artifacts:
     runs-on: ${{ matrix.target.os }}
     needs: version
-    if: needs.version.outputs.new
+    if: ${{ needs.version.outputs.new }}
     defaults:
       run:
         working-directory: ./packages/desktop
@@ -71,7 +71,7 @@ jobs:
     name: Create Desktop Release
     runs-on: ubuntu-latest
     needs: [ version, artifacts ]
-    if: needs.version.outputs.new
+    if: ${{ needs.version.outputs.new }}
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
 
@@ -93,7 +93,7 @@ jobs:
   add:
     runs-on: ${{ matrix.target.os }}
     needs: [ version, artifacts, release ]
-    if: needs.version.outputs.new
+    if: ${{ needs.version.outputs.new }}
     strategy:
       matrix:
         target: [ 
