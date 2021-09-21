@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new: ${{ steps.version_check.outputs.versionChanged }}
-      v: ${{ steps.version_check.outputs.releaseVersion }}
-      tag: mobile-${{ steps.version_check.outputs.releaseVersion }}
+      v: v${{ steps.version_check.outputs.rawVersion }}
+      tag: ${{ steps.version_check.outputs.releaseVersion }}
     steps:
       - uses: actions/checkout@v2
 
@@ -21,7 +21,7 @@ jobs:
         uses: thebongy/version-check@v1
         with:
           file: ./packages/mobile/package.json
-          tagFormat: v${version}
+          tagFormat: mobile-v${version}
           failBuild: false
       - name:
         run: echo "MyDeck Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
