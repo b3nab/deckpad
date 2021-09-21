@@ -32,21 +32,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: version
     if: needs.version.outputs.new
+    # defaults:
+    #   run:
+    #     working-directory: ./packages/mobile
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-
       - uses: expo/expo-github-action@v6
         with:
           expo-version: 4.x
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
 
-      - run: yarn install
-
-      - run: expo export --public-url ${{ secrets.ASSETS_URL }}
+      - run: |
+          cd ./packages/mobile
+          yarn install
+          expo export --public-url ${{ secrets.ASSETS_URL }}
 
       - uses: peaceiris/actions-gh-pages@v3
         with:
