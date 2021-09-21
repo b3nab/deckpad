@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "b3nab.mydeck.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
