@@ -3,7 +3,7 @@ name: MyDeck Mobile Release
 on: 'push'
 
 jobs:
- # check version between last tag and package.json - if version not change then the build will fail (correct way to not continue wasting build time)
+  # check version between last tag and package.json - if version not change then the build will fail (correct way to not continue wasting build time)
   version:
     runs-on: ubuntu-latest
     outputs:
@@ -20,9 +20,8 @@ jobs:
           file: ./packages/mobile/package.json
           tagFormat: v${version}
       - name:
-        run: |
-        echo "MyDeck Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
-
+        run: echo "MyDeck Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
+        
   # export assets for expo build using turtle-cli
   export:
     name: Export assets
@@ -165,18 +164,18 @@ jobs:
           # { 'os': 'macos-latest', 'system': 'ios', 'ext': 'ipa' },
         ]
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Download Artifact
-      id: download
-      uses: actions/download-artifact@v2
-      with:
-        name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+      - name: Download Artifact
+        id: download
+        uses: actions/download-artifact@v2
+        with:
+          name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
-    - name: Upload Artifact to Mobile Release
-      uses: Fhwang0926/upload-release-asset@v1.1.17
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+      - name: Upload Artifact to Mobile Release
+        uses: Fhwang0926/upload-release-asset@v1.1.17
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
