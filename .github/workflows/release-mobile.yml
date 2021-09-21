@@ -37,7 +37,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-          cache: 'yarn'
 
       - uses: expo/expo-github-action@v6
         with:
@@ -75,7 +74,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-          cache: 'yarn'
       - uses: actions/cache@v2
         id: turtle-cache
         with:
@@ -110,7 +108,6 @@ jobs:
   #     - uses: actions/setup-node@v2
   #       with:
   #         node-version: 14
-  #         cache: 'yarn'
 
   #     - run: ./.github/scripts/decrypt_secret.sh
   #       env:
