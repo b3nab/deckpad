@@ -88,7 +88,7 @@ jobs:
 
       - run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
-          gpg -d --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" --batch release-android.jks.asc > release-android.jks
+          gpg -d --yes --quiet --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" release-android.jks.asc > release-android.jks
           yarn install
           npm install -g turtle-cli
           turtle build:android -o ./MyDeck_${{ needs.version.outputs.v }}_android.apk --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json -t apk
