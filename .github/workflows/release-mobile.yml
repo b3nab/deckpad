@@ -42,9 +42,10 @@ jobs:
           node-version: 14
       - uses: expo/expo-github-action@v6
         with:
+          expo-cache: true
           expo-version: 4.x
-          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
-          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+          username: ${{ secrets.EXPO_CLI_USERNAME }}
+          password: ${{ secrets.EXPO_CLI_PASSWORD }}
 
       - name: Install & Expo export
         run: |
@@ -87,6 +88,7 @@ jobs:
           key: ${{ runner.os }}-turtle
 
       - run: |
+          gpg --version
           echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
           gpg -d --yes --quiet --passphrase "${{ secrets.ANDROID_KEYSTORE_PASSPHRASE }}" release-android.jks.asc > release-android.jks
           yarn install
