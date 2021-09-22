@@ -87,17 +87,17 @@ jobs:
           path: ~/.turtle
           key: ${{ runner.os }}-turtle
       
-      # - name: Import GPG key
-      #   id: import_gpg
-      #   uses: crazy-max/ghaction-import-gpg@v4
-      #   with:
-      #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-      #     passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - run: |
           gpg --version
           echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
-          gpg -d --yes --quiet --passphrase "${{ secrets.GPG_PASSPHRASE }}" release-android.jks.asc > release-android.jks
+          gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
           yarn install
           npm install -g turtle-cli
           turtle build:android -o ./MyDeck_${{ needs.version.outputs.v }}_android.apk --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json -t apk
