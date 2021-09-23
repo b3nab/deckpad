@@ -24,13 +24,22 @@ jobs:
 
       - run: |
           gpg --version
+          gpg --list-keys
+          gpg --list-secret-keys
           echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
           gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
 
+        # gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
+  
+  # prepare multiple fail-fast strategy and wait to finish before fail all action
+  # fail-fast:
+  #   runs-on: ubuntu-latest
+  #   needs: [ fail-import-gpg, fail-default-gpg, fail-restart-gpg ]
   # check version between last tag and package.json - if version not change then the build will fail (correct way to not continue wasting build time)
   version:
     name: Check version updates
     runs-on: ubuntu-latest
+    needs: fail-fast
     outputs:
       new: ${{ steps.version_check.outputs.versionChanged }}
       v: v${{ steps.version_check.outputs.rawVersion }}
