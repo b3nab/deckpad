@@ -3,6 +3,30 @@ name: MyDeck Mobile Release
 on: 'push'
 
 jobs:
+ # fail fast
+  fail-fast:
+    name: Fail Fast strategy - GPG decrypt key
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/mobile
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - run: |
+          gpg --version
+          echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
+          gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
+
   # check version between last tag and package.json - if version not change then the build will fail (correct way to not continue wasting build time)
   version:
     name: Check version updates
