@@ -134,7 +134,7 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
             </TabPanel>
             <TabPanel value="2">
               {Object.keys(plugins).map(plugin => (
-                <Accordion key="plugin">
+                <Accordion key={`plugin-${plugin}`}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls={`panel${plugin}-content`}
@@ -143,9 +143,11 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
                     <Typography className={classes.heading}>{plugin}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    {Object.keys(plugins[plugin]).map(action => (
-                      <Typography>{action}</Typography>
-                    ))}
+                    <Grid direction="column">
+                      {Object.keys(plugins[plugin]).map((action, i) => (
+                        <Typography key={i} paragraph>{action}</Typography>
+                      ))}
+                    </Grid>
                   </AccordionDetails>
                 </Accordion>
               ))}

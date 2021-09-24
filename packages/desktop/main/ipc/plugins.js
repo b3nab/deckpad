@@ -3,7 +3,10 @@ import isDev from 'electron-is-dev'
 import { PluginManager } from 'live-plugin-manager'
 import PluginClerk from 'pluginclerk'
 import pubsub from 'electron-pubsub'
-import { companion } from '../plugins'
+import {
+  companion,
+  multimedia,
+} from '../plugins'
 
 const manager = new PluginManager()
 const clerk = new PluginClerk({
@@ -73,6 +76,7 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   // -------------Main-------------
   // ------------------------------
   initPlugin("companion", companion)
+  initPlugin("multimedia", multimedia)
   // initPlugin("mydeckBase", mydeckBase)
   // ------------------------------
   // ------------------------------

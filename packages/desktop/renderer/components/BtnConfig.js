@@ -136,59 +136,63 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
 
                 <Grid container item direction="column" spacing={3} alignItems="center" justifyContent="space-evenly">
                   {plugins && (
-                    <FormControl>
-                      <InputLabel htmlFor="action.plugin">Plugin</InputLabel>
-                      <Field
-                        component={Select}
-                        name="action.plugin"
-                        inputProps={{
-                          id: 'action.plugin',
-                        }}
-                      >
-                        {Object.keys(plugins).map((plugin, i) => (
-                          <MenuItem key={i} value={plugin}>{plugin.toUpperCase()}</MenuItem>
-                        ))}
-                      </Field>
-                    </FormControl>
+                    <>
+                      <FormControl>
+                        <InputLabel htmlFor="action.plugin">Plugin</InputLabel>
+                        <Field
+                          component={Select}
+                          name="action.plugin"
+                          inputProps={{
+                            id: 'action.plugin',
+                          }}
+                        >
+                          {Object.keys(plugins).map((plugin, i) => (
+                            <MenuItem key={i} value={plugin}>{plugin.toUpperCase()}</MenuItem>
+                          ))}
+                        </Field>
+                      </FormControl>
+                      {values.action.plugin && Object.keys(plugins[values.action.plugin]) && (
+                        <>
+                          <FormControl>
+                            <InputLabel htmlFor="action.type">Action</InputLabel>
+                            <Field
+                              component={Select}
+                              name="action.type"
+                              inputProps={{
+                                id: 'action.type',
+                              }}
+                            >
+                              {Object.keys(plugins[values.action.plugin]).map((action, i) => (
+                                <MenuItem key={i} value={action}>
+                                  {plugins[values.action.plugin][action].label}
+                                </MenuItem>
+                              ))}
+                            </Field>
+                          </FormControl>
+                          {values.action.type && plugins[values.action.plugin][values.action.type] && plugins[values.action.plugin][values.action.type].options && (
+                            <FormControl>
+                              <InputLabel htmlFor="action.options">Options</InputLabel>
+                              <Field
+                                component={Select}
+                                name="action.options"
+                                inputProps={{
+                                  id: 'action.options',
+                                }}
+                              >
+                                {plugins[values.action.plugin][values.action.type].options.map((option, i) => (
+                                    <MenuItem key={i} value={option.value}>
+                                      {option.name}
+                                    </MenuItem>
+                                ))}
+                              </Field>
+                            </FormControl>
+                          )}
+                        </>
+                      )}
+                    </>
                   )}
 
-                  {plugins && values.action.plugin && (
-                    <FormControl>
-                      <InputLabel htmlFor="action.type">Action</InputLabel>
-                      <Field
-                        component={Select}
-                        name="action.type"
-                        inputProps={{
-                          id: 'action.type',
-                        }}
-                      >
-                        {Object.keys(plugins[values.action.plugin]).map((action, i) => (
-                          <MenuItem key={i} value={action}>
-                            {plugins[values.action.plugin][action].label}
-                          </MenuItem>
-                        ))}
-                      </Field>
-                    </FormControl>
-                  )}
 
-                  {plugins && values.action.plugin && values.action.type && (
-                    <FormControl>
-                      <InputLabel htmlFor="action.options">Options</InputLabel>
-                      <Field
-                        component={Select}
-                        name="action.options"
-                        inputProps={{
-                          id: 'action.options',
-                        }}
-                      >
-                        {plugins[values.action.plugin][values.action.type].options.map((option, i) => (
-                          <MenuItem key={i} value={option.value}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Field>
-                    </FormControl>
-                  )}
                 </Grid>
 
               </Box>

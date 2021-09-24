@@ -16,6 +16,9 @@ if (isProd) {
 
 (async () => {
   await app.whenReady()
+  console.log('[DeckPad]')
+  console.log('platform: ', process.platform)
+  console.log('locale: ', app.getLocale())
   // ---- Start Window ----
   // ----------------------
   const mainWin = await createMainWindow({

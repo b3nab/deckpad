@@ -3,7 +3,7 @@
   "description": "A powerful deck board app for your streaming needs! This is the desktop app, use it as a configurator for your companion mobile app (soon MyDeck on majors Stores).",
   "author": "Benedetto Abbenanti b3nab <benedetto.abbenanti@gmail.com>",
   "homepage": "https://github.com/b3nab/mydeck",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
@@ -34,6 +34,7 @@
     "jsondiffpatch": "^0.4.1",
     "jsum": "^2.0.0-alpha.3",
     "live-plugin-manager": "^0.16.0",
+    "loudness": "^0.4.1",
     "material-ui-popup-state": "^1.9.3",
     "pluginclerk": "^4.13.0",
     "react-colorful": "^5.4.0",
