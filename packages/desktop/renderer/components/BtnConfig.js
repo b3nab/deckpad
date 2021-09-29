@@ -66,7 +66,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
               </Grid>
 
               <Box display="flex" p={2} flexGrow="1">
-                <Box display="flex" flexDirection="column" alignItems="start" justifyContent="start">
+                <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
                   <Grid container item alignItems="start" justifyContent="start">
                     <Grid container item direction="column" alignItems="center" justifyContent="start">
                       <DeckBtn {...values} clickAction={() => { if(ipc) { ipc.send('open-image') } }} />
