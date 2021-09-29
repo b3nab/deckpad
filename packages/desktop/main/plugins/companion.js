@@ -1,24 +1,30 @@
-import { ipcMain } from 'electron'
+// Companion Plugin
+// --
+// actions:
+//    - change-deck
+const companion = (hypers) => {
+  const {
+    useState,
+    useEffect,
+    syncPage,
+    syncLabel,
+    dynamicBoard,
+  } = hypers
 
-const companion = ({ store, toIO, sendMessageToRenderer, updateProps }) => {
-  let pages = []
 
-  const start = () => {
-    ipcMain.on('update-board', (event, board) => {
-      console.log(`[companion] received update-board`)
-      let newPages = []
-      board.map(page => {
-        newPages.push({value: page.id, name: page.name})
-      })
-      pages = newPages
-      updateProps()
-      toIO('board', board)
+  const [ pages, setPages ] = useState([])
+
+
+  dynamicBoard((board,) => {
+    console.log(`[dynamicBoard] update pages for plugin`)
+    let newPages = []
+    board.map(page => {
+      newPages.push({value: page.id, name: page.name})
     })
-  }
-
-  const stop = () => {}
+    setPages(newPages)
+  })
   
-  const actions = () => ({
+  return {
     'change-deck': {
       label: 'Change Deck Page',
       fire: async (data) => {
@@ -27,18 +33,11 @@ const companion = ({ store, toIO, sendMessageToRenderer, updateProps }) => {
         const actualMobile = pages.findIndex(p => p.value == data.options)
         console.log(`[FIRE ACTION] change-deck log actualMobile is `, actualMobile)
 
-        actualMobile != -1 && sendMessageToRenderer('switch-deck', actualMobile)
+        actualMobile != -1 && syncPage(actualMobile)
       },
-      // probably it will not change "pages" because it's a variable
-      // can try with a function (maybe general for actions or for a single action)
+      // it will change options because "pages" it's a special hook variable!
       options: pages
     }
-  })
-  
-  return {
-    start,
-    stop,
-    actions,
   }
 }
 

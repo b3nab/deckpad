@@ -4,7 +4,7 @@ import pubsub from 'electron-pubsub'
 import { loadBoard, saveBoard } from '../helpers'
 
 const configureServerIO = async ({deckServer, ipcProps}) => {
-  const { store, sendMessageToRenderer } = ipcProps
+  const { store, toIO, sendMessageToRenderer } = ipcProps
   const options = {
     // path: '/mydeck'
   }
@@ -39,6 +39,11 @@ const configureServerIO = async ({deckServer, ipcProps}) => {
       console.log(`[PUBSUB] IO with data => ${data}`)
       socket.emit(...data)
     })
+  })
+    
+  ipcMain.on('update-board', (event, board) => {
+    console.log(`fire "toIO" - send board`)
+    toIO('board', board)
   })
   
   console.log(`end configuring IO socket server!`)
