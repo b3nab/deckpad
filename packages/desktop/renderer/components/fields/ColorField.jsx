@@ -39,7 +39,7 @@ export const ColorField = (props) => {
   
   return (
     <div style={{ margin: '20px 20px 20px' }}>
-      <Typography variant="overline" display="inline">{label + '  - '}</Typography>
+      <Typography variant="overline" display="inline">{label}</Typography>
       <PopupState variant="popover" popupId="color-popup">
         {(popupState) => (
           <div>

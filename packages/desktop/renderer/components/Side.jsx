@@ -143,7 +143,7 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
                     <Typography className={classes.heading}>{plugin}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Grid direction="column">
+                    <Grid container direction="column">
                       {Object.keys(plugins[plugin]).map((action, i) => (
                         <Typography key={i} paragraph>{action}</Typography>
                       ))}

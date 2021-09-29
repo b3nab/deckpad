@@ -43,24 +43,7 @@ import { useStyles } from '../lib/useStyles'
 const ipc = electron.ipcRenderer || false
 
 export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
-  // const [ plugins, setPlugins ] = useState()
   const classes = useStyles()
-  
-  // useEffect(() => {
-  //   console.log('[BTN] is => ', btn)
-  //   if(ipc) {
-  //     ipc.on('plugins-installed', (event, data) => { 
-  //       console.log(`plugins are: ${JSON.stringify(data, null, 2)}`)
-  //       setPlugins(data)
-  //     })
-  //     ipc.send('plugins-installed')
-  //   }
-  //   return () => {
-  //     if(ipc) {
-  //       ipc.removeAllListeners('plugins-installed')
-  //     }
-  //   }
-  // }, [btn])
 
   return (
     <Paper className={classes.DeckPaper}>
@@ -76,42 +59,56 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
         >
           {({ submitForm, isSubmitting, values, resetForm }) => (
           <Form>
-            <Box p={2}>
+            <Box p={1}>
 
               <Grid item>
                 Button Preview
               </Grid>
 
-              <Box display="flex" p={2}>
-                <Grid container item direction="column" spacing={3} alignItems="center" justifyContent="space-evenly">
-                  <DeckBtn {...values} clickAction={() => { if(ipc) { ipc.send('open-image') } }} />
-                  <Field component={ImageField}
-                    name="image"
-                    type="text"
-                    label="Image"
-                  />
-                  {/* <Typography as="h6">Shape</Typography> */}
-                  <Field component={ToggleButtonGroup}
-                    id="shape"
-                    name="shape"
-                    type="checkbox"
-                    label="Shape"
-                    exclusive
-                  >
-                    <ToggleButton value="circle" aria-label="circle">
-                      <CircleIcon />
-                    </ToggleButton>
-                    <ToggleButton value="square" aria-label="square">
-                      <SquareIcon />
-                    </ToggleButton>
-                    <ToggleButton value="none" aria-label="none">
-                      <NoneIcon />
-                    </ToggleButton>
-                  </Field>
-                </Grid>
-
-                <Grid container item direction="column" spacing={3} alignItems="center" justifyContent="space-evenly">
-                  {/* <Typography as="h6">Text</Typography> */}
+              <Box display="flex" p={2} flexGrow="1">
+                <Box display="flex" flexDirection="column" alignItems="start" justifyContent="start">
+                  <Grid container item alignItems="start" justifyContent="start">
+                    <Grid container item direction="column" alignItems="center" justifyContent="start">
+                      <DeckBtn {...values} clickAction={() => { if(ipc) { ipc.send('open-image') } }} />
+                      <Field component={ImageField}
+                        name="image"
+                        type="text"
+                        label="Image"
+                      />
+                      {/* <Typography as="h6">Shape</Typography> */}
+                      <Field component={ToggleButtonGroup}
+                        id="shape"
+                        name="shape"
+                        type="checkbox"
+                        label="Shape"
+                        exclusive
+                      >
+                        <ToggleButton value="circle" aria-label="circle">
+                          <CircleIcon />
+                        </ToggleButton>
+                        <ToggleButton value="square" aria-label="square">
+                          <SquareIcon />
+                        </ToggleButton>
+                        <ToggleButton value="none" aria-label="none">
+                          <NoneIcon />
+                        </ToggleButton>
+                      </Field>
+                    </Grid>
+                    <Grid container item direction="column" justifyContent="start">
+                      {/* <Typography as="h6">Text</Typography> */}
+                      {/* <Typography as="h6">Colors</Typography> */}
+                      <Field component={ColorField}
+                        name="bgColor"
+                        type="text"
+                        label="Background Color"
+                      />
+                      <Field component={ColorField}
+                        name="labelColor"
+                        type="text"
+                        label="Text Color"
+                      />
+                    </Grid>
+                  </Grid>
                   <Field component={TextField}
                     name="label"
                     type="text"
@@ -119,22 +116,10 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
                     autoFocus
                     fullWidth
                   />
-                  {/* <Typography as="h6">Colors</Typography> */}
-                  <Grid container>
-                    <Field component={ColorField}
-                      name="bgColor"
-                      type="text"
-                      label="Background"
-                    />
-                    <Field component={ColorField}
-                      name="labelColor"
-                      type="text"
-                      label="Text"
-                    />
-                  </Grid>
-                </Grid>
+                </Box>
 
-                <Grid container item direction="column" spacing={3} alignItems="center" justifyContent="space-evenly">
+
+                <Box display="flex" p={2} flexDirection="column" flexGrow="1" justifyContent="flex-start">
                   {plugins && (
                     <>
                       <FormControl>
@@ -193,7 +178,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
                   )}
 
 
-                </Grid>
+                </Box>
 
               </Box>
 
@@ -213,7 +198,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
       ) : (
         <DialogContent>
           <DialogContentText>
-            Click a Button
+            Click a Button to start editing
           </DialogContentText>
         </DialogContent>
       )}
