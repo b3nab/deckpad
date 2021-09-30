@@ -14,9 +14,9 @@ import Hyper, { isHyperized } from './hyper'
 const manager = new PluginManager()
 const clerk = new PluginClerk({
   // keyword specified inside package.json:keywords property
-  keyword: 'mydeck-plugin',
+  keyword: 'deckpad-plugin',
   // prefix of the plugin to be valid
-  prefix: 'mydeck-',
+  prefix: 'deckpad-',
   // function used for logging receives (logLevel, ...message)
   log: isDev ? console.log : null,
   cacheDuration: null,
@@ -83,7 +83,7 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   isDev && initPlugin("example", example)
   initPlugin("companion", companion)
   // initPlugin("multimedia", multimedia)
-  // initPlugin("mydeckBase", mydeckBase)
+  // initPlugin("deckpadBase", deckpadBase)
   // ------------------------------
   // ------------------------------
   // ------------------------------

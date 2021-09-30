@@ -1,4 +1,4 @@
-# MyDeck - Virtual Macro Board
+# DeckPad - Virtual Macro Board
 
 ## Desktop APP
 
@@ -8,7 +8,7 @@ Fully Customizable Deck Button Board w/ Actions and Plugins for Windows/MacOS/Li
 
 ## Features
 
-- Save/Load .board MyDeck configuration files
+- Save/Load .board DeckPad configuration files
 - Drag&Drop Buttons to switch position
 - Customize and Configure Deck Buttons
   - Label
@@ -18,4 +18,4 @@ Fully Customizable Deck Button Board w/ Actions and Plugins for Windows/MacOS/Li
 
 ### WIP
 
-Run with `lerna --scope @mydeck/desktop run dev`
+Run with `lerna --scope @deckpad/desktop run dev`

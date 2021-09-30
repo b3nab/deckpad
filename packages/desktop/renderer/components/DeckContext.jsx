@@ -18,7 +18,7 @@ function moveElement(array, index, offset) {
   return move(array, index, newIndex)
 }
 // --------------
-// MyDeck Context
+// DeckPad Context
 // --------------
 
 const DeckContext = createContext({ items: [] })

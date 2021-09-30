@@ -4,3 +4,8 @@ npm-debug.*
 
 # macOS
 .DS_Store
+
+
+# private files
+
+*.private.*

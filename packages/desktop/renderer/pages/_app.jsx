@@ -21,7 +21,7 @@ function MyApp({Component, pageProps}) {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        <title>MyDeck - Board Configurator</title>
+        <title>DeckPad - Board Configurator</title>
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />

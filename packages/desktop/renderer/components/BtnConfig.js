@@ -67,8 +67,8 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
 
               <Box display="flex" p={2} flexGrow="1">
                 <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
-                  <Grid container item alignItems="start" justifyContent="start">
-                    <Grid container item direction="column" alignItems="center" justifyContent="start">
+                  <Grid container item alignItems="flex-start" justifyContent="flex-start">
+                    <Grid container item direction="column" alignItems="center" justifyContent="flex-start">
                       <DeckBtn {...values} clickAction={() => { if(ipc) { ipc.send('open-image') } }} />
                       <Field component={ImageField}
                         name="image"
@@ -94,7 +94,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
                         </ToggleButton>
                       </Field>
                     </Grid>
-                    <Grid container item direction="column" justifyContent="start">
+                    <Grid container item direction="column" justifyContent="flex-start">
                       {/* <Typography as="h6">Text</Typography> */}
                       {/* <Typography as="h6">Colors</Typography> */}
                       <Field component={ColorField}

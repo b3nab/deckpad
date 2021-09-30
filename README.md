@@ -1,19 +1,21 @@
 <div align="center">
   <img src="packages/desktop/resources/logo.png" height="120">
-  <h1>MyDeck</h1>
+  <h1>DeckPad</h1>
   <strong>remote macro board with companion app</strong>
   <br/>
   <br/>
-  <img src="mydeck-github-banner.png" width="100%" alt="Banner">
+  <img src="deckpad-github-banner.png" width="100%" alt="Banner">
 </div>
 
-## Virtual Macro Board  - What is MyDeck? 📱
+[![DeckPad Desktop Release](https://github.com/b3nab/deckpad/actions/workflows/release-desktop.yml/badge.svg)](https://github.com/b3nab/deckpad/actions/workflows/release-desktop.yml)
+
+## Virtual Macro Board  - What is DeckPad? 📱
 
 Easily control your computer with this fully customizable Deck Buttons Board (like a macro keyboard but configurable). Support custom Actions extendable with Plugins. Available on Windows, MacOS, Linux (desktop) and Android, iOS (companion app).
-
+<!-- 
 #### Developer notes
 
-> **b3nab**: I'm developing this app on a live stream! You can follow my adventures on Twitch at: https://twitch.tv/b3nab
+> **b3nab**: I'm developing this app on a live stream! You can follow my adventures on Twitch at: https://twitch.tv/b3nab -->
 
 ---
 
@@ -28,17 +30,24 @@ Easily control your computer with this fully customizable Deck Buttons Board (li
   - and more..
 - Easily save and load .board files
 - Switch buttons' position with drag and drop
-- Extendable with plugins, write your custom action!
+- Extendable with plugins, write your custom action! (WIP feature)
 
 ---
 
 # Download
 
-### **MyDeck Configurator** - Desktop App
+The app is actually in alpha stage and there is available a link to download configurator and companion apps. Enjoy! 🥂
 
-(download soon)
+### 💻 Desktop App - Configurator
 
-### **MyDeck Companion** - Mobile App
+#### **Alpha Release**
+| Platform | Download |
+| -- | -- |
+| Windows | [DeckPad_win.exe](https://github.com/b3nab/deckpad/releases/latest/download/DeckPad_win.exe) |
+| MacOS | [DeckPad_mac.dmg](https://github.com/b3nab/deckpad/releases/latest/download/DeckPad_mac.dmg) |
+| Linux | [DeckPad_linux.AppImage](https://github.com/b3nab/deckpad/releases/latest/download/DeckPad_linux.AppImage) |
+
+### 📱 Mobile App - Companion
 
 (download soon)
 
@@ -46,10 +55,10 @@ Easily control your computer with this fully customizable Deck Buttons Board (li
 
 ### Project Structure
 
-MyDeck has the main desktop app that act as a server on LAN and then there is a mobile app (like a companion app) that let you interact with your configured board.
+DeckPad has the main desktop app that act as a server on LAN (it needs WiFi/Ethernet connectivity) and then through his mobile app (like a companion app) let you interact with your configured board.
 Repo structure:
 
-- mydeck
+- deckpad
   - packages
     - desktop
     - mobile

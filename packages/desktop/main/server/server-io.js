@@ -6,7 +6,7 @@ import { loadBoard, saveBoard } from '../helpers'
 const configureServerIO = async ({deckServer, ipcProps}) => {
   const { store, toIO, sendMessageToRenderer } = ipcProps
   const options = {
-    // path: '/mydeck'
+    // path: '/deckpad'
   }
   const io = socketIO(deckServer, options)
   //Whenever someone connects this gets executed

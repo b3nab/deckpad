@@ -39,7 +39,7 @@ export const useIPCs = ({
         }, 500)
         setSavedNotification(false)
       })
-      ipc.on('mydeck-ready', (event, data) => { loadBoard(true); ipc.send('plugins-installed') })
+      ipc.on('deckpad-ready', (event, data) => { loadBoard(true); ipc.send('plugins-installed') })
       ipc.on('companion', (event, name) => { setCompanion(name) })
       ipc.on('switch-deck', (event, toIndex) => { setActual(toIndex) })
       ipc.on('loaded-board', (event, data) => { setDecks(validateBoard(data)); resetDeck() })
@@ -49,7 +49,7 @@ export const useIPCs = ({
     }
     return () => {
       if(ipc) {
-        ipc.removeAllListeners('mydeck-ready')
+        ipc.removeAllListeners('deckpad-ready')
         ipc.removeAllListeners('companion')
         ipc.removeAllListeners('switch-deck')
         ipc.removeAllListeners('saved-board')

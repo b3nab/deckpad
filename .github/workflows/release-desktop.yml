@@ -1,4 +1,4 @@
-name: MyDeck Desktop Release
+name: DeckPad Desktop Release
 
 on: push
 
@@ -24,7 +24,7 @@ jobs:
           tagFormat: desktop-v${version}
           failBuild: false
       - name:
-        run: echo "MyDeck Desktop Version ${{steps.version_check.outputs.releaseVersion}}"
+        run: echo "DeckPad Desktop Version ${{steps.version_check.outputs.releaseVersion}}"
 
 
   # generate build artifacts
@@ -62,8 +62,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
-          path: ./packages/desktop/dist/MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          name: DeckPad_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          path: ./packages/desktop/dist/DeckPad_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
 
   # create release tag from version
@@ -110,7 +110,7 @@ jobs:
       id: download
       uses: actions/download-artifact@v2
       with:
-        name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+        name: DeckPad_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
     - name: Upload Artifact to Desktop Release
       uses: Fhwang0926/upload-release-asset@v1.1.17
@@ -118,7 +118,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
-        # asset_path: ./packages/desktop/dist/MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
-        # asset_name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+        asset_name: DeckPad_${{ matrix.target.system }}.${{ matrix.target.ext }}
+        # asset_path: ./packages/desktop/dist/DeckPad_${{ matrix.target.system }}.${{ matrix.target.ext }}
+        # asset_name: DeckPad_${{ matrix.target.system }}.${{ matrix.target.ext }}
         # asset_content_type: application/zip

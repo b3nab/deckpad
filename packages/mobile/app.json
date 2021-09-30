@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MyDeck Companion",
-    "slug": "mydeck",
+    "name": "DeckPad Companion",
+    "slug": "deckpad",
     "version": "0.0.1",
     "icon": "./assets/icon.png",
     "splash": {
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "b3nab.mydeck.mobile"
+      "package": "b3nab.deckpad.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"

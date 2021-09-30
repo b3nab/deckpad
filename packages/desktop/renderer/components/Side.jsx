@@ -113,7 +113,7 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
           <Paper className={clsx(classes.flexGrow)}>
             <TabContext value={tabIndex}>
             {/* <AppBar position="static"> */}
-              <TabList onChange={handleTabChange} aria-label="MyDeck Tabs">
+              <TabList onChange={handleTabChange} aria-label="DeckPad Tabs">
                 <Tab label="Pages" value="1" style={{minWidth: 0, flex: 1}} />
                 <Tab label="ACtions" value="2" style={{minWidth: 0, flex: 1}} />
               </TabList>

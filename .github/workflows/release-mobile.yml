@@ -1,4 +1,4 @@
-name: MyDeck Mobile Release
+name: DeckPad Mobile Release
 
 on: 'push'
 
@@ -57,7 +57,7 @@ jobs:
           tagFormat: mobile-v${version}
           failBuild: false
       - name:
-        run: echo "MyDeck Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
+        run: echo "DeckPad Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
         
   # export assets for expo build using turtle-cli
   export:
@@ -133,7 +133,7 @@ jobs:
           gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
           yarn install
           npm install -g turtle-cli
-          turtle build:android -o ./MyDeck_${{ needs.version.outputs.v }}_android.apk --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json -t apk
+          turtle build:android -o ./DeckPad_${{ needs.version.outputs.v }}_android.apk --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json -t apk
         env:
           EXPO_ANDROID_KEY_PASSWORD: ${{ secrets.EXPO_ANDROID_KEY_PASSWORD }}
           EXPO_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.EXPO_ANDROID_KEYSTORE_PASSWORD }}
@@ -141,8 +141,8 @@ jobs:
       - name: Archive .apk build
         uses: actions/upload-artifact@v2
         with:
-          name: MyDeck_${{ needs.version.outputs.v }}_android.apk
-          path: ./packages/mobile/MyDeck_${{ needs.version.outputs.v }}_android.apk
+          name: DeckPad_${{ needs.version.outputs.v }}_android.apk
+          path: ./packages/mobile/DeckPad_${{ needs.version.outputs.v }}_android.apk
 
   # build ios ipa
   # ipa:
@@ -221,7 +221,7 @@ jobs:
         id: download
         uses: actions/download-artifact@v2
         with:
-          name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          name: DeckPad_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
 
       - name: Upload Artifact to Mobile Release
         uses: Fhwang0926/upload-release-asset@v1.1.17
@@ -229,4 +229,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_name: MyDeck_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+          asset_name: DeckPad_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}

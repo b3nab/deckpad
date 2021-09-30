@@ -52,8 +52,8 @@ if (isProd) {
   buildMenu()
   buildTray()
   
-  // Inform App that all MyDeck modules are ready
-  sendMessageToRenderer('mydeck-ready', true)
+  // Inform App that all DeckPad modules are ready
+  sendMessageToRenderer('deckpad-ready', true)
 })()
 
 app.on('window-all-closed', () => {

@@ -83,20 +83,20 @@ export const Deck = ({ serverAddress, goToHome }) => {
       setAPI(socket)
       
       console.log('[IO] build listeners')
-      socket.on("connect", () => {
+      socket.on('connect', () => {
         console.log('[IO] connected to socket server! Device is: ', Device.deviceName)
         socket.emit('companion', Device.deviceName)
       });
 
-      socket.on("disconnect", () => {
-        console.log('[IO] MyDeck disconnected')
+      socket.on('disconnect', () => {
+        console.log('[IO] DeckPad disconnected')
         goToHome()
         setAPI()
         setBoard()
       });
       
-      socket.on("board", (boardObject) => {
-        console.log(`[IO] update board`)
+      socket.on('board', (boardObject) => {
+        console.log(`[IO] update board `,{boardObject})
         setBoard(boardObject)
       });
     } catch (error) {

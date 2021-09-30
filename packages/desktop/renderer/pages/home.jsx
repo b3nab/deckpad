@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { CssBaseline, Grid, Box } from '@material-ui/core'
 
 import { useStyles } from '../lib/useStyles'
-import { useMyDeck } from '../lib/useMyDeck'
+import { useDeckPad } from '../lib/useDeckPad'
 
 import { DeckBar } from '../components/DeckBar'
 import { Deck } from '../components/Deck'
@@ -36,7 +36,7 @@ function Home() {
     serverStatus, setServerStatus,
     companionName, setCompanion,
     addPage, deletePage, updateActualDeck, updateCol, updateRow,
-  } = useMyDeck({ maxCol: 15, maxRow: 10 })
+  } = useDeckPad({ maxCol: 15, maxRow: 10 })
 
   const serverStartStopText = serverStatus ? 'STOP ' : 'START '
   

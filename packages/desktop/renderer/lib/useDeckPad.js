@@ -7,7 +7,7 @@ import { useIPCs } from './useIPCs'
 
 const ipc = electron.ipcRenderer || false
 
-export const useMyDeck = ({ maxCol, maxRow, }) => {
+export const useDeckPad = ({ maxCol, maxRow, }) => {
   const defaultDeck = {
     id: uuid(),
     name: 'Deck Page',
@@ -111,7 +111,7 @@ export const useMyDeck = ({ maxCol, maxRow, }) => {
     saveBoard,
     saveBoardAs,
     serverStartStop,
-    // useMyDeck exports
+    // useDeckPad exports
     maxCol, maxRow, defaultDeck,
     btn, setBtn, saveBtn,
     decks, setDecks,

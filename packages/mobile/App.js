@@ -10,7 +10,7 @@ import { Deck } from './ui'
 
 const ConnectTo = ({ setIPLan }) => {
   const [hasPermission, setHasPermission] = useState(null)
-  // const { getItem, setItem } = useAsyncStorage('@mydeck.address')
+  // const { getItem, setItem } = useAsyncStorage('@deckpad.address')
   // const [ lastIP, setLastIP] = useState('')
   const [ IP, setIP] = useState('')
   const [ scanQR, setScanQR] = useState(false)
@@ -48,7 +48,7 @@ const ConnectTo = ({ setIPLan }) => {
           />
         </View>
       }
-      {/* <Text>MyDeck - not connected</Text> */}
+      {/* <Text>DeckPad - not connected</Text> */}
       {/* <Text>Companion status is: ok</Text> */}
       <Text />
       <View style={styles.div}>

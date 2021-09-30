@@ -1,8 +1,8 @@
 {
-  "name": "@mydeck/desktop",
-  "description": "A powerful deck board app for your streaming needs! This is the desktop app, use it as a configurator for your companion mobile app (soon MyDeck on majors Stores).",
+  "name": "@deckpad/desktop",
+  "description": "A powerful deck board app for your streaming needs! This is the desktop app, use it as a configurator for your companion mobile app (soon DeckPad on majors Stores).",
   "author": "Benedetto Abbenanti b3nab <benedetto.abbenanti@gmail.com>",
-  "homepage": "https://github.com/b3nab/mydeck",
+  "homepage": "https://github.com/b3nab/deckpad",
   "version": "0.1.7",
   "main": "app/background.js",
   "scripts": {

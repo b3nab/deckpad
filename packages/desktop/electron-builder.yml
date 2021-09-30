@@ -1,12 +1,12 @@
-appId: b3nab.mydeck.desktop
-productName: MyDeck
+appId: b3nab.deckpad.desktop
+productName: DeckPad
 copyright: Copyright © 2021 b3nab
 
-artifactName: ${productName}_v${version}_${os}.${ext}
+artifactName: ${productName}_${os}.${ext}
 
 fileAssociations:
   - ext: board
-    name: MyDeck Board File
+    name: DeckPad Board File
     role: Editor
 
 files:
@@ -32,7 +32,7 @@ dmg:
 
 # Linux configuration
 linux:
-  executableName: mydeck
+  executableName: deckpad
   category: Development
   # icon: "resources/icon.ico"
   target:

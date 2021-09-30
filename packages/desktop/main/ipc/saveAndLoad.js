@@ -14,7 +14,7 @@ export const saveAndLoad = ({store, sendMessageToRenderer}) => {
       myBoard = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
         properties: ['openFile'],
         filters: [
-          {name: 'MyDeck Board Configuration', extensions: ['board']}
+          {name: 'DeckPad Board Configuration', extensions: ['board']}
         ]
       })
       myBoard = myBoard ? myBoard[0] : null
@@ -44,7 +44,7 @@ export const saveAndLoad = ({store, sendMessageToRenderer}) => {
     let myBoard = dialog.showSaveDialogSync(BrowserWindow.getFocusedWindow(), {
       properties: ['openFile'],
       filters: [
-        {name: 'MyDeck Board Configuration', extensions: ['board']}
+        {name: 'DeckPad Board Configuration', extensions: ['board']}
       ]
     })
     myBoard += !myBoard.endsWith('.board') ? '.board' : ''
