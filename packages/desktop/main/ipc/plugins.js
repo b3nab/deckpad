@@ -83,7 +83,7 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   // ------------------------------
   isDev && initPlugin("example", example)
   initPlugin("companion", companion)
-  // initPlugin("multimedia", multimedia)
+  initPlugin("multimedia", multimedia)
   // initPlugin("deckpadBase", deckpadBase)
   // ------------------------------
   // ------------------------------
