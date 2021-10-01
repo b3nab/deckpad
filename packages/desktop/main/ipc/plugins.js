@@ -45,6 +45,7 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
       const fire = Hyper.engine[plugin].actions[type].fire
       await fire(action)
     } catch (error) {
+      error.hyper && toIO('toast', error.msg)
       console.log(`firing action ${plugin} - ${type} : ${error}`)
       return false
     }

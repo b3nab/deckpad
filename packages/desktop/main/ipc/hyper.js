@@ -148,10 +148,11 @@ export default Hyper
 
 export const isHyperized = (name, action) => {
   if(!Object.keys(Hyper.engine).includes(name)) {
-    throw `missing plugin - ${name} is not registered`
+    throw {hyper: true, plugin: name, msg: `missing plugin - ${name} is not registered`}
   }
   if(!Object.keys(Hyper.engine[name].actions).includes(action)) {
-    throw `missing action - ${name} is registered but ${action} is not exported`
+    throw {hyper: true, plugin: name, action: action, msg: `missing action - ${name} is registered but ${action} is not exported`}
+    // throw `missing action - ${name} is registered but ${action} is not exported`
   }
   return true
 }
