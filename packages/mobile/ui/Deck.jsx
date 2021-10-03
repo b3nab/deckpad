@@ -75,7 +75,7 @@ export const Deck = ({ serverAddress, goToHome }) => {
   //     goToHome()
   //   }
   // }
-  async function initCompanion() {
+  function initCompanion() {
     try {
       console.log(`[DECK] server address is ${serverAddress}`)
       console.log('[DECK] initCompanion()')
@@ -99,6 +99,17 @@ export const Deck = ({ serverAddress, goToHome }) => {
         console.log(`[IO] update board `,{boardObject})
         setBoard(boardObject)
       });
+
+      socket.on('toast', (toastObject) => {
+        console.log(`[IO] show toast `,{toastObject})
+        // setBoard(toastObject)
+      });
+
+      return () => {
+        socket.offAny()
+        socket.close()
+        goToHome()
+      }
     } catch (error) {
       console.error('Deck.initCompanion : ', error)
       goToHome()
@@ -107,7 +118,7 @@ export const Deck = ({ serverAddress, goToHome }) => {
 
   useEffect(() => {
     // if(serverAddress) {
-    initCompanion()
+    return initCompanion()
     // }
   }, [])
   
