@@ -37,6 +37,10 @@ function Home() {
     companionName, setCompanion,
     addPage, deletePage, updateActualDeck, updateCol, updateRow,
   } = useDeckPad({ maxCol: 15, maxRow: 10 })
+  const openBtnConfig = conf => {
+    setBtn()
+    setBtn(conf)
+  }
 
   const serverStartStopText = serverStatus ? 'STOP ' : 'START '
   
@@ -65,7 +69,7 @@ function Home() {
               />
             </Grid>
           <Grid item className={classes.DeckPaper}>
-            <Deck deck={decks[actual]} updateDeck={updateActualDeck} openBtnConfig={setBtn} />
+            <Deck deck={decks[actual]} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} />
           </Grid>
           <Grid container item>
             <BtnConfig btn={btn} saveBtn={saveBtn} plugins={plugins} />

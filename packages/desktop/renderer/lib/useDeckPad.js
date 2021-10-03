@@ -21,7 +21,6 @@ export const useDeckPad = ({ maxCol, maxRow, }) => {
       image: "",
       action: {
         plugin: null,
-        type: null,
         options: {}
       }
     }))

@@ -69,7 +69,33 @@ export const useIPCs = ({
         oldFormat = true
         deck.id = uuid()
       }
+      deck.buttons.map(row => {
+        row.map(btn => {
+          if(!Object.keys(btn.action).includes('plugin')) {
+            oldFormat = true
+            btn.action.plugin = null
+          }
+          if(Object.keys(btn.action).includes('type') && !!btn.action.type) {
+            oldFormat = true
+            btn.action.plugin = `${btn.action.plugin}=>${btn.action.type}`
+          }
+          if(Object.keys(btn.action).includes('type')) {
+            oldFormat = true
+            delete btn.action.type
+          }
+          if(typeof btn.action.options == 'string') {
+            const toPage = btn.action.options
+            btn.action.options = {
+              toPage: toPage
+            }
+          }
+        })
+      })
     })
+
+    console.log(`validating board.. is oldFormat? ${oldFormat}`)
+    console.log('board now is ', board)
+    oldFormat && saveBoard(board)
     return board
   }
 
@@ -82,7 +108,7 @@ export const useIPCs = ({
   const newBoard = () => { setDecks([defaultDeck]); resetDeck() }
   const loadBoard = (latest=false) => { sendIPC('load-board', latest) }
   const reloadBoard = (latest=true) => { sendIPC('load-board', latest) }
-  const saveBoard = () => { sendIPC('save-board', decks) }
+  const saveBoard = (file = decks) => { sendIPC('save-board', file) }
   const saveBoardAs = () => { sendIPC('save-board-as', decks) }
   const serverStartStop = () => { serverStatus ? sendIPC('stop-server') : sendIPC('start-server') }
 

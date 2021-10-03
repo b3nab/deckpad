@@ -30,7 +30,9 @@ const configureServerIO = async ({deckServer, ipcProps}) => {
     socket.on('action', async (data) => {
       const { position, action } = data
       console.log(`fire action from button @position ${position}\nwith action: ${JSON.stringify(action, null, 2)}`)
-      const fireStatus = await firePlugin({action, position})
+      const fireStatus = await firePlugin(data)
+
+      !fireStatus && console.log('fireStatus error, not completed')
       
       socket.send(fireStatus)
     })
@@ -52,7 +54,7 @@ const configureServerIO = async ({deckServer, ipcProps}) => {
 }
 
 const firePlugin = async ({action, position}) => {
-  if(!action.plugin || !action.type || !action.options) return false
+  if(!action.plugin || !action.options) return false
   pubsub.publish('fire-plugin', action)
   return true
 }

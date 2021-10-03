@@ -25,11 +25,11 @@ const Hyper = {
   hyperize: function (name, fn) {
     // console.log(`hyperize => ${name}`)
     // console.log({ Hyper: this })
-    const plugin = this.engine[name]
+    // const plugin = this.engine[name]
     let idx = 0
     let hooks = []
     let effects = []
-    // Hype- maybe something like (so-so) ReactFiber
+    // Hype - maybe something like (so-so) ReactFiber
     return (() => {
       // console.log(`Hype of ${name}`)
  
@@ -44,6 +44,9 @@ const Hyper = {
         this.toConfigurator('switch-deck', actualMobile)
       }
 
+      // Factory of `dynamic*` functions
+      // used for building:
+      //    - dynamicBoard(callback)
       const dynamic = (event) => ((cb) => {
         // console.log(`[Hyper] dynamic hook for ${event}`)        
         ipcMain.once(event, (event, board) => {
@@ -54,7 +57,8 @@ const Hyper = {
         })
       })
 
-      
+      // useEffect Hook
+      // use it like React!
       const useEffect = (cb, newDeps) => {
         let hasChanged = true
         const oldDeps = hooks[idx]
@@ -68,7 +72,9 @@ const Hyper = {
         idx++
         // return [state, setState]
       }
-
+      
+      // useState Hook
+      // use it like React!
       const useState = (initVal) => {
         const _idx = idx
         let state = hooks.length > idx ? hooks[idx] : initVal
@@ -80,6 +86,29 @@ const Hyper = {
         return [state, setState]
       }
 
+
+      // WIP HOOK: useDebounce
+      // ----------------------
+      const useDebounce = (value, delay = 500) => {
+        // State and setters fpr debounced value
+        const [debouncedValue, setDebouncedValue] = useState(value);
+        
+        useEffect(() => {
+          const handler = setTimeout(() => {
+            setDebouncedValue(value);
+          }, delay);
+          
+          return () => {
+            clearTimeout(handler);
+          };
+        }, [value, delay]);
+        
+        
+        return debouncedValue;
+      }
+      
+      // WIP HOOK: useDebounce
+      // ----------------------
       const useReducer = (actions) => {
         let fireAction = (key) => {
           switch (key) {
@@ -119,7 +148,7 @@ const Hyper = {
       plugin: this.hyperize(name, fn),
       actions: {}
     }
-    this.hydrate(name)
+    // this.hydrate(name)
   },
   
   hydrate: function(name) {

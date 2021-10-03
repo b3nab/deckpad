@@ -2,6 +2,7 @@ import electron from 'electron'
 import React, { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
 import { 
+  Checkbox,
   Select,
   TextField,
 } from 'formik-material-ui'
@@ -17,6 +18,7 @@ import {
   DialogContentText,
   FormControl,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Paper,
   Box,
@@ -44,22 +46,79 @@ const ipc = electron.ipcRenderer || false
 
 export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
   const classes = useStyles()
-
+  
   const missingPluginOrAction = (values) => {
-    console.log(`missingPluginOrAction - values:`, values)
-    console.log('values.action.plugin is there ? ', !!values?.action?.plugin)
+    // console.log(`missingPluginOrAction - values:`, values)
+    // console.log('"plugin=>action" input value is there ? ', values.action.plugin)
+    const [plugin, action] = values?.action?.plugin?.split('=>') || [null, null]
+    // const [plugin, action] = values?.action?.plugin
     let pluginMissing = false
-    if(!!values?.action?.plugin) {
-      pluginMissing = !Object.keys(plugins).includes(values.action.plugin)
-    }
-    console.log('pluginMissing ? ', pluginMissing)
-    console.log('values.action.type is there ? ', !!values?.action?.type)
     let actionMissing = false
-    if(!pluginMissing && !!values?.action?.type) {
-      actionMissing = !Object.keys(plugins[values.action.plugin]).includes(values.action.type)
+    if(!!values?.action?.plugin && !!plugin && !!action) {
+      pluginMissing = !Object.keys(plugins).includes(plugin)
+      actionMissing = !Object.keys(plugins[plugin]).includes(action)
     }
-    console.log('actionMissing ? ', actionMissing)
+    // console.log('pluginMissing ? ', pluginMissing)
+    // console.log('actionMissing ? ', actionMissing)
+    // console.log('action input value is there ? ', !!action)
+    // if(!pluginMissing && !!values?.action?.type) {
+    // }
     return pluginMissing || actionMissing
+  }
+  
+
+  const buildActionInputs = (pluginAction) => {
+    const [plugin, action] = pluginAction.split('=>')
+    const inputs = plugins[plugin][action].inputs
+
+
+    const buildInput = v => {
+      switch (v.type) {
+        case 'text':
+        case 'textearea':
+        case 'number':
+        case 'email':
+        case 'password':
+          return wrapInput(TextField, v.key, null, {type: v.type, label: v.label, multiline: v.type==='textarea'})
+        case 'checkbox':
+          return wrapInput(Checkbox, v.key, v.label, {type: v.type})
+        case 'color':
+          return wrapInput(ColorField, v.key, v.label)
+        case 'select':
+          const childs =  v.extra && v.extra.options ?
+            v.extra.options.map((opt) =>
+              <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+            ) : null
+          return wrapInput(Select, v.key, v.label, null, childs)      
+      }
+    }
+
+
+    const wrapInput = (Comp, key, label, fieldExtras=null, childs=null) => (
+      <FormControl>
+        {label && <InputLabel htmlFor={`action.options.${key}`}>{label}</InputLabel>}
+        <Field component={Comp}
+          name={`action.options.${key}`}
+          inputProps={{
+            id: `action.options.${key}`,
+          }}
+          {...fieldExtras}
+        >
+          {childs}
+        </Field>
+      </FormControl>
+    )
+
+    // console.log(`inputs =>`,inputs)
+    
+    let actionInputs = []
+    inputs && inputs.forEach(inp => {
+      actionInputs.push(buildInput(inp))
+    })
+    
+    // console.log(`outputs =>`, actionInputs)
+      
+    return actionInputs
   }
 
   return (
@@ -144,65 +203,30 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
                     ) : (
                       <>
                       { plugins && (
-                        <>
-                          <FormControl>
-                            <InputLabel htmlFor="action.plugin">Plugin</InputLabel>
-                            <Field
-                              component={Select}
-                              name="action.plugin"
-                              inputProps={{
-                                id: 'action.plugin',
-                              }}
-                            >
-                              {Object.keys(plugins).map((plugin, i) => (
-                                <MenuItem key={i} value={plugin}>{plugin.toUpperCase()}</MenuItem>
-                              ))}
-                            </Field>
-                          </FormControl>
-                          {values.action.plugin && Object.keys(plugins[values.action.plugin]) && (
-                            <>
-                              <FormControl>
-                                <InputLabel htmlFor="action.type">Action</InputLabel>
-                                <Field
-                                  component={Select}
-                                  name="action.type"
-                                  inputProps={{
-                                    id: 'action.type',
-                                  }}
-                                >
-                                  {Object.keys(plugins[values.action.plugin]).map((action, i) => (
-                                    <MenuItem key={i} value={action}>
-                                      {plugins[values.action.plugin][action].label}
-                                    </MenuItem>
-                                  ))}
-                                </Field>
-                              </FormControl>
-                              {values.action.type && plugins[values.action.plugin][values.action.type] && plugins[values.action.plugin][values.action.type].options && (
-                                <FormControl>
-                                  <InputLabel htmlFor="action.options">Options</InputLabel>
-                                  <Field
-                                    component={Select}
-                                    name="action.options"
-                                    inputProps={{
-                                      id: 'action.options',
-                                    }}
-                                  >
-                                    {plugins[values.action.plugin][values.action.type].options.map((option, i) => (
-                                        <MenuItem key={i} value={option.value}>
-                                          {option.name}
-                                        </MenuItem>
-                                    ))}
-                                  </Field>
-                                </FormControl>
-                              )}
-                            </>
-                          )}
-                        </>
+                        <FormControl>
+                          <InputLabel htmlFor="action.plugin">Plugin</InputLabel>
+                          <Field
+                            component={Select}
+                            name="action.plugin"
+                            inputProps={{
+                              id: 'action.plugin',
+                            }}
+                          >
+                            {Object.entries(plugins).map(([namePlugin, plugin]) => [
+                                (<ListSubheader key={namePlugin}>{namePlugin.toUpperCase()}</ListSubheader>),
+                                ...Object.entries(plugin).map(([nameAction, action]) => (
+                                  <MenuItem key={nameAction} value={`${namePlugin}=>${nameAction}`}>{action.label}</MenuItem>
+                                ))
+                            ])}
+                          </Field>
+                        </FormControl>
                       )}
+                      { values.action.plugin &&
+                        buildActionInputs(values.action.plugin)
+                      }
                       </>
-                  )}
-
-
+                    )
+                  }
                 </Box>
 
               </Box>

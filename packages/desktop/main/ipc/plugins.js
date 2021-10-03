@@ -39,14 +39,15 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   // with deckServer to call fire() on plugin
   pubsub.subscribe('fire-plugin', async (event, action) => {
     console.log(`fire with action => ${action}`)
-    const { plugin, type, options } = action
+    const { plugin, options } = action
+    const [plug, act] = plugin.split('=>')
     try {
-      isHyperized(plugin, type)
-      const fire = Hyper.engine[plugin].actions[type].fire
-      await fire(action)
+      isHyperized(plug, act)
+      const fire = Hyper.engine[plug].actions[act].fire
+      await fire(options)
     } catch (error) {
       error.hyper && toIO('toast', error.msg)
-      console.log(`firing action ${plugin} - ${type} : ${error}`)
+      console.log(`firing action ${plug} - ${act} : ${error}`)
       return false
     }
   })
@@ -85,6 +86,7 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   initPlugin("companion", companion)
   initPlugin("multimedia", multimedia)
   // initPlugin("deckpadBase", deckpadBase)
+  // Hyper.work()
   // ------------------------------
   // ------------------------------
   // ------------------------------

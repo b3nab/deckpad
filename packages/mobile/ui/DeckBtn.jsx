@@ -63,9 +63,12 @@ export const DeckBtn = ({api, position, changeDeck, ...props}) => {
     })
     // console.log('fire btn @position ', position)
     // console.log(`action => ${JSON.stringify(action,null,2)}`)
-    if(action.plugin === 'companion') {
-      if(action.type === 'change-deck') {
-        changeDeck(action.options)
+    if(action.plugin) {
+      const [plu, act] = action.plugin.split('=>')
+      if(plu === 'companion') {
+        if(act === 'change-deck') {
+          changeDeck(action.options.toPage)
+        }
       }
     }
   }
