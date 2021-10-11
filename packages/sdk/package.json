@@ -1,0 +1,52 @@
+{
+  "name": "@deckpad/sdk",
+  "version": "1.0.0",
+  "description": "DeckPad SDK - useful to develop plugins for deckpad",
+  "keywords": [
+    "deckpad",
+    "sdk",
+    "deckpad",
+    "sdk",
+    "plugin"
+  ],
+  "author": "b3nab <3042431+b3nab@users.noreply.github.com>",
+  "homepage": "https://github.com/b3nab/deckpad#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b3nab/deckpad.git"
+  },
+  "scripts": {
+    "build": "tsc ./src/index.js --allowJs --outDir lib",
+    "dev": "tsc ./src/index.js --allowJs --outDir lib -w",
+    "babel": "babel ./src --out-dir ./dist --minify --compact true"
+  },
+  "bugs": {
+    "url": "https://github.com/b3nab/deckpad/issues"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8"
+  },
+  "babel": {
+    "presets": [
+      ["@babel/preset-env", {
+        "modules": "cjs",
+        "targets": {
+          "node": "current"
+        }
+      }]
+    ]
+  }
+}
