@@ -1,10 +1,11 @@
-import { app } from 'electron'
+import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import Store from 'electron-store'
 import pubsub from 'electron-pubsub'
 import { createMainWindow, buildMenu, buildTray } from './helpers'
 // IPC MAIN RESOLVERS
 import { loadIPCs, plugins, deckServer, saveAndLoad, image } from './ipc'
+import { Quantum } from '@deckpad/sdk'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -34,18 +35,23 @@ if (isProd) {
     port: process.argv[2]
   })
   
-  
-  // ---- Load App Modules ----
-  // --------------------------
   const store = new Store()
-  const sendMessageToRenderer = (channel, msg) => mainWin.webContents.send(channel, msg)
-  const toIO = (...params) => pubsub.publish('io', ...params)
+  const toConfigurator = (channel, msg) => mainWin.webContents.send(channel, msg)
   
-  loadIPCs({ store, toIO, sendMessageToRenderer }, [
+  // ---- Init Quantum ----
+  // ----------------------
+  Quantum.init({
+    pubsub,
+    ipcMain,
+    store,
+    toConfigurator,
+  })
+  
+  loadIPCs([
+    image,
     saveAndLoad,
     deckServer,
     plugins,
-    image
   ])
   
   // ---- Window Decorations ----
@@ -53,7 +59,7 @@ if (isProd) {
   buildTray()
   
   // Inform App that all DeckPad modules are ready
-  sendMessageToRenderer('deckpad-ready', true)
+  toConfigurator('deckpad-ready', true)
 })()
 
 app.on('window-all-closed', () => {
