@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Start developing a plugin for DeckPad
 
 Create a new plugin for DeckPad is really simple, you need to know a bit of Javascript and if you know React.js you are almoast done.
