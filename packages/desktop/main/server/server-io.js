@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron'
 import socketIO from 'socket.io'
 import pubsub from 'electron-pubsub'
+import { Quantum } from '@deckpad/sdk'
 import { loadBoard, saveBoard } from '../helpers'
 
-const configureServerIO = async ({deckServer, ipcProps}) => {
-  const { store, toIO, sendMessageToRenderer } = ipcProps
+const configureServerIO = async (deckServer) => {
   const options = {
     // path: '/deckpad'
   }
@@ -16,36 +16,36 @@ const configureServerIO = async ({deckServer, ipcProps}) => {
     //Whenever someone disconnects this piece of code executed
     socket.on('disconnect', function () {
       console.log('A user disconnected')
-      sendMessageToRenderer('companion', null)
+      Quantum.toConfigurator('companion', null)
     })
 
     socket.on('companion', (companionName) => {
       console.log('[IO] new companion =>', companionName)
-      sendMessageToRenderer('companion', companionName)
-      let currentBoard = store.get('currentBoard')
+      Quantum.toConfigurator('companion', companionName)
+      let currentBoard = Quantum.store.get('currentBoard')
       const board = loadBoard(currentBoard)
       socket.emit('board', board)
     })
     
     socket.on('action', async (data) => {
       const { position, action } = data
-      console.log(`fire action from button @position ${position}\nwith action: ${JSON.stringify(action, null, 2)}`)
+      // console.log(`fire action from button @position ${position}\nwith action: ${JSON.stringify(action, null, 2)}`)
       const fireStatus = await firePlugin(data)
 
-      !fireStatus && console.log('fireStatus error, not completed')
+      // !fireStatus && console.log('fireStatus error, not completed')
       
-      socket.send(fireStatus)
+      // socket.send(fireStatus)
     })
 
     pubsub.subscribe('io', async (event, ...data) => {
-      console.log(`[PUBSUB] IO with data => ${data}`)
+      // console.log('[PUBSUB] IO with data =>',data)
       socket.emit(...data)
     })
   })
     
   ipcMain.on('update-board', (event, board) => {
-    console.log(`fire "toIO" - send board`)
-    toIO('board', board)
+    console.log(`fire "Quantum.toCompanion" - send board`)
+    Quantum.toCompanion('board', board)
   })
   
   console.log(`end configuring IO socket server!`)
@@ -53,9 +53,9 @@ const configureServerIO = async ({deckServer, ipcProps}) => {
   return io
 }
 
-const firePlugin = async ({action, position}) => {
+const firePlugin = async ({action, origin}) => {
   if(!action.plugin || !action.options) return false
-  pubsub.publish('fire-plugin', action)
+  pubsub.publish('fire-plugin', {action, origin})
   return true
 }
 

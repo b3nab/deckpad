@@ -1,6 +1,7 @@
+import SDK from '@deckpad/sdk'
 import loudness from 'loudness'
 
-const multimedia = (hypers) => {
+const audio = () => {
   
   return ({
     'vol-up': {
@@ -45,4 +46,4 @@ const multimedia = (hypers) => {
   })
 }
 
-export default multimedia
+export default audio

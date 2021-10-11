@@ -1,15 +1,18 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
+import { Quantum } from '@deckpad/sdk'
 import { loadBoard, saveBoard } from '../helpers'
 // -------------------
 //      SAVE and
 //        LOAD
 // -------------------
-export const saveAndLoad = ({store, sendMessageToRenderer}) => {
+export const saveAndLoad = () => {
   
   ipcMain.on('load-board', (event, useLastBoard) => {
     let myBoard
     if(useLastBoard) {
-      myBoard = store.get('currentBoard')
+      console.log('load-board...')
+      console.log('Quantum is ', Quantum)
+      myBoard = Quantum.store.get('currentBoard')
     } else {
       myBoard = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
         properties: ['openFile'],
@@ -21,17 +24,17 @@ export const saveAndLoad = ({store, sendMessageToRenderer}) => {
     }
     console.log(`result from "load-board" ==>\n ${myBoard}`)
     if(myBoard) {
-      store.set('currentBoard', myBoard)
+      Quantum.store.set('currentBoard', myBoard)
       const board = loadBoard(myBoard)
-      event.sender.send('loaded-board', board)
+      Quantum.toConfigurator('loaded-board', board)
     }
   })
   
   ipcMain.on('save-board', (event, data) => {
-    let currentBoard = store.get('currentBoard')
+    let currentBoard = Quantum.store.get('currentBoard')
     if(currentBoard) {
       const saved = saveBoard(currentBoard, data)
-      event.sender.send('saved-board', saved)
+      Quantum.toConfigurator('saved-board', saved)
     } else {
       saveAsFunction(event, data)
     }
@@ -50,9 +53,9 @@ export const saveAndLoad = ({store, sendMessageToRenderer}) => {
     myBoard += !myBoard.endsWith('.board') ? '.board' : ''
     console.log(`result from "save-board-as" ==>\n ${myBoard}`)
     if(myBoard) {
-      store.set('currentBoard', myBoard)
+      Quantum.store.set('currentBoard', myBoard)
       const saved = saveBoard(myBoard, data)
-      event.sender.send('saved-board-as', saved)
+      Quantum.toConfigurator('saved-board-as', saved)
     }
   }
 }

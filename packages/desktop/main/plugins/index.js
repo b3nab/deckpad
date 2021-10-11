@@ -1,10 +1,10 @@
 // export * from './deckpad'
 import example from './example.plugin'
 import companion from './companion'
-import multimedia from './multimedia'
+import audio from './audio'
 
 export {
     example,
     companion,
-    multimedia,
+    audio,
 }

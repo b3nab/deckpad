@@ -4,12 +4,12 @@ import { PluginManager } from 'live-plugin-manager'
 import PluginClerk from 'pluginclerk'
 import pubsub from 'electron-pubsub'
 import equal from 'fast-deep-equal'
+import { Quantum, Hyper } from '@deckpad/sdk'
 import {
   example,
   companion,
-  multimedia,
+  audio,
 } from '../plugins'
-import Hyper, { isHyperized } from './hyper'
 
 const manager = new PluginManager()
 const clerk = new PluginClerk({
@@ -25,32 +25,20 @@ const clerk = new PluginClerk({
 // ---------------------------------
 //          Plugins System
 // ---------------------------------
-export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
-  // Hyper Engine configure and load ipc listeners from Configurator (renderer)
-  Hyper.configure({ store, toIO, sendMessageToRenderer })
+export const plugins = () => {
   // ---- INIT -----
   const initPlugin = (pluginName, plugin) => {
     console.log(`init plugin: ${pluginName}`)
     Hyper.register(pluginName, plugin)
   }
+  // ------------------------------
+  // ---- Load Default Plugins ----
+  // ------------------------------
+  isDev && initPlugin("example", example)
+  initPlugin("companion", companion)
+  initPlugin("audio", audio)
+  // initPlugin("deckpadBase", deckpadBase)
 
-  // ---- PubSub Listeners -----
-  // ---------------------------
-  // with deckServer to call fire() on plugin
-  pubsub.subscribe('fire-plugin', async (event, action) => {
-    console.log(`fire with action => ${action}`)
-    const { plugin, options } = action
-    const [plug, act] = plugin.split('=>')
-    try {
-      isHyperized(plug, act)
-      const fire = Hyper.engine[plug].actions[act].fire
-      await fire(options)
-    } catch (error) {
-      error.hyper && toIO('toast', error.msg)
-      console.log(`firing action ${plug} - ${act} : ${error}`)
-      return false
-    }
-  })
   // ---- IPC Listeners ----
   // -----------------------
   // ipcMain.on('plugins-installed', async (event, arg) => {
@@ -58,13 +46,13 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   // })
   // ipcMain.on('plugins-available', async (event, arg) => {
   //   const res = await clerk.fetchPlugins({})
-  //   sendMessageToRenderer('plugins-available', res)
+  //   Quantum.toConfigurator('plugins-available', res)
   // })
   // ipcMain.on('install-plugin', async (event, {name: pluginName, options}) => {
   //   await manager.install(pluginName)
   //   const plugin = manager.require(pluginName)
   //   initPlugin(pluginName, plugin)
-  //   sendMessageToRenderer('plugins-list-update', serializePlugins())
+  //   Quantum.toConfigurator('plugins-list-update', serializePlugins())
   // })
   // ipcMain.on('remove-plugin', async (event, pluginName) => {
   //   if(engine[pluginName].fn.stop) {
@@ -72,22 +60,6 @@ export const plugins = ({ store, toIO, sendMessageToRenderer }) => {
   //   }
   //   await manager.uninstall(pluginName)
   //   delete engine[PluginName]
-  //   sendMessageToRenderer('plugins-list-update', serializePlugins())
+  //   Quantum.toConfigurator('plugins-list-update', serializePlugins())
   // })
-
-
-  // ------------------------------
-  // ------------------------------
-  // ---- Load Default Plugins ----
-  // ------------------------------
-  // -------------Main-------------
-  // ------------------------------
-  isDev && initPlugin("example", example)
-  initPlugin("companion", companion)
-  initPlugin("multimedia", multimedia)
-  // initPlugin("deckpadBase", deckpadBase)
-  // Hyper.work()
-  // ------------------------------
-  // ------------------------------
-  // ------------------------------
 }

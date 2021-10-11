@@ -1,20 +1,14 @@
+import { useState, syncPage, syncLabel, dynamicBoard } from '@deckpad/sdk'
+
 // Companion Plugin
 // --
 // actions:
 //    - change-deck
-const companion = (hypers) => {
-  const {
-    useState,
-    useEffect,
-    syncPage,
-    syncLabel,
-    dynamicBoard,
-  } = hypers
-
-
+const companion = () => {  
   const [ pages, setPages ] = useState([])
-
-
+  const [ counter, setCounter ] = useState(0)
+  const [ clock, setClock ] = useState({})
+  
   dynamicBoard((board) => {
     console.log(`[dynamicBoard] update pages for plugin`)
     let newPages = []
@@ -23,6 +17,18 @@ const companion = (hypers) => {
     })
     setPages(newPages)
   })
+
+  const getClock = (data) => {
+    const datetime = new Date()
+    const hours = datetime.getHours()
+    const mins = datetime.getMinutes()
+    const secs = data.showSeconds ? ':'+datetime.getSeconds() : ''
+    const time24h = `${hours}:${mins}${secs}`
+    const amORpm = datetime.getHours() < 13 ? 'AM' : 'PM'
+    const isAM = amORpm == 'AM'
+    const time12h = `${isAM ? hours : hours - 12}:${mins}${secs}${amORpm}`
+    syncLabel(data.displayAs == '12h' ? time12h : time24h)
+  }
   
   return {
     'change-deck': {
@@ -45,24 +51,38 @@ const companion = (hypers) => {
         actualMobile != -1 && syncPage(actualMobile)
       },
     },
-    // 'clock': {
-    //   label: 'Show clock',
-    //   inputs: [{
-    //     type: 'radio',
-    //     key: 'displayAs',
-    //     label: 'Time Format',
-    //     extra: {
-    //       options: [{
-    //         value: '12', label: 'AM/PM',
-    //       }, {
-    //         value: '24', label: '24H',
-    //       }]
-    //     }
-    //   }],
-    //   fire: async (data) => {
-    //     syncLabel()
-    //   }
-    // }
+    'clock': {
+      label: 'Show clock',
+      inputs: [{
+        type: 'select',
+        key: 'displayAs',
+        label: 'Time Format',
+        extra: {
+          options: [{
+            value: '12h', label: 'AM/PM',
+          }, {
+            value: '24h', label: '24H',
+          }]
+        }
+      }, {
+        type: 'checkbox',
+        key: 'showSeconds',
+        label: 'showSeconds'
+      }],
+      fire: async (data) => {
+        // setInterval(() => {
+          getClock(data)
+        // }, 1000);
+      }
+    },
+    'counter': {
+      label: 'Simple Counter',
+      fire: async (data) => {
+        const upVal = counter + 1
+        setCounter(upVal)
+        syncLabel(upVal)
+      },
+    },
   }
 }
 
