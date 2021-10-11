@@ -14,6 +14,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
     "expo": "^42.0.0",
+    "expo-background-fetch": "~9.2.2",
     "expo-barcode-scanner": "~10.2.2",
     "expo-device": "^3.3.0",
     "expo-haptics": "^10.1.0",

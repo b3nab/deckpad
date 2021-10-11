@@ -40,7 +40,7 @@ const DeckBtnWrapper = styled.TouchableHighlight`
   };  
 `
 
-export const DeckBtn = ({api, position, changeDeck, ...props}) => {
+export const DeckBtn = ({api, deckId, position, changeDeck, ...props}) => {
   let { label, labelColor, shape, bgColor, image, action } = props
   // console.log(JSON.stringify(props, null, 2))
 
@@ -56,12 +56,16 @@ export const DeckBtn = ({api, position, changeDeck, ...props}) => {
   
 
   const fireAction = () => {
+    const origin = {
+      deck: deckId,
+      pos: position
+    }
     impactAsync()
     api.emit('action', {
-      position,
       action,
+      origin,
     })
-    // console.log('fire btn @position ', position)
+    // console.log('fire btn @origin ', origin)
     // console.log(`action => ${JSON.stringify(action,null,2)}`)
     if(action.plugin) {
       const [plu, act] = action.plugin.split('=>')

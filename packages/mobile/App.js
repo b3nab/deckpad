@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Alert, Linking, Dimensions, LayoutAnimation, Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useRef, useState, useEffect } from 'react'
+import { AppState, Alert, Linking, Dimensions, LayoutAnimation, Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import * as Device from 'expo-device'
 import * as Permissions from 'expo-permissions'
 import { StatusBar } from 'expo-status-bar'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { Button, TextInput } from 'react-native-paper'
 // import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+import io from 'socket.io-client'
+
 
 import { Deck } from './ui'
 
@@ -89,6 +92,88 @@ const ConnectTo = ({ setIPLan }) => {
 
 export default function App() {
   const [ IPLan, setIPLan ] = useState(false)
+  const [ board, setBoard ] = useState()
+  const [ actual, setActual ] = useState(0)
+  const [api, setAPI] = useState()
+  const appState = useRef(AppState.currentState)
+  const [appResume, setAppResume] = useState(true)
+  console.log('fn AppState => ', AppState.currentState)
+  
+  useEffect(() => {
+    console.log('effect AppState => ', AppState.currentState)
+    AppState.addEventListener('change', _handleAppStateChange)
+
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange)
+    }
+  }, [])
+
+  const _handleAppStateChange = (nextAppState) => {
+    if(appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+      setAppResume(true)
+    }
+    console.log('change AppState => ', nextAppState)
+  }
+
+  function initCompanion() {
+    try {
+      console.log(`[DECK] server address is ${IPLan}`)
+      console.log('[DECK] initCompanion()')
+      const socket = io(IPLan)
+      setAPI(socket)
+      
+      console.log('[IO] build listeners')
+      socket.on('connect', () => {
+        console.log('[IO] connected to socket server! Device is: ', Device.deviceName)
+        socket.emit('companion', Device.deviceName)
+      })
+
+      socket.on('disconnect', () => {
+        console.log('[IO] DeckPad io client throttling')
+        !appResume && setAPI()
+        !appResume && setBoard()
+        !appResume && setIPLan()
+        setAppResume(false)
+      })
+      socket.on('off', () => {
+        console.log('[IO] DeckPad disconnected')
+        setAPI()
+        setBoard()
+        setIPLan()
+        setAppResume(false)
+      })
+      
+      socket.on('board', (boardObject) => {
+        // console.log(`[IO] update board `,{boardObject})
+        setBoard(boardObject)
+      })
+
+      socket.on('toast', (toastObject) => {
+        console.log(`[IO] show toast `,{toastObject})
+        // setBoard(toastObject)
+      })
+      
+      return () => {
+        console.log('return of effect! exit from initCompanion')
+        socket.offAny()
+        socket.close()
+        // setIPLan()
+        setAPI()
+        setBoard()
+      }
+    } catch (error) {
+      console.error('Deck.initCompanion : ', error)
+      setIPLan()
+    }
+  }
+
+  useEffect(() => {
+    if(IPLan) {
+      setAppResume(false)
+      return initCompanion()
+    }
+  }, [IPLan])
 
   if(!IPLan) {
     return (
@@ -98,7 +183,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Deck serverAddress={IPLan} goToHome={() => setIPLan(false)} />
+      <Deck board={board} actual={actual} setActual={setActual} api={api} goToHome={() => setIPLan(false)} />
     </View>
   )
 }

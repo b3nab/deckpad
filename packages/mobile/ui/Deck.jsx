@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Animated, StyleSheet, Text } from 'react-native'
-import * as Device from 'expo-device'
 import styled from 'styled-components'
 import { DeckBtn } from './DeckBtn'
-import Frisbee from 'frisbee'
-import io from 'socket.io-client'
 import { ActivityIndicator, FAB } from 'react-native-paper'
 
 const BoardWrapper = styled.View`
@@ -40,12 +37,7 @@ const DeckRow = styled.View`
 //   },
 // })
 
-export const Deck = ({ serverAddress, goToHome }) => {
-  // console.log(`[DECK] server address is ${serverAddress}`)
-  const [ board, setBoard ] = useState()
-  const [ actual, setActual ] = useState(0)
-  const [api, setAPI] = useState()
-
+export const Deck = ({ board, actual, setActual, api, goToHome }) => {
   const changeDeck = (id) => {
     // console.log('[SWITCH-DECK] to id: ', id)
     // console.log('[SWITCH-DECK] actual index: ', actual)
@@ -57,82 +49,9 @@ export const Deck = ({ serverAddress, goToHome }) => {
     api.emit('switch-deck', toIndex)
   }
 
-  // async function initCompanion() {
-  //   try {
-  //     const companionAPI = new Frisbee({
-  //       baseURI: `${serverAddress}`, // optional
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'Content-Type': 'application/json'
-  //       }
-  //     })
-  //     const companionRes = await companionAPI.get(`/companion`)
-  //     console.log(companionRes.body)
-  //     setBoard(companionRes.body.board)
-  //     setAPI(companionAPI)
-  //   } catch (error) {
-  //     console.error('Deck.initCompanion : ', error)
-  //     goToHome()
-  //   }
-  // }
-  function initCompanion() {
-    try {
-      console.log(`[DECK] server address is ${serverAddress}`)
-      console.log('[DECK] initCompanion()')
-      const socket = io(serverAddress)
-      setAPI(socket)
-      
-      console.log('[IO] build listeners')
-      socket.on('connect', () => {
-        console.log('[IO] connected to socket server! Device is: ', Device.deviceName)
-        socket.emit('companion', Device.deviceName)
-      });
-
-      socket.on('disconnect', () => {
-        console.log('[IO] DeckPad disconnected')
-        goToHome()
-        setAPI()
-        setBoard()
-      });
-      
-      socket.on('board', (boardObject) => {
-        console.log(`[IO] update board `,{boardObject})
-        setBoard(boardObject)
-      });
-
-      socket.on('toast', (toastObject) => {
-        console.log(`[IO] show toast `,{toastObject})
-        // setBoard(toastObject)
-      });
-
-      return () => {
-        socket.offAny()
-        socket.close()
-        goToHome()
-      }
-    } catch (error) {
-      console.error('Deck.initCompanion : ', error)
-      goToHome()
-    }
-  }
-
-  useEffect(() => {
-    // if(serverAddress) {
-    return initCompanion()
-    // }
-  }, [])
-  
   return (
     <BoardWrapper>
-      {/* <FAB
-        style={styles.fab}
-        small
-        icon="reload"
-        onPress={() => initCompanion()}
-      /> */}
-
       {board ? 
-        // <Text key={`btn-r${r}-c${c}`}>[BTN!]</Text>
         board.map((deck, i) => (
           <DeckWrapper key={deck.id} visible={actual == i}>
             {deck.buttons.slice(0,deck.row).map((row, r) => (
@@ -140,6 +59,7 @@ export const Deck = ({ serverAddress, goToHome }) => {
                 {row.slice(0,deck.col).map((btn, c) => (
                   <DeckBtn key={`btn-r${r}-c${c}`}
                     api={api}
+                    deckId={deck.id}
                     position={`${r}-${c}`}
                     changeDeck={changeDeck}
                     {...btn}
