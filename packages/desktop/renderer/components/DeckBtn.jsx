@@ -1,4 +1,5 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
+import electron from 'electron'
 import {
   Typography,
   Button
@@ -8,6 +9,9 @@ import {
 } from '@material-ui/icons'
 import styled from 'styled-components'
 import { useDrag, useDrop } from 'react-dnd'
+
+
+const ipc = electron.ipcRenderer || false
 
 const DeckBtnWrapper = styled.div`
   width: 70px;
@@ -45,7 +49,11 @@ const DeckBtnWrapper = styled.div`
 `
 
 
-export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => {
+export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, ...props}) => {
+  console.log('BTN position === ', deckId, '@', position)
+  const ref = useRef(null)
+  const [ syncedLabel, setSyncedLabel ] = useState({[deckId]: {[position]: null}})
+  console.log('syncedLabel == ', syncedLabel)
   const [{ isDragging }, connectDrag] = useDrag(() => ({
     type: 'DECKBTN',
     item: {position},
@@ -54,7 +62,6 @@ export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => 
       isDragging: monitor.isDragging(),
     })
   }))
-
   const [{isOver, canDrop, item, dropRes}, connectDrop] = useDrop({
     accept: 'DECKBTN',
     canDrop: () => true,
@@ -72,8 +79,26 @@ export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => 
       dropRes: monitor.getDropResult()
     })
   })
+  // send board (on updates)
+  useEffect(() => {
+    if(ipc){
+      ipc.on('update-label', (event, updateToLabel) => {
+        if(deckId == updateToLabel.origin.deck && position == updateToLabel.origin.pos) {
+          console.log('actual: ', position, 'update label!', updateToLabel)
+          setSyncedLabel({
+            ...syncedLabel,
+            [updateToLabel.origin.deck]: {
+              [updateToLabel.origin.pos]: updateToLabel.label
+            }
+          })
+        }
+      })
+    }
+    return () => {
+      ipc.removeAllListeners('update-label')
+    }
+  })
   
-  const ref = useRef(null)
   connectDrag(ref)
   connectDrop(ref)
   const { label, labelColor, shape, bgColor, image } = props
@@ -93,7 +118,7 @@ export const DeckBtn = ({position, onSwitchPosition, clickAction, ...props}) => 
     >
       {/* <Button style={{width: 70, height: 70, borderRadius: 10, border: '3px solid black'}}> */}
         
-        <Typography variant='caption' style={{color: rgba(labelColor), zIndex: "1"}}>{label}</Typography>
+        <Typography variant='caption' style={{color: rgba(labelColor), zIndex: "1"}}>{syncedLabel[deckId][position] || label}</Typography>
         {image && (
           <img src={image} alt="btnImage" style={{width: '100%', height: '100%', position: 'absolute'}}/>
         )}

@@ -43,7 +43,7 @@ const CircleStatus = styled.span`
     `}
 `
 
-export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop, serverStartStopText, serverIP, addPage, deletePage, maxCol, maxRow, updateCol, updateRow, updateActualDeck}) => {
+export const Side = ({board, actual, setActual, stats, plugins, serverStartStop, serverStartStopText, serverIP, addPage, deletePage, maxCol, maxRow, updateCol, updateRow, updateActualDeck}) => {
   const classes = useStyles()
   const [tabIndex, setTabIndex] = useState('1')
   const { serverStatus, companionName } = stats
@@ -120,7 +120,7 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
             {/* </AppBar> */}
             <TabPanel value="1">
               <List>
-              {decks.map((page, index) => (
+              {board.map((page, index) => (
                 <ListItem button key={index} onClick={() => setActual(index)}>
                   {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                   <ListItemText primary={page.name} />
@@ -166,8 +166,8 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
               // InputLabelProps={{
               //   shrink: true,
               // }}
-              value={decks[actual].name || ''}
-              onChange={(e) => updateActualDeck({...decks[actual], name: e.target.value})}
+              value={board[actual].name || ''}
+              onChange={(e) => updateActualDeck({...board[actual], name: e.target.value})}
               // variant="filled"
             />
               
@@ -179,7 +179,7 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
               InputLabelProps={{
                 shrink: true,
               }}
-              value={decks[actual].col}
+              value={board[actual].col}
               onChange={(e) => updateCol(e.target.value >= maxCol ? maxCol : (e.target.value < 0 ? 0 : e.target.value))}
               variant="filled"
             />
@@ -191,7 +191,7 @@ export const Side = ({decks, actual, setActual, stats, plugins, serverStartStop,
               InputLabelProps={{
                 shrink: true,
               }}
-              value={decks[actual].row}
+              value={board[actual].row}
               onChange={(e) => updateRow(e.target.value >= maxRow ? maxRow : (e.target.value < 0 ? 0 : e.target.value))}
               variant="filled"
             />

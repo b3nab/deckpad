@@ -6,7 +6,7 @@ import {v4 as uuid } from 'uuid'
 const ipc = electron.ipcRenderer || false
 
 export const useIPCs = ({
-  defaultDeck, decks, setDecks, resetDeck,
+  defaultDeck, board, setBoard, resetDeck,
   setSavedNotification,
   setCompanion,
   setActual,
@@ -18,9 +18,9 @@ export const useIPCs = ({
   // send board (on updates)
   useEffect(() => {
     if(ipc){
-      ipc.send('update-board', decks)
+      ipc.send('update-board', board)
     }
-  }, [decks])
+  }, [board])
 
 
   // ipc first send on app opening
@@ -42,7 +42,7 @@ export const useIPCs = ({
       ipc.on('deckpad-ready', (event, data) => { loadBoard(true); ipc.send('plugins-installed') })
       ipc.on('companion', (event, name) => { setCompanion(name) })
       ipc.on('switch-deck', (event, toIndex) => { setActual(toIndex) })
-      ipc.on('loaded-board', (event, data) => { setDecks(validateBoard(data)); resetDeck() })
+      ipc.on('loaded-board', (event, data) => { setBoard(validateBoard(data)); resetDeck() })
       ipc.on('started-server', (event, data) => { setServerStatus(true); setServerIP(data) })
       ipc.on('stopped-server', (event, data) => { setServerStatus(false); setCompanion(''); setServerIP(false) })
       ipc.on('plugins-installed', (event, data) => { setPlugins(data) })
@@ -89,6 +89,10 @@ export const useIPCs = ({
               toPage: toPage
             }
           }
+          if(!!btn.action.plugin && btn.action.plugin.split('=>')[0] == 'multimedia') {
+            btn.action.plugin = 'audio=>'+btn.action.plugin.split('=>')[1]
+            oldFormat = true
+          }
         })
       })
     })
@@ -105,11 +109,11 @@ export const useIPCs = ({
     }
   }
   // IPCs functions to export
-  const newBoard = () => { setDecks([defaultDeck]); resetDeck() }
+  const newBoard = () => { setBoard([defaultDeck]); resetDeck() }
   const loadBoard = (latest=false) => { sendIPC('load-board', latest) }
   const reloadBoard = (latest=true) => { sendIPC('load-board', latest) }
-  const saveBoard = (file = decks) => { sendIPC('save-board', file) }
-  const saveBoardAs = () => { sendIPC('save-board-as', decks) }
+  const saveBoard = (file = board) => { sendIPC('save-board', file) }
+  const saveBoardAs = () => { sendIPC('save-board-as', board) }
   const serverStartStop = () => { serverStatus ? sendIPC('stop-server') : sendIPC('start-server') }
 
   

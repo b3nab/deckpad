@@ -26,7 +26,7 @@ export const useDeckPad = ({ maxCol, maxRow, }) => {
     }))
   }
   const [ btn, setBtn ] = useState()
-  const [ decks, setDecks ] = useState([defaultDeck])
+  const [ board, setBoard ] = useState([defaultDeck])
   const [ actual, setActual ] = useState(0)
   const [ serverIP, setServerIP ] = useState(false)
   const [ plugins, setPlugins ] = useState([])
@@ -51,7 +51,7 @@ export const useDeckPad = ({ maxCol, maxRow, }) => {
     saveBoardAs,
     serverStartStop
   } = useIPCs({
-    defaultDeck, decks, setDecks, resetDeck,
+    defaultDeck, board, setBoard, resetDeck,
     setSavedNotification,
     setCompanion,
     setActual,
@@ -68,33 +68,33 @@ export const useDeckPad = ({ maxCol, maxRow, }) => {
   const addPage = () => {
     let newPage = {...defaultDeck}
     newPage.id = uuid()
-    newPage.name += ` ${decks.length+1}`
-    setDecks([...decks, newPage])
-    setActual(decks.length)
+    newPage.name += ` ${board.length+1}`
+    setBoard([...board, newPage])
+    setActual(board.length)
   }
   const deletePage = () => {
-    if(decks.length > 1) {
-      let pages = decks.filter(item => item !== decks[actual])
-      setDecks(pages)
+    if(board.length > 1) {
+      let pages = board.filter(item => item !== board[actual])
+      setBoard(pages)
       setActual(actual === 0 ? 0 : actual-1)
     }
   }
   const updateActualDeck = (newPage) => {
-    let pages = [...decks]
+    let pages = [...board]
     pages[actual] = newPage
-    setDecks(pages)
+    setBoard(pages)
   }
   const updateCol = (n) => {
     const newCol = Number(n)
-    updateActualDeck({...decks[actual], col: newCol})
+    updateActualDeck({...board[actual], col: newCol})
   }
   const updateRow = (n) => {
     const newRow = Number(n)
-    updateActualDeck({...decks[actual], row: newRow})
+    updateActualDeck({...board[actual], row: newRow})
   }
   const saveBtn = (btnProps) => {
     console.log('btn to save: ', btnProps)
-    let newDeck = decks[actual]
+    let newDeck = board[actual]
     newDeck.buttons[btn.row][btn.col] = btnProps
     updateActualDeck(newDeck)
   }
@@ -113,7 +113,7 @@ export const useDeckPad = ({ maxCol, maxRow, }) => {
     // useDeckPad exports
     maxCol, maxRow, defaultDeck,
     btn, setBtn, saveBtn,
-    decks, setDecks,
+    board, setBoard,
     actual, setActual,
     serverIP, setServerIP,
     plugins, setPlugins,

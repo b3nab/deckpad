@@ -26,7 +26,7 @@ function Home() {
     serverStartStop,
     maxCol, maxRow, defaultDeck,
     btn, setBtn, saveBtn,
-    decks, setDecks,
+    board, setBoard,
     actual, setActual,
     serverIP, setServerIP,
     showSaved, setSavedNotification,
@@ -69,7 +69,7 @@ function Home() {
               />
             </Grid>
           <Grid item className={classes.DeckPaper}>
-            <Deck deck={decks[actual]} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} />
+            <Deck board={board} actual={actual} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} />
           </Grid>
           <Grid container item>
             <BtnConfig btn={btn} saveBtn={saveBtn} plugins={plugins} />
@@ -77,7 +77,7 @@ function Home() {
         </Grid>
         <Grid container item>
           <Side
-            decks={decks}
+            board={board}
             actual={actual}
             setActual={setActual}
             addPage={addPage}

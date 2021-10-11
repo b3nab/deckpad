@@ -5,24 +5,44 @@ import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
 import { useStyles } from '../lib/useStyles'
 
-const DeckWrapper = styled.div`
+
+const BoardWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-content: center;
-  flex-wrap: wrap;
-`
-
-const DeckRow = styled.div`
-  display: flex;
-  // flex: 1 1 100%;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `
+const DeckWrapper = styled.div`
+  /* width: 100%;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap; */
+  width: 100%;
+  height: 100%;
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: center;
+  display: ${props => props.visible ? 'flex' :  'none'};
+`
 
-export const Deck = ({ deck, updateDeck, openBtnConfig }) => {
+const DeckRow = styled.div`
+  /* display: flex;
+  // flex: 1 1 100%;
+  justify-content: center;
+  align-items: center; */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
   const classes = useStyles()
-  // console.log('[UI|Deck] deck actual is => ', deck)
+  const deck = board[actual]
+  // console.log('[UI|Deck] board actual is => ', board)
   // const { items, moveItem } = useContext(DeckContext)
   // const [ btnSettings, setBtnSettings] = useState({settings: {}})
   // const [ showDeckBtnModal, setShowDeckBtnModal] = useState(false)
@@ -31,9 +51,9 @@ export const Deck = ({ deck, updateDeck, openBtnConfig }) => {
     // console.log('Switch Position => ', position, ' to ', target)
     const [ positionRow, positionCol ] = position.split('-')
     const [ targetRow, targetCol ] = target.split('-')
-    const positionItem = deck.buttons[positionRow][positionCol]
-    const targetItem = deck.buttons[targetRow][targetCol]
-    let newDeck = {...deck}
+    const positionItem = board[actual].buttons[positionRow][positionCol]
+    const targetItem = board[actual].buttons[targetRow][targetCol]
+    let newDeck = {...board[actual]}
     newDeck.buttons[targetRow][targetCol] = positionItem
     newDeck.buttons[positionRow][positionCol] = targetItem
     updateDeck(newDeck)
@@ -58,6 +78,33 @@ export const Deck = ({ deck, updateDeck, openBtnConfig }) => {
   // }
 
   return (
+    <BoardWrapper>
+      {board ? 
+        board.map((deck, i) => (
+          <DeckWrapper key={deck.id} visible={actual == i}>
+            {deck.buttons.slice(0,deck.row).map((row, r) => (
+              <DeckRow key={`row-${r}`}>
+                {row.slice(0,deck.col).map((btn, c) => (
+                  <DeckBtn key={`btn-r${r}-c${c}`}
+                    {...btn}
+                    deckId={deck.id}
+                    position={`${r}-${c}`}
+                    onSwitchPosition={switchPosition}
+                    clickAction={() => openBtnConfig({ settings: btn, row: r, col: c })}
+                  />
+                ))}
+              </DeckRow>
+            ))}
+          </DeckWrapper>
+        ))
+      : 
+      <div>Loading...</div>
+    }
+
+    </BoardWrapper>
+  )
+
+  return (
     <Paper className={classes.DeckPaper}>
       {!!deck ?
         [...Array(deck.row)].map((e,r) => (
@@ -65,6 +112,7 @@ export const Deck = ({ deck, updateDeck, openBtnConfig }) => {
             {[...Array(deck.col)].map((e,c) => (
               <DeckBtn key={`${r}-${c}`}
                 {...deck.buttons[r][c]}
+                deckId={deck.id}
                 position={`${r}-${c}`}
                 onSwitchPosition={switchPosition}
                 clickAction={() => openBtnConfig({ settings: deck.buttons[r][c], row: r, col: c })}
