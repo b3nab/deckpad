@@ -14,6 +14,8 @@
       "**/react-native/**",
       "**/expo",
       "**/expo/**",
+      "**/expo-*",
+      "**/expo-*/**",
       "**/jest",
       "**/jest/**",
       "**/next",

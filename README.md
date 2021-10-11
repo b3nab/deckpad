@@ -17,9 +17,7 @@ Easily control your computer with this fully customizable Deck Buttons Board (li
 
 > **b3nab**: I'm developing this app on a live stream! You can follow my adventures on Twitch at: https://twitch.tv/b3nab -->
 
----
-
-# Features
+## Features
 
 - Configurable dimensions (numbers of rows and columns)
 - Up to 150 buttons per page
@@ -31,14 +29,12 @@ Easily control your computer with this fully customizable Deck Buttons Board (li
 - Easily save and load .board files
 - Switch buttons' position with drag and drop
 - Extendable with plugins, write your custom action! (WIP feature)
-
----
-
 # Download
 
 The app is actually in alpha stage and there is available a link to download configurator and companion apps. Enjoy! 🥂
 
 ### 💻 Desktop App - Configurator
+![DeckPad Desktop Screenshot](./deckpad-configurator-desktop-screenshot.png)
 
 #### **Alpha Release**
 | Platform | Download |
@@ -62,8 +58,7 @@ Repo structure:
   - packages
     - desktop
     - mobile
-    - ui
-    - plugins
+    - sdk
   
 
 ### CONTRIBUTE
