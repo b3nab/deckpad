@@ -9,7 +9,7 @@
 
 [![DeckPad Desktop Release](https://github.com/b3nab/deckpad/actions/workflows/release-desktop.yml/badge.svg)](https://github.com/b3nab/deckpad/actions/workflows/release-desktop.yml)
 
-## Virtual Macro Board  - What is DeckPad? 📱
+## Virtual Macro Board  - What is DeckPad? 📱👉🖥️
 
 Easily control your computer with this fully customizable Deck Buttons Board (like a macro keyboard but configurable). Support custom Actions extendable with Plugins. Available on Windows, MacOS, Linux (desktop) and Android, iOS (companion app).
 <!-- 
