@@ -10,7 +10,7 @@ fileAssociations:
     role: Editor
 
 files:
-  - 'resources/**/*'
+  - './resources/**/*'
   - from: .
     filter:
       - package.json
@@ -18,8 +18,7 @@ files:
 
 # Mac OS configuration
 mac:
-  icon: "resources/icon.icns"
-
+  # icon: "icon.icns"
 # Config for OSX dmg
 dmg:
   contents:
@@ -34,7 +33,7 @@ dmg:
 linux:
   executableName: deckpad
   category: Development
-  # icon: "resources/icon.ico"
+  # icon: "icon.ico"
   target:
     - "AppImage"
     # - "snap"
@@ -56,7 +55,7 @@ linux:
 
 # Windows configuration
 win:
-  icon: "resources/icon.ico"
+  # icon: "icon.ico"
   target:
     - "zip"
     - "nsis"
@@ -70,5 +69,8 @@ nsis:
 directories:
   output: dist
   buildResources: resources
+
+extraResources:
+  - './resources/**'
 
 publish: null

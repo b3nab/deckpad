@@ -1,6 +1,13 @@
 import { createTheme } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 
+
+const colors = {
+  fucsia: '#F02BAD',
+  indaco: '#3D5AD5',
+  blue: '#2B7FE2',
+  cyan: '#00D1FF',
+}
 export const theme = createTheme({
   shape: {
     borderRadius: 15,
@@ -13,11 +20,14 @@ export const theme = createTheme({
       // main: '#556cd6',
       // main: '#33E1ED',
       main: '#FFFFFF',
+      // DECKPAD THEME
+      // main: colors.cyan,
     },
     secondary: {
       // main: '#524EEE',
       // main: '#19857b',
-      main: '#000000',
+      // main: '#000000',
+      main: colors.blue,
     },
     error: {
       main: '#EF4E7B',
@@ -26,14 +36,19 @@ export const theme = createTheme({
       main: '#07B39B',
     },
     background: {
+      default: '#030303',
+      // paper: '#050709',
+      paper: '#070709',
       // COLORS FROM FIGMA DESIGN
       // default: '#000000',
       // paper: '#151520',
-      // default: '#2D2D44',
-      // paper: '#1E1E2C',
-      // NEW COLORS DARK THEME
-      default: '#121212',
-      paper: '#18191A',
+      // BASIC DARK COLORS
+      // default: '#121212',
+      // paper: '#18191A',
+      // DECKPAD THEME
+      // default: '#070716',
+      // paper: '#03030B',
+      // paper: '#040D17',
     },
     text: {
       primary: '#FFFFFF',
