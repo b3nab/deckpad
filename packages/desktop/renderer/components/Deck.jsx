@@ -70,13 +70,11 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
 
   const switchPosition = ({position, target}) => {
     // console.log('Switch Position => ', position, ' to ', target)
-    const [ positionRow, positionCol ] = position.split('-')
-    const [ targetRow, targetCol ] = target.split('-')
-    const positionItem = board[actual].buttons[positionRow][positionCol]
-    const targetItem = board[actual].buttons[targetRow][targetCol]
+    const positionItem = board[actual].buttons[position.row][position.col]
+    const targetItem = board[actual].buttons[target.row][target.col]
     let newDeck = {...board[actual]}
-    newDeck.buttons[targetRow][targetCol] = positionItem
-    newDeck.buttons[positionRow][positionCol] = targetItem
+    newDeck.buttons[target.row][target.col] = positionItem
+    newDeck.buttons[position.row][position.col] = targetItem
     updateDeck(newDeck)
   }
 
