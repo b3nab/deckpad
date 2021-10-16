@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app, ipcMain, nativeImage } from 'electron'
 import serve from 'electron-serve'
 import Store from 'electron-store'
 import pubsub from 'electron-pubsub'
@@ -6,6 +6,9 @@ import { createMainWindow, buildMenu, buildTray } from './helpers'
 // IPC MAIN RESOLVERS
 import { loadIPCs, plugins, deckServer, saveAndLoad, image } from './ipc'
 import { Quantum } from '@deckpad/sdk'
+import path from 'path'
+const iconPath = path.join(__dirname, '..', 'resources', 'icons/icon-512x512.png')
+const iconImage = nativeImage.createFromPath(iconPath)
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -26,6 +29,7 @@ if (isProd) {
     prefs: {
       name: 'main',
       options: {
+        icon: iconImage,
         width: 1000,
         height: 720,
         minWidth: 665,
