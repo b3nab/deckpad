@@ -35,7 +35,6 @@ function init(conf) {
     const { plugin, options } = action
     const [plug, act] = plugin.split('=>')
     const pao = {p: plug,a: act,o: options}
-    // const origin = {deck: deckId, pos: origin}
     Hyper.fire(pao, origin)
     Hyper.work()
   })

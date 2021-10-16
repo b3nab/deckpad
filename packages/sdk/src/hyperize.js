@@ -27,8 +27,19 @@ export default function hyperize(name, fn, {
 
     const syncLabel = (label, origin) => {
       console.log(`[HYPERIZE] ${name} - syncLabel() `, label, origin)
-      toConfigurator('update-label', {origin, label})
-      toCompanion('update-label', {origin, label})
+      const shadowLabel = {
+        [origin.deck]: {
+          buttons: {
+            [origin.pos.row]: {
+              [origin.pos.col]: {
+                label: label
+              }
+            }
+          }
+        }
+      }
+      toConfigurator('update-label', shadowLabel)
+      toCompanion('update-label', shadowLabel)
     }
 
     const syncPage = (actualMobile) => {
