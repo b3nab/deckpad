@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Animated, StyleSheet, Text } from 'react-native'
+import { Animated } from 'react-native'
 import styled from 'styled-components'
 import { DeckBtn } from './DeckBtn'
-import { ActivityIndicator, FAB } from 'react-native-paper'
+import { ActivityIndicator } from 'react-native-paper'
 
 const BoardWrapper = styled.View`
   width: 100%;
@@ -28,16 +28,7 @@ const DeckRow = styled.View`
   justify-content: center;
 `
 
-// const styles = StyleSheet.create({
-//   fab: {
-//     position: 'absolute',
-//     margin: 16,
-//     right: 0,
-//     bottom: 0,
-//   },
-// })
-
-export const Deck = ({ board, actual, setActual, api, goToHome }) => {
+export const Deck = ({ board, shadowBoard, actual, setActual, io, goToHome }) => {
   const changeDeck = (id) => {
     // console.log('[SWITCH-DECK] to id: ', id)
     // console.log('[SWITCH-DECK] actual index: ', actual)
@@ -46,7 +37,7 @@ export const Deck = ({ board, actual, setActual, api, goToHome }) => {
     // console.log('[SWITCH-DECK] to toDeck: ', toDeck)
     const toIndex = toDeck != -1 ? toDeck : actual
     setActual(toIndex)
-    api.emit('switch-deck', toIndex)
+    io.emit('switch-deck', toIndex)
   }
 
   return (
@@ -58,10 +49,13 @@ export const Deck = ({ board, actual, setActual, api, goToHome }) => {
               <DeckRow key={`row-${r}`}>
                 {row.slice(0,deck.col).map((btn, c) => (
                   <DeckBtn key={`btn-r${r}-c${c}`}
-                    api={api}
+                    io={io}
                     deckId={deck.id}
-                    position={`${r}-${c}`}
+                    // position={`${r}-${c}`}
+                    position={{row: r, col: c}}
                     changeDeck={changeDeck}
+                    shadowBoard={shadowBoard}
+                    btnShadow={shadowBoard[deck.id]?.buttons?.[r]?.[c]}
                     {...btn}
                   />
                 ))}

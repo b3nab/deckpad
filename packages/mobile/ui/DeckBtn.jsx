@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 // import { Image } from 'react-native'
 import { impactAsync } from 'expo-haptics'
 import { Caption as RNCaption } from 'react-native-paper'
@@ -40,20 +40,26 @@ const DeckBtnWrapper = styled.TouchableHighlight`
   };  
 `
 
-export const DeckBtn = ({api, deckId, position, changeDeck, ...props}) => {
+export const DeckBtn = ({io, deckId, position, btnShadow, shadowBoard, changeDeck, ...props}) => {
   let { label, labelColor, shape, bgColor, image, action } = props
-  // console.log(JSON.stringify(props, null, 2))
-
+  const [shadowLabel, setShadowLabel] = useState(shadowBoard?.[deckId]?.buttons?.[position.row]?.[position.col]?.label)
   const parseColor = (color) => {
     if(typeof color == 'object') {
       return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
     }
     return color
   }
-
   labelColor = parseColor(labelColor)
   bgColor = parseColor(bgColor)
   
+  useEffect(() => {
+    // console.log('btnSHADOW changed!!!! => btnShadow', btnShadow)
+    setShadowLabel(btnShadow?.label)
+  }, [btnShadow, shadowBoard])
+  
+  // useEffect(() => {
+  //   console.log('shadowBoard changed => shadowBoard', shadowBoard)
+  // }, [shadowBoard])
 
   const fireAction = () => {
     const origin = {
@@ -61,7 +67,7 @@ export const DeckBtn = ({api, deckId, position, changeDeck, ...props}) => {
       pos: position
     }
     impactAsync()
-    api.emit('action', {
+    io.emit('action', {
       action,
       origin,
     })
@@ -87,9 +93,7 @@ export const DeckBtn = ({api, deckId, position, changeDeck, ...props}) => {
             {!!image && 
                 <Image source={{uri: image}}></Image>
             }
-            {!!label &&
-                <Caption color={labelColor}>{label}</Caption>
-            }
+            <Caption color={labelColor}>{shadowLabel || label}</Caption>
         </Fragment>
     </DeckBtnWrapper>
   )
