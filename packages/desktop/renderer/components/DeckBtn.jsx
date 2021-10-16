@@ -5,7 +5,7 @@ import {
   Button
 } from '@material-ui/core'
 import { 
-  Add as AddIcon,
+  Add,
 } from '@material-ui/icons'
 import styled from 'styled-components'
 import { useDrag, useDrop } from 'react-dnd'
@@ -14,8 +14,8 @@ import { useDrag, useDrop } from 'react-dnd'
 const ipc = electron.ipcRenderer || false
 
 const DeckBtnWrapper = styled.div`
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@ const DeckBtnWrapper = styled.div`
   align-items: center;
   transition: all .3s linear;
   overflow: hidden;
-  margin: 10px;
+  margin: 15px;
   border: 1px solid #ffffff60;
   box-shadow: #000000 -3px 4px 0px 1px, #5c5c5c -4px 5px 0px 1px;
   
@@ -48,12 +48,19 @@ const DeckBtnWrapper = styled.div`
   }
 `
 
+const AddIcon = styled(Add)`
+  transition: all .4s !important;
+  opacity: 0;
+  ${DeckBtnWrapper}:hover & {
+    opacity: 1;
+  }
+`
+
 
 export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, ...props}) => {
-  console.log('BTN position === ', deckId, '@', position)
+  const { btnShadow, label, labelColor, shape, bgColor, image } = props
+  // console.log('BTN position === ', deckId, '@', position)
   const ref = useRef(null)
-  const [ syncedLabel, setSyncedLabel ] = useState({[deckId]: {[position]: null}})
-  console.log('syncedLabel == ', syncedLabel)
   const [{ isDragging }, connectDrag] = useDrag(() => ({
     type: 'DECKBTN',
     item: {position},
@@ -79,29 +86,9 @@ export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, ...pro
       dropRes: monitor.getDropResult()
     })
   })
-  // send board (on updates)
-  useEffect(() => {
-    if(ipc){
-      ipc.on('update-label', (event, updateToLabel) => {
-        if(deckId == updateToLabel.origin.deck && position == updateToLabel.origin.pos) {
-          console.log('actual: ', position, 'update label!', updateToLabel)
-          setSyncedLabel({
-            ...syncedLabel,
-            [updateToLabel.origin.deck]: {
-              [updateToLabel.origin.pos]: updateToLabel.label
-            }
-          })
-        }
-      })
-    }
-    return () => {
-      ipc.removeAllListeners('update-label')
-    }
-  })
   
   connectDrag(ref)
   connectDrop(ref)
-  const { label, labelColor, shape, bgColor, image } = props
 
   const rgba = color => 
     typeof(color) == 'object' ? 
@@ -118,7 +105,7 @@ export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, ...pro
     >
       {/* <Button style={{width: 70, height: 70, borderRadius: 10, border: '3px solid black'}}> */}
         
-        <Typography variant='caption' style={{color: rgba(labelColor), zIndex: "1"}}>{syncedLabel[deckId][position] || label}</Typography>
+        <Typography variant='caption' style={{color: rgba(labelColor), zIndex: "1"}}>{btnShadow?.label || label}</Typography>
         {image && (
           <img src={image} alt="btnImage" style={{width: '100%', height: '100%', position: 'absolute'}}/>
         )}

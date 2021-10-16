@@ -1,9 +1,11 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Paper } from '@material-ui/core'
 import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
 import { useStyles } from '../lib/useStyles'
+import electron from 'electron'
+const ipc = electron.ipcRenderer || false
 
 
 const BoardWrapper = styled.div`
@@ -15,24 +17,14 @@ const BoardWrapper = styled.div`
   align-items: center;
 `
 const DeckWrapper = styled.div`
-  /* width: 100%;
-  height: 100%;
-  display: flex;
-  align-content: center;
-  flex-wrap: wrap; */
   width: 100%;
   height: 100%;
-  /* display: flex; */
   flex-direction: column;
   justify-content: center;
   display: ${props => props.visible ? 'flex' :  'none'};
 `
 
 const DeckRow = styled.div`
-  /* display: flex;
-  // flex: 1 1 100%;
-  justify-content: center;
-  align-items: center; */
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -40,12 +32,41 @@ const DeckRow = styled.div`
 `
 
 export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
-  const classes = useStyles()
-  const deck = board[actual]
   // console.log('[UI|Deck] board actual is => ', board)
-  // const { items, moveItem } = useContext(DeckContext)
-  // const [ btnSettings, setBtnSettings] = useState({settings: {}})
-  // const [ showDeckBtnModal, setShowDeckBtnModal] = useState(false)
+  const classes = useStyles()
+  const [ shadowBoard, setShadowBoard ] = useState({})
+  // deepmerge(source, target)
+  // source is the partial or path payload
+  // target is the full object (in time it's the previous object)
+  const deepmerge = (source, target) => {
+    let final = target
+    for (const [key, val] of Object.entries(source)) {
+      if (val !== null && typeof val === `object`) {
+        if (target[key] === undefined) {
+          final[key] = new val.__proto__.constructor()
+        }
+        final[key] = deepmerge(val, target[key])
+      } else {
+        final[key] = val
+      }
+    }
+    return final
+  }
+  const updateShadowBoard = (partialShadow) => {
+    const newShadow = deepmerge(partialShadow, shadowBoard)
+    setShadowBoard({...newShadow})
+  }
+   useEffect(() => {
+    if(ipc) {
+      ipc.on('update-label', (event, shadowLabel) => {
+        // console.log('update label!', shadowLabel)
+        updateShadowBoard(shadowLabel)
+      })
+    }
+    return () => {
+      ipc.removeAllListeners('update-label')
+    }
+  })
 
   const switchPosition = ({position, target}) => {
     // console.log('Switch Position => ', position, ' to ', target)
@@ -59,24 +80,6 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
     updateDeck(newDeck)
   }
 
-  // const openModalDeckBtn = (btnProps, row, col) => {
-  //   setBtnSettings({
-  //     settings: btnProps,
-  //     row,
-  //     col
-  //   })
-  //   setShowDeckBtnModal(true)
-  // }
-
-  // const onSaveDeckBtn = (btnProps) => {
-  //   console.log('btn to save: ', btnProps)
-  //   setBtnSettings({settings: {}})
-  //   setShowDeckBtnModal(false)
-  //   let newDeck = deck
-  //   newDeck.buttons[btnSettings.row][btnSettings.col] = btnProps
-  //   updateDeck(newDeck)
-  // }
-
   return (
     <BoardWrapper>
       {board ? 
@@ -87,8 +90,10 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
                 {row.slice(0,deck.col).map((btn, c) => (
                   <DeckBtn key={`btn-r${r}-c${c}`}
                     {...btn}
+                    btnShadow={shadowBoard[deck.id]?.buttons?.[r]?.[c]}
                     deckId={deck.id}
-                    position={`${r}-${c}`}
+                    // position={`${r}-${c}`}
+                    position={{row: r, col: c}}
                     onSwitchPosition={switchPosition}
                     clickAction={() => openBtnConfig({ settings: btn, row: r, col: c })}
                   />
@@ -102,33 +107,5 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
     }
 
     </BoardWrapper>
-  )
-
-  return (
-    <Paper className={classes.DeckPaper}>
-      {!!deck ?
-        [...Array(deck.row)].map((e,r) => (
-          <DeckRow key={`row-${r}`}>
-            {[...Array(deck.col)].map((e,c) => (
-              <DeckBtn key={`${r}-${c}`}
-                {...deck.buttons[r][c]}
-                deckId={deck.id}
-                position={`${r}-${c}`}
-                onSwitchPosition={switchPosition}
-                clickAction={() => openBtnConfig({ settings: deck.buttons[r][c], row: r, col: c })}
-              />
-            ))}
-          </DeckRow>
-        ))
-        :
-        <div>Loading...</div>
-      }
-      {/* <DeckBtnModal
-        show={showDeckBtnModal}
-        close={() => setShowDeckBtnModal(false)}
-        btnSettings={btnSettings.settings}
-        saveDeckBtn={btnProps => onSaveDeckBtn(btnProps)}
-      /> */}
-    </Paper>
   )
 }

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import electron from 'electron'
+const ipc = electron.ipcRenderer || false
 import {v4 as uuid } from 'uuid'
 
 import { useIPCs } from './useIPCs'
 
 
-const ipc = electron.ipcRenderer || false
 
 export const useDeckPad = ({ maxCol, maxRow, }) => {
   const defaultDeck = {
