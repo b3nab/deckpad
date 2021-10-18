@@ -39,7 +39,10 @@ const DeckBtnWrapper = styled.div`
     // border: 3px solid ${props.background};
     border-radius: 10px;
   `}
-  // ${props => props.shape === 'none' && ``}
+  ${props => props.shape === 'none' && `
+    border: none;
+    box-shadow: none;
+  `}
 
   opacity: ${props => props.isDragging ? 1 : 0.5};
 
@@ -57,7 +60,7 @@ const AddIcon = styled(Add)`
 `
 
 
-export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, ...props}) => {
+export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, fireAction, ...props}) => {
   const { btnShadow, label, labelColor, shape, bgColor, image } = props
   // console.log('BTN position === ', deckId, '@', position)
   const ref = useRef(null)
@@ -102,6 +105,7 @@ export const DeckBtn = ({deckId, position, onSwitchPosition, clickAction, ...pro
       background={rgba(bgColor)}
       ref={ref}
       onClick={() => clickAction()}
+      onDoubleClick={() => fireAction()}
     >
       {/* <Button style={{width: 70, height: 70, borderRadius: 10, border: '3px solid black'}}> */}
         

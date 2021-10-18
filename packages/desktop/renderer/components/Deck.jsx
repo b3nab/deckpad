@@ -5,6 +5,7 @@ import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
 import { useStyles } from '../lib/useStyles'
 import electron from 'electron'
+import pubsub from 'electron-pubsub'
 const ipc = electron.ipcRenderer || false
 
 
@@ -31,7 +32,7 @@ const DeckRow = styled.div`
   justify-content: center;
 `
 
-export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
+export const Deck = ({ board, actual, updateDeck, openBtnConfig, sendIPC }) => {
   // console.log('[UI|Deck] board actual is => ', board)
   const classes = useStyles()
   const [ shadowBoard, setShadowBoard ] = useState({})
@@ -78,6 +79,14 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
     updateDeck(newDeck)
   }
 
+  const fireAction = ({action, origin}) => {
+    console.log('FIRE ACTION FROM CONFIGURATOR!')
+    console.log('action', action)
+    console.log('origin', origin)
+    if(!action.plugin || !action.options) return
+    sendIPC('fire-plugin', {action, origin})
+  }
+
   return (
     <BoardWrapper>
       {board ? 
@@ -94,6 +103,7 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig }) => {
                     position={{row: r, col: c}}
                     onSwitchPosition={switchPosition}
                     clickAction={() => openBtnConfig({ settings: btn, row: r, col: c })}
+                    fireAction={() => fireAction({action: btn.action, origin: {deck: deck.id, pos: {row: r, col: c}}})}
                   />
                 ))}
               </DeckRow>

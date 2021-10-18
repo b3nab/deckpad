@@ -30,8 +30,17 @@ function init(conf) {
   // pubsub listener on deckServer
   // to call fire() on plugin
   pubsub.subscribe('fire-plugin', async (event, {action, origin}) => {
-    // console.log('fired with action => ',action)
-    // console.log('fired from origin => ', origin)
+    console.log('[PUBSUB] fired with action => ',action)
+    console.log('[PUBSUB] fired from origin => ', origin)
+    const { plugin, options } = action
+    const [plug, act] = plugin.split('=>')
+    const pao = {p: plug,a: act,o: options}
+    Hyper.fire(pao, origin)
+    Hyper.work()
+  })
+  ipcMain.on('fire-plugin', async (event, {action, origin}) => {
+    console.log('[IPC] fired with action => ',action)
+    console.log('[IPC] fired from origin => ', origin)
     const { plugin, options } = action
     const [plug, act] = plugin.split('=>')
     const pao = {p: plug,a: act,o: options}

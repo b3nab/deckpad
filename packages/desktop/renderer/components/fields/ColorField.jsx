@@ -10,7 +10,7 @@ export const ColorField = (props) => {
     field: { name, value: valueColor },
     label
   } = props
-  console.log('arrived ', valueColor)
+  // console.log('arrived ', valueColor)
   
   const rgba = color => {
     if(typeof color === 'object') {

@@ -11,7 +11,6 @@ export const saveAndLoad = () => {
     let myBoard
     if(useLastBoard) {
       console.log('load-board...')
-      console.log('Quantum is ', Quantum)
       myBoard = Quantum.store.get('currentBoard')
     } else {
       myBoard = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {

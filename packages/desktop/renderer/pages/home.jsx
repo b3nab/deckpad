@@ -69,7 +69,7 @@ function Home() {
               />
             </Grid>
           <Grid item className={classes.DeckPaper}>
-            <Deck board={board} actual={actual} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} />
+            <Deck board={board} actual={actual} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} sendIPC={sendIPC} />
           </Grid>
           <Grid container item>
             <BtnConfig btn={btn} saveBtn={saveBtn} plugins={plugins} />

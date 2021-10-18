@@ -52,7 +52,7 @@ const Hyper = {
     // Hyper.hydrate(name)
   },
   hydrate: function(name) {
-    console.log('[Hyper] hydrate() => ', name)
+    // console.log('[Hyper] hydrate() => ', name)
     // console.log('[Hyper] hydrate() Hyper is ', Hyper)
     Hyper.setHypeCtx(Hyper.engine[name].plugin)
     Hyper.engine[name].needUpdate = false

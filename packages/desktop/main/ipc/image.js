@@ -23,4 +23,20 @@ export const image = () => {
       Quantum.toConfigurator('selected-btn-image', out)
     }
   })
+  ipcMain.on('get-path', (event, arg) => {
+    const folderPath = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
+      properties: ['openFile'],
+      filters: [
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    })
+    console.log(`result from "get-path" ==>\n ${folderPath}`)
+    if(folderPath) {
+      // const extension = extname(folderPath[0])
+      // const base64 = readFileSync(folderPath[0]).toString('base64')
+      // const out = `data:folderPath/${extension};base64,${base64}`
+      // console.log('[IPC] folderPath out => ', out)
+      Quantum.toConfigurator('selected-path', folderPath)
+    }
+  })
 }

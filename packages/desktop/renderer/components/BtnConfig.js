@@ -37,6 +37,7 @@ import {
 import {
   ColorField,
   ImageField,
+  PathField,
 } from './fields'
 import { DeckBtn } from './DeckBtn'
 import { useStyles } from '../lib/useStyles'
@@ -77,6 +78,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
         case 'text':
         case 'textearea':
         case 'number':
+        case 'url':
         case 'email':
         case 'password':
           return wrapInput(TextField, v.key, null, {type: v.type, label: v.label, multiline: v.type==='textarea'})
@@ -89,7 +91,9 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
             v.extra.options.map((opt) =>
               <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
             ) : null
-          return wrapInput(Select, v.key, v.label, null, childs)      
+          return wrapInput(Select, v.key, v.label, null, childs)
+        case 'path':
+          return wrapInput(PathField, v.key, v.label)
       }
     }
 

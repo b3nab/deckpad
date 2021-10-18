@@ -133,8 +133,8 @@ export default function hyperize(name, fn, {
     const resolve = () => {
       idx = 0
       efct = 0
-      console.log(`resolving hyperized ${name}`)
-      console.log(`state hooks ${JSON.stringify(hooks, null, 2)}`)
+      // console.log(`resolving hyperized ${name}`)
+      // console.log(`state hooks ${JSON.stringify(hooks, null, 2)}`)
       let actions = fn()
 
       return actions
