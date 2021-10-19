@@ -38,10 +38,10 @@ if (isProd) {
     },
     port: process.argv[2]
   })
-  
+
   const store = new Store()
   const toConfigurator = (channel, msg) => mainWin.webContents.send(channel, msg)
-  
+
   // ---- Init Quantum ----
   // ----------------------
   Quantum.init({
@@ -50,18 +50,18 @@ if (isProd) {
     store,
     toConfigurator,
   })
-  
+
   loadIPCs([
     image,
     saveAndLoad,
     deckServer,
     plugins,
   ])
-  
+
   // ---- Window Decorations ----
-  buildMenu()
-  buildTray()
-  
+  // buildMenu()
+  // buildTray(iconImage)
+
   // Inform App that all DeckPad modules are ready
   toConfigurator('deckpad-ready', true)
 })()

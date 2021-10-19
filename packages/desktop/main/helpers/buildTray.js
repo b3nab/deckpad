@@ -1,13 +1,10 @@
-import { app, Menu, Tray } from 'electron'
-import path from 'path'
+import { Menu, Tray } from 'electron'
 
 // ---- Tray Icon ----
 // -------------------
-export default function buildTray() {
+export default function buildTray(iconImage) {
   console.log('[buildTray] fn')
-  const iconLogo = app.isPackaged ? `${path.join(app.getPath('appData'),'resources','logo.png')}` : `${path.join(__dirname,'..','resources','logo.png')}`
-  console.log('[ICON] path => ', iconLogo)
-  const tray = new Tray(iconLogo)
+  const tray = new Tray(iconImage)
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Item1', type: 'radio' },
     { label: 'Item2', type: 'radio' },
