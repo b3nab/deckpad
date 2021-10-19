@@ -1,15 +1,13 @@
 import { createServer } from 'http'
-// import express from 'express'
+import express from 'express'
 import iIP from 'internal-ip'
 import detect from 'detect-port'
-import { configureServerIO } from './wss'
-import { configureWSS } from './wss'
+import { configureServerIO } from './server-io'
 
 const startDeckServer = async () => {
-  // const app = express()
-  const deckServer = createServer()
-  // const io = await configureServerIO(deckServer)
-  const wss = await configureWSS(deckServer)
+  const app = express()
+  const deckServer = createServer(app)
+  const io = await configureServerIO(deckServer)
   console.log(`io dict keys: ${Object.keys(io.httpServer)}`)
   const port = await detect(8332)
   const localIP = await iIP.v4()

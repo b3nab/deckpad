@@ -50,7 +50,8 @@
     "socket.io": "^4.2.0",
     "styled-components": "^5.3.1",
     "systeminformation": "^5.9.7",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "ws": "^8.2.3"
   },
   "devDependencies": {
     "electron": "^13.1.7",
