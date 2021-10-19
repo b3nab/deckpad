@@ -9,6 +9,7 @@ import {
   example,
   companion,
   audio,
+  commands,
 } from '../plugins'
 
 const manager = new PluginManager()
@@ -34,9 +35,10 @@ export const plugins = () => {
   // ------------------------------
   // ---- Load Default Plugins ----
   // ------------------------------
-  isDev && initPlugin("example", example)
+  // isDev && initPlugin("example", example)
   initPlugin("companion", companion)
   initPlugin("audio", audio)
+  initPlugin("commands", commands)
   // initPlugin("deckpadBase", deckpadBase)
 
   // ---- IPC Listeners ----
