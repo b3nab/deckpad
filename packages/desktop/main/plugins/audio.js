@@ -1,8 +1,17 @@
 import SDK from '@deckpad/sdk'
 import loudness from 'loudness'
 
+// NEEDS A TRY:
+// - native-sound-mixer
+// - custom patched loudness
+// - https://www.npmjs.com/package/node-audio-linux (linux only)
+
+// PACKAGES FOR SOUND BOARD/PAD PLUGIN
+// - https://www.npmjs.com/package/@goodboydigital/soundboy
+
+
 const audio = () => {
-  
+
   return ({
     'vol-up': {
       label: 'Volume Up',

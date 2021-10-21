@@ -1,6 +1,7 @@
 import { useState, syncPage, syncLabel, dynamicBoard } from '@deckpad/sdk'
 import { shell } from 'electron'
-
+import { exec } from 'shelljs'
+import execa from 'execa'
 
 // Commands Plugin
 // --
@@ -48,6 +49,20 @@ const commands = () => {
       fire: async (data) => {
         console.log('open-url action -- data => ', data)
         shell.openPath(data.folderPath)
+      }
+    },
+    'shell': {
+      label: 'Execute Shell command',
+      inputs: [
+        {
+          key: 'sh',
+          type: 'textarea',
+          label: 'Write some shell commands'
+        }
+      ],
+      fire: async (data) => {
+        console.log('open-url action -- data => ', data)
+        execa(data.sh)
       }
     },
     'hotkey': {
