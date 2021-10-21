@@ -8,6 +8,27 @@ import ioClient from 'socket.io-client'
 import { Deck } from './ui'
 import logo from './assets/icon.png'
 
+
+// AUTO DISCOVERY FN EXAMPLE
+// var socket;
+// for(var i=1; i<255; i++) {
+//   socket = new WebSocket('ws://192.168.1.'+i+':8080/service');
+
+//   socket.onopen = function () {   
+//     console.log('WebSocket Connected!!');   
+//   };
+
+//   socket.onclose = function (event) {
+//     console.log('WebSocket Disconnected!!');
+//     socket.close();
+//   };
+
+//   socket.onmessage = function (event) {
+//     console.log('WebSocket receive msg: ' + event.data);
+//   }
+// }
+
+
 const ConnectTo = ({ setIPLan }) => {
   const [hasPermission, setHasPermission] = useState(null)
   // const { getItem, setItem } = useAsyncStorage('@deckpad.address')
