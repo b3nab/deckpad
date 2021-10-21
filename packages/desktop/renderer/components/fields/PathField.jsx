@@ -12,6 +12,7 @@ export const PathField = (props) => {
   const {
     form: { setFieldValue },
     field: { name, value: valuePath },
+    openFolder
   } = props
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export const PathField = (props) => {
       {/* <p>{valuePath}</p> */}
       <Button onClick={() => {
         if(ipc) {
-          ipc.send('get-path')
+          ipc.send('get-path', openFolder)
         }
       }}>{!valuePath ? 'Open path' : 'Change path'}</Button>
     </div>

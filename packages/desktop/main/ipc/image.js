@@ -23,9 +23,9 @@ export const image = () => {
       Quantum.toConfigurator('selected-btn-image', out)
     }
   })
-  ipcMain.on('get-path', (event, arg) => {
+  ipcMain.on('get-path', (event, openFolder) => {
     const folderPath = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
-      properties: ['openFile'],
+      properties: [openFolder ? 'openDirectory' : 'openFile'],
       filters: [
         { name: 'All Files', extensions: ['*'] }
       ]

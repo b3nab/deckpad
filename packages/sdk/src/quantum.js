@@ -1,7 +1,7 @@
 // @deckpad/sdk
 // Copyright (c) b3nab
 // ---
-// --- 
+// ---
 // Quantum
 // Internal Engine
 // ---

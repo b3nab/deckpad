@@ -1,15 +1,16 @@
+import path from 'path'
 import { app, ipcMain, nativeImage } from 'electron'
 import serve from 'electron-serve'
 import Store from 'electron-store'
 import pubsub from 'electron-pubsub'
-import { createMainWindow, buildMenu, buildTray } from './helpers'
+import { Quantum } from '@deckpad/sdk'
 // IPC MAIN RESOLVERS
 import { loadIPCs, plugins, deckServer, saveAndLoad, image } from './ipc'
-import { Quantum } from '@deckpad/sdk'
-import path from 'path'
+import { createMainWindow, buildMenu, buildTray } from './helpers'
+import { startDeckServer } from './server'
+
 const iconPath = path.join(__dirname, '..', 'resources', 'icons/icon-512x512.png')
 const iconImage = nativeImage.createFromPath(iconPath)
-
 const isProd = process.env.NODE_ENV === 'production'
 
 if (isProd) {
@@ -29,6 +30,7 @@ if (isProd) {
     prefs: {
       name: 'main',
       options: {
+        backgroundColor: '#030303',
         icon: iconImage,
         width: 1000,
         height: 720,
@@ -41,6 +43,10 @@ if (isProd) {
 
   const store = new Store()
   const toConfigurator = (channel, msg) => mainWin.webContents.send(channel, msg)
+
+  // Init DeckPad Server
+  // NEW refactor for IPC, socket.io, pubsub to websockets
+  // startDeckServer()
 
   // ---- Init Quantum ----
   // ----------------------

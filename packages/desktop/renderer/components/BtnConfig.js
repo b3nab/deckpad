@@ -1,7 +1,7 @@
 import electron from 'electron'
 import React, { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
-import { 
+import {
   Checkbox,
   Select,
   TextField,
@@ -26,7 +26,7 @@ import {
 import {
   ToggleButton,
 } from '@material-ui/lab'
-import { 
+import {
   ToggleButtonGroup,
 } from 'formik-material-ui-lab'
 import {
@@ -47,7 +47,7 @@ const ipc = electron.ipcRenderer || false
 
 export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
   const classes = useStyles()
-  
+
   const missingPluginOrAction = (values) => {
     // console.log(`missingPluginOrAction - values:`, values)
     // console.log('"plugin=>action" input value is there ? ', values.action.plugin)
@@ -66,7 +66,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
     // }
     return pluginMissing || actionMissing
   }
-  
+
 
   const buildActionInputs = (pluginAction) => {
     const [plugin, action] = pluginAction.split('=>')
@@ -75,13 +75,14 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
 
     const buildInput = v => {
       switch (v.type) {
+        case 'textarea':
+          return wrapInput(TextField, v.key, null, {type: v.type, label: v.label, multiline: true, rows: 4})
         case 'text':
-        case 'textearea':
         case 'number':
         case 'url':
         case 'email':
         case 'password':
-          return wrapInput(TextField, v.key, null, {type: v.type, label: v.label, multiline: v.type==='textarea'})
+          return wrapInput(TextField, v.key, null, {type: v.type, label: v.label})
         case 'checkbox':
           return wrapInput(Checkbox, v.key, v.label, {type: v.type})
         case 'color':
@@ -93,7 +94,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
             ) : null
           return wrapInput(Select, v.key, v.label, null, childs)
         case 'path':
-          return wrapInput(PathField, v.key, v.label)
+          return wrapInput(PathField, v.key, v.label, {openFolder: v.extra?.folder})
       }
     }
 
@@ -114,14 +115,14 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
     )
 
     // console.log(`inputs =>`,inputs)
-    
+
     let actionInputs = []
     inputs && inputs.forEach(inp => {
       actionInputs.push(buildInput(inp))
     })
-    
+
     // console.log(`outputs =>`, actionInputs)
-      
+
     return actionInputs
   }
 

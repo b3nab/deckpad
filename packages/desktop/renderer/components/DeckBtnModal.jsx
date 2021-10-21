@@ -41,10 +41,23 @@ const ipc = electron.ipcRenderer || false
 
 export const DeckBtnModal = ({ show, close, btnSettings, saveDeckBtn }) => {
   const [ plugins, setPlugins ] = useState()
+  const shapes = [
+    {
+      name: 'circle',
+      icon: CircleIcon
+    },
+    {
+      name: 'square',
+      icon: SquareIcon
+    },
+    {
+      name: 'none',
+      icon: NoneIcon
+    },
+  ]
   
   useEffect(() => {
     if(ipc) {
-      // ipc.send('plugins-list')
       ipc.on('plugins-list-update', (event, data) => { 
         console.log(`plugins are: ${JSON.stringify(data, null, 2)}`)
         setPlugins(data)
@@ -105,15 +118,11 @@ export const DeckBtnModal = ({ show, close, btnSettings, saveDeckBtn }) => {
                     label="Shape"
                     exclusive
                   >
-                    <ToggleButton value="circle" aria-label="circle">
-                      <CircleIcon />
-                    </ToggleButton>
-                    <ToggleButton value="square" aria-label="square">
-                      <SquareIcon />
-                    </ToggleButton>
-                    <ToggleButton value="none" aria-label="none">
-                      <NoneIcon />
-                    </ToggleButton>
+                    {shapes.map((shape, i) => (
+                      <ToggleButton key={i} value={shape.name} aria-label={shape.name}>
+                        <shape.icon />
+                      </ToggleButton>
+                    ))}
                   </Field>
                   <Typography as="h6">Colors</Typography>
                   <Field component={ColorField}
