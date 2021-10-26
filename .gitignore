@@ -1,4 +1,4 @@
-node_modules/**/*
+*/node_modules/**/*
 npm-debug.*
 *.lock
 *.log
@@ -14,3 +14,7 @@ Design/*
 new.board
 TEST.md
 TODO.md
+node_modules
+dist
+build
+builds

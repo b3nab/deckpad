@@ -5,6 +5,28 @@
   "devDependencies": {
     "lerna": "^3.22.1"
   },
+  "scripts": {
+    "---------- YARN EXEC ----------": "",
+    "desktop": "lerna --stream --scope @deckpad/desktop exec yarn",
+    "mobile": "lerna --stream --scope @deckpad/mobile exec yarn",
+    "cli": "lerna --stream --scope @deckpad/cli exec yarn",
+    "sdk": "lerna --stream --scope @deckpad/sdk exec yarn",
+    "---------- YARN DEV ----------": "",
+    "dev:desktop": "lerna --stream --scope @deckpad/desktop run dev",
+    "dev:mobile": "lerna --stream --scope @deckpad/mobile run dev",
+    "dev:cli": "lerna --stream --scope @deckpad/cli run dev",
+    "dev:sdk": "lerna --stream --scope @deckpad/sdk run dev",
+    "---------- YARN ADD ----------": "",
+    "add:desktop": "lerna --stream --scope @deckpad/desktop exec yarn add",
+    "add:mobile": "lerna --stream --scope @deckpad/mobile exec yarn add",
+    "add:cli": "lerna --stream --scope @deckpad/cli exec yarn add",
+    "add:sdk": "lerna --stream --scope @deckpad/sdk exec yarn add",
+    "---------- YARN BUILD ----------": "",
+    "build:desktop": "lerna --stream --scope @deckpad/desktop exec yarn build",
+    "build:mobile": "lerna --stream --scope @deckpad/mobile exec yarn build",
+    "build:cli": "lerna --stream --scope @deckpad/cli exec yarn build",
+    "build:sdk": "lerna --stream --scope @deckpad/sdk exec yarn build"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
