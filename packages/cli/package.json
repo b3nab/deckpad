@@ -1,0 +1,58 @@
+{
+  "name": "@deckpad/cli",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "CLI for DeckPad Toolkit - create, build and release extensions for DeckPad",
+  "keywords": [
+    "padkit",
+    "deckpad",
+    "extensions-kit",
+    "toolkit"
+  ],
+  "author": "b3nab <3042431+b3nab@users.noreply.github.com>",
+  "homepage": "https://github.com/b3nab/deckpad#readme",
+  "license": "MIT",
+  "source": "src/cli.js",
+  "main": "dist/cli.js",
+  "bin": {
+    "padkit": "dist/cli.js"
+  },
+  "directories": {
+    "dist": "dist",
+    "templates": "templates",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b3nab/deckpad.git"
+  },
+  "scripts": {
+    "parcel": "parcel watch",
+    "build": "rollup -c",
+    "dev": "rollup -cw"
+  },
+  "bugs": {
+    "url": "https://github.com/b3nab/deckpad/issues"
+  },
+  "dependencies": {
+    "es6-template-strings": "^2.0.1",
+    "log-symbols": "^5.0.0",
+    "meow": "^10.1.1",
+    "prompts": "^2.4.2",
+    "recursive-copy": "^2.0.13",
+    "through2": "^4.0.2",
+    "update-notifier": "^5.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "rollup": "^2.58.0",
+    "rollup-plugin-preserve-shebangs": "^0.2.0"
+  }
+}

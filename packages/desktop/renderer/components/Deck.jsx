@@ -36,18 +36,21 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig, sendIPC }) => {
   // console.log('[UI|Deck] board actual is => ', board)
   const classes = useStyles()
   const [ shadowBoard, setShadowBoard ] = useState({})
-  // deepmerge(source, target)
-  // source is the partial or path payload
+  // deepmerge(partial, target)
+  // partial is the partial or path payload
   // target is the full object (in time it's the previous object)
-  const deepmerge = (source, target) => {
-    let final = target
-    for (const [key, val] of Object.entries(source)) {
+  const deepmerge = (partial, target) => {
+    let final = {...target}
+    for (const [key, val] of Object.entries(partial)) {
       if (val !== null && typeof val === `object`) {
-        if (target[key] === undefined) {
+        if (final[key] === undefined) {
           final[key] = new val.__proto__.constructor()
         }
-        final[key] = deepmerge(val, target[key])
+        final[key] = deepmerge(val, final[key])
       } else {
+        if (final[key] === undefined) {
+          final[key] = new val.__proto__.constructor()
+        }
         final[key] = val
       }
     }
@@ -69,14 +72,37 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig, sendIPC }) => {
     }
   })
 
+  const matrixSwitchAB = (matrix, a,b) => {
+    const elA = matrix[a.row][a.col]
+    const elB = matrix[b.row][b.col]
+    matrix[a.row][a.col] = elB
+    matrix[b.row][b.col] = elA
+    return matrix
+  }
+  const objSwitchAB = (obj, a,b) => {
+    let newObj = {
+      [a.row]: {[a.col]: {}},
+      [b.row]: {[b.col]: {}}
+    }
+    newObj[a.row][a.col] = obj[b.row]?.[b.col] || null
+    newObj[b.row][b.col] = obj[a.row]?.[a.col] || null
+    return newObj
+  }
+
   const switchPosition = ({position, target}) => {
     // console.log('Switch Position => ', position, ' to ', target)
-    const positionItem = board[actual].buttons[position.row][position.col]
-    const targetItem = board[actual].buttons[target.row][target.col]
     let newDeck = {...board[actual]}
-    newDeck.buttons[target.row][target.col] = positionItem
-    newDeck.buttons[position.row][position.col] = targetItem
+    newDeck.buttons = matrixSwitchAB(newDeck.buttons, position, target)
+    console.log(newDeck)
     updateDeck(newDeck)
+    const actualId = board[actual].id
+    let newShad = {...shadowBoard[actualId]}
+    newShad.buttons = objSwitchAB(newShad.buttons, position, target)
+    updateShadowBoard({[actualId]: newShad})
+    // const positionItem = board[actual].buttons[position.row][position.col]
+    // const targetItem = board[actual].buttons[target.row][target.col]
+    // newDeck.buttons[target.row][target.col] = positionItem
+    // newDeck.buttons[position.row][position.col] = targetItem
   }
 
   const fireAction = ({action, origin}) => {
@@ -89,7 +115,7 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig, sendIPC }) => {
 
   return (
     <BoardWrapper>
-      {board ? 
+      {board ?
         board.map((deck, i) => (
           <DeckWrapper key={deck.id} visible={actual == i}>
             {deck.buttons.slice(0,deck.row).map((row, r) => (
@@ -110,7 +136,7 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig, sendIPC }) => {
             ))}
           </DeckWrapper>
         ))
-      : 
+      :
       <div>Loading...</div>
     }
 
