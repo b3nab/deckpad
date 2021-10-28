@@ -1,0 +1,46 @@
+{
+  "name": "@deckpad/plugin-companion",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Official deckpad plugin for companion actions",
+  "keywords": [
+    "deckpad",
+    "extension",
+    "deckpad-extension",
+    "deckpad-plugin"
+  ],
+  "author": "b3nab",
+  "homepage": "https://github.com/b3nab/undefined#readme",
+  "license": "MIT",
+  "source": "src/companion.js",
+  "main": "dist/companion.js",
+  "directories": {
+    "dist": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b3nab/undefined.git"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -cw"
+  },
+  "bugs": {
+    "url": "https://github.com/b3nab/undefined/issues"
+  },
+  "dependencies": {
+    "@deckpad/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "rollup": "^2.58.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "rollup-plugin-preserve-shebangs": "^0.2.0"
+  }
+}
