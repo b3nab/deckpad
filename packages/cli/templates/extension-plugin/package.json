@@ -1,19 +1,19 @@
 {
-  "name": "${name}",
+  "name": "${package_name}",
   "version": "${version}",
   "type": "module",
   "description": "${description}",
   "keywords": [
+    "deckpad-extension",
     "deckpad",
     "extension",
-    "deckpad-extension",
     "deckpad-plugin"
   ],
   "author": "${author}",
   "homepage": "${github_repo}#readme",
   "license": "${license}",
-  "source": "src/index.js",
-  "main": "dist/index.js",
+  "source": "src/${ext_name}.js",
+  "main": "dist/${ext_name}.js",
   "directories": {
     "dist": "dist",
     "test": "__tests__"
@@ -30,13 +30,13 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -cw"
   },
   "bugs": {
     "url": "${github_repo}/issues"
   },
   "dependencies": {
-    "@deckpad/sdk": "0.0.1"
+    "@deckpad/sdk": "^1.0.0"
   },
   "devDependencies": {
     "rollup": "^2.58.0",

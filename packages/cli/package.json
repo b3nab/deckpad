@@ -47,6 +47,7 @@
     "meow": "^10.1.1",
     "prompts": "^2.4.2",
     "recursive-copy": "^2.0.13",
+    "semver": "^7.3.5",
     "through2": "^4.0.2",
     "update-notifier": "^5.1.0"
   },

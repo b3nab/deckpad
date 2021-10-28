@@ -1,11 +1,11 @@
 import { useState, syncPage, syncLabel, dynamicBoard } from '@deckpad/sdk'
 
-// ${name}
+// ${package_name}
 // extension-${type}
 // --
-// myplugin:
+// ${ext_name}:
 //    - action
-const myplugin = () => {
+const ${ext_name} = () => {
   const [ something, setSomething ] = useState()
 
   return {
@@ -19,4 +19,4 @@ const myplugin = () => {
   }
 }
 
-export default myplugin
+export default ${ext_name}

@@ -3,8 +3,9 @@ import semver from 'semver'
 import { buildManifest, initExtension } from './helpers'
 
 const init = async (inputs) => {
+  const folder = inputs[0] || null
   let extType, extName
-  const namePrefix = () => `deckpad-${extType}-`
+  const namePrefix = (prev, values) => `@deckpad/${values.type}-${values.ext_name}`
   const questions = [
     {
       type: 'select',
@@ -17,26 +18,32 @@ const init = async (inputs) => {
       ]
     },
     {
+      type: prev => prev == 'plugin' ? 'text' : null,
+      name: 'ext_name',
+      message: '🧑‍💻 name for your plugin fn:',
+      validate: val => Boolean(val),
+    },
+    {
       type: prev => {
         extType = prev
         return 'text'
       },
-      name: 'name',
-      message: `🧰 name for your extension:`,
-      initial: prev => `deckpad-${prev}-`,
+      name: 'package_name',
+      message: `🧰 name for your extension (for npm package.json):`,
+      initial: namePrefix,
       validate: val => Boolean(val),
     },
     {
       type: 'text',
       name: 'description',
-      message: `🧰 Write a description:`,
+      message: `🧰 Write a description (for npm package.json):`,
       initial: '',
     },
     {
       type: 'text',
       name: 'version',
       message: 'Insert starting version:',
-      initial: '1.0.0',
+      initial: '0.0.1',
       format: v => semver.clean(v),
       validate: val => Boolean(semver.valid(val)),
     },
@@ -53,13 +60,13 @@ const init = async (inputs) => {
       initial: '',
     },
     {
-      type: val => Boolean(val) ? 'text' : null,
+      type: 'text',
       name: 'github_user',
       message: 'Insert github username:',
-      initial: '',
+      initial: prev => prev || '',
     },
     {
-      type: val => Boolean(val) ? 'text' : null,
+      type: 'text',
       name: 'github_repo',
       message: 'Insert github repo name:',
       initial: inputs[0] || '',
@@ -69,10 +76,10 @@ const init = async (inputs) => {
       name: 'license',
       message: 'Choose a license:',
       choices: [
-        { title: 'none', value: '' },
         { title: 'MIT', value: 'MIT' },
         { title: 'ISC', value: 'ISC' },
         { title: 'APACHE', value: 'APACHE' },
+        { title: 'none', value: '' },
       ]
     },
     // {
@@ -88,7 +95,17 @@ const init = async (inputs) => {
   ]
 
   const answers = await prompts(questions)
-  const folder = inputs[0] || null
-  initExtension(buildManifest(answers), folder)
+  const validAnswers = [
+    'type',
+    'package_name',
+    'description',
+    'version',
+    'email',
+    'author',
+    'github_user',
+    'license'
+  ].reduce((res, k) => res && answers.hasOwnProperty(k), true)
+
+  validAnswers && initExtension(buildManifest(answers), folder)
 }
 export default init

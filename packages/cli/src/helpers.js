@@ -11,7 +11,13 @@ const templatesDir = (extType) => path.join(__dirname, '..', 'templates', `exten
 const options = manifest => ({
 	overwrite: true,
 	dot: true,
-	transform: function(src, dest, stats) {
+  rename: function(path) {
+    if(path.endsWith('src/__plugin__.js')) {
+      return path.replace('__plugin__', manifest.ext_name)
+    }
+    return path
+  },
+  transform: function(src, dest, stats) {
 		return thr(function(chunk, enc, done)  {
 			done(null, template(chunk.toString(), manifest))
 		})
