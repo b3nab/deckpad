@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "dev": "yarn run start",
     "upgrade": "expo upgrade",
-    "eject": "expo eject"
+    "build": "expo build:android -t app-bundle"
   },
   "dependencies": {
     "@expo-google-fonts/righteous": "^0.2.0",
