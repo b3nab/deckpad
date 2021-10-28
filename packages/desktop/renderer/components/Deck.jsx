@@ -99,10 +99,6 @@ export const Deck = ({ board, actual, updateDeck, openBtnConfig, sendIPC }) => {
     let newShad = {...shadowBoard[actualId]}
     newShad.buttons = objSwitchAB(newShad.buttons, position, target)
     updateShadowBoard({[actualId]: newShad})
-    // const positionItem = board[actual].buttons[position.row][position.col]
-    // const targetItem = board[actual].buttons[target.row][target.col]
-    // newDeck.buttons[target.row][target.col] = positionItem
-    // newDeck.buttons[position.row][position.col] = targetItem
   }
 
   const fireAction = ({action, origin}) => {

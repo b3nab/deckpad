@@ -1,23 +1,26 @@
-import { dialog, ipcMain } from 'electron'
+import { app, dialog, ipcMain } from 'electron'
 import isDev from 'electron-is-dev'
 import { PluginManager } from 'live-plugin-manager'
+import epm from 'electron-plugin-manager'
 import PluginClerk from 'pluginclerk'
 import pubsub from 'electron-pubsub'
-import equal from 'fast-deep-equal'
 import { Quantum, Hyper } from '@deckpad/sdk'
 import {
   example,
-  companion,
   audio,
+  system,
   commands,
+  companion,
 } from '../plugins'
+import { extensionsDir } from '../configs'
 
-const manager = new PluginManager()
+// const manager = new PluginManager()
+
 const clerk = new PluginClerk({
   // keyword specified inside package.json:keywords property
-  keyword: 'deckpad-plugin',
+  keyword: 'deckpad-extension',
   // prefix of the plugin to be valid
-  prefix: 'deckpad-',
+  // prefix: 'deckpad-',
   // function used for logging receives (logLevel, ...message)
   log: isDev ? console.log : null,
   cacheDuration: null,
@@ -27,18 +30,28 @@ const clerk = new PluginClerk({
 //          Plugins System
 // ---------------------------------
 export const plugins = () => {
+
+  // Start Electron-Plugin-Manager
+  epm.manager(ipcMain)
+
   // ---- INIT -----
   const initPlugin = (pluginName, plugin) => {
     console.log(`init plugin: ${pluginName}`)
     Hyper.register(pluginName, plugin)
   }
+
+  // Installed plugins
+  const installed = epm.list(extensionsDir)
+  console.log('extensionsDir ', extensionsDir)
+  console.log('installed ', installed)
   // ------------------------------
   // ---- Load Default Plugins ----
   // ------------------------------
   // isDev && initPlugin("example", example)
-  initPlugin("companion", companion)
   initPlugin("audio", audio)
+  initPlugin("system", system)
   initPlugin("commands", commands)
+  initPlugin("companion", companion)
   // initPlugin("deckpadBase", deckpadBase)
 
   // ---- IPC Listeners ----

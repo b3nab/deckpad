@@ -8,6 +8,8 @@ import { Quantum } from '@deckpad/sdk'
 import { loadIPCs, plugins, deckServer, saveAndLoad, image } from './ipc'
 import { createMainWindow, buildMenu, buildTray } from './helpers'
 import { startDeckServer } from './server'
+import epm from 'electron-plugin-manager'
+import { extensionsDir } from './configs'
 
 const iconPath = path.join(__dirname, '..', 'resources', 'icons/icon-512x512.png')
 const iconImage = nativeImage.createFromPath(iconPath)
@@ -24,22 +26,7 @@ if (isProd) {
   console.log('[DeckPad]')
   console.log('platform: ', process.platform)
   console.log('locale: ', app.getLocale())
-  // ---- Start Window ----
-  // ----------------------
-  const mainWin = await createMainWindow({
-    prefs: {
-      name: 'main',
-      options: {
-        backgroundColor: '#030303',
-        icon: iconImage,
-        width: 1000,
-        height: 720,
-        minWidth: 665,
-        minHeight: 450,
-      }
-    },
-    port: process.argv[2]
-  })
+  let mainWin
 
   const store = new Store()
   const toConfigurator = (channel, msg) => mainWin.webContents.send(channel, msg)
@@ -55,6 +42,10 @@ if (isProd) {
     ipcMain,
     store,
     toConfigurator,
+    ext: {
+      epm,
+      extensionsDir
+    },
   })
 
   loadIPCs([
@@ -64,9 +55,26 @@ if (isProd) {
     plugins,
   ])
 
-  // ---- Window Decorations ----
+  // ---- App Decorations ----
   // buildMenu()
   // buildTray(iconImage)
+
+  // ---- Start Window ----
+  // ----------------------
+  mainWin = await createMainWindow({
+    prefs: {
+      name: 'main',
+      options: {
+        backgroundColor: '#030303',
+        icon: iconImage,
+        width: 1000,
+        height: 720,
+        minWidth: 665,
+        minHeight: 450,
+      }
+    },
+    port: process.argv[2]
+  })
 
   // Inform App that all DeckPad modules are ready
   toConfigurator('deckpad-ready', true)

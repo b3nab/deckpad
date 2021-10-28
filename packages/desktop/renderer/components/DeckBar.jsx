@@ -18,10 +18,9 @@ export const DeckBar = ({ newBoard, loadBoard, saveBoard, saveBoardAs, openSetti
           <Button className={classes.marginRight} variant="contained" color="primary" size="small" onClick={() => saveBoard()}>SAVE</Button>
           <Button className={classes.marginRight} variant="contained" color="primary" size="small" onClick={() => saveBoardAs()}>SAVE AS..</Button>
           {/* <Button className={classes.marginRight} variant="contained" color="primary" size="small" onClick={() => openSettings()}>SETTINGS</Button> */}
-          {/* <Button className={classes.marginRight} variant="contained" color="primary" size="small" onClick={() => openExtensions()}>EXTENSIONS</Button> */}
+          <Button className={classes.marginRight} variant="contained" color="primary" size="small" onClick={() => openExtensions()}>EXTENSIONS</Button>
         </Grid>
       </Grid>
     </AppBar>
     )
   }
-  
