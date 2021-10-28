@@ -7,7 +7,7 @@
 // ---
 import Hyper from "./hyper"
 
-let board, virtualBoard, store, pubsub, ipcMain
+let board, virtualBoard, store, pubsub, ipcMain, epm, extensionsDir
 let toConfigurator = () => {}
 let toCompanion = () => {}
 let toPads = () => {}
@@ -18,6 +18,8 @@ function init(conf) {
   store = conf.store
   pubsub = conf.pubsub
   ipcMain = conf.ipcMain
+  epm = conf.ext.epm
+  extensionsDir = conf.ext.extensionsDir
   toConfigurator = conf.toConfigurator
   toCompanion = (...params) => pubsub.publish('io', ...params)
   toPads = (...data) => {
@@ -25,7 +27,7 @@ function init(conf) {
     toCompanion(...data)
   }
   // configure Hyper and its itnernal vars
-  Hyper.configure({ipcMain, toConfigurator, toCompanion, toPads})
+  Hyper.configure({ipcMain, toConfigurator, toCompanion, toPads, epm, extensionsDir})
 
   // pubsub listener on deckServer
   // to call fire() on plugin

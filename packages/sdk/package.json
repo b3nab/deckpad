@@ -11,7 +11,7 @@
   ],
   "author": "b3nab <3042431+b3nab@users.noreply.github.com>",
   "homepage": "https://github.com/b3nab/deckpad#readme",
-  "license": "ISC",
+  "license": "MIT",
   "main": "lib/index.js",
   "directories": {
     "lib": "lib"

@@ -1,7 +1,7 @@
 // @deckpad/sdk
 // Copyright (c) b3nab
 // ---
-// --- 
+// ---
 // Hyper
 // a plugin manager system
 // deeply inspired by React.js and ReactFiber implementation
@@ -16,11 +16,16 @@ const Hyper = {
   toPads: null,
   ipcMain: null,
 
-  configure: function({ ipcMain, toConfigurator, toCompanion, toPads }) {
+  configure: function({ ipcMain, toConfigurator, toCompanion, toPads, epm, extensionsDir }) {
     Hyper.toConfigurator = toConfigurator
     Hyper.toCompanion = toCompanion
     Hyper.toPads = toPads
     Hyper.ipcMain = ipcMain
+    Hyper.ipcMain.handle('extensions.get-dir', () => extensionsDir)
+    Hyper.ipcMain.handle('extensions.use', (e, p) => {
+      const plugLoaded = epm.load(extensionsDir, p)
+      console.log('POC::\nis-number(0) ? ', plugLoaded.arc4random())
+    })
     const registerBoardWorkersFor = (event) => {
       // console.log('registerBoardWorkersFor => ', event)
       Hyper.ipcMain.on(event, (event, args) => {
