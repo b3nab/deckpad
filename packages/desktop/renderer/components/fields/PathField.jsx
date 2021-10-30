@@ -1,9 +1,9 @@
 import electron from 'electron'
 import React, { Fragment, useEffect } from 'react'
 import { Field } from 'formik'
-import { TextField } from 'formik-material-ui'
-import { Button } from '@material-ui/core'
-import { Delete as DeleteIcon } from '@material-ui/icons'
+import { TextField } from 'formik-mui'
+import { Button } from '@mui/material'
+import { Delete as DeleteIcon } from '@mui/icons-material'
 
 // Preventing NextJS SSR webpacking
 const ipc = electron.ipcRenderer || false

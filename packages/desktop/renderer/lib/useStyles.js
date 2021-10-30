@@ -1,13 +1,41 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 
 const drawerWidth = 270
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(() => ({
   root: {
     height: '100vh',
-    display: 'flex',
-    background: theme.palette.background.default,
-    color: theme.palette.text.primary,
+  },
+  rootGrid: {
+    height: '100%',
+    flex: 1,
+    flexDirection: 'row',
+  },
+
+  rootMain: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  rootSide: {
+    flexDirection: 'column'
+  },
+
+  flex: {
+    display: 'flex'
+  },
+
+  pluginInputs: {
+    margin: '0.5rem 0'
+  }
+}))
+
+
+const useStylesOLD = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+    // display: 'flex',
+    // background: theme.palette.background.default,
+    // color: theme.palette.text.primary,
   },
   appBar: {
     width: '100%',

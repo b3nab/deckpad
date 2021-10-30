@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Paper } from '@material-ui/core'
+import { Paper } from '@mui/material'
 import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
 import { useStyles } from '../lib/useStyles'

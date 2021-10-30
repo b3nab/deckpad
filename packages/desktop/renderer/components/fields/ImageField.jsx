@@ -1,7 +1,7 @@
 import electron from 'electron'
 import React, { Fragment, useEffect } from 'react'
-import { Button } from '@material-ui/core'
-import { Delete as DeleteIcon } from '@material-ui/icons'
+import { Button } from '@mui/material'
+import { Delete as DeleteIcon } from '@mui/icons-material'
 
 // Preventing NextJS SSR webpacking
 const ipc = electron.ipcRenderer || false

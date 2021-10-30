@@ -1,5 +1,5 @@
-import { createTheme } from '@material-ui/core/styles';
-import red from '@material-ui/core/colors/red';
+import { createTheme } from '@mui/material/styles'
+import { red } from '@mui/material/colors'
 
 
 const colors = {
@@ -14,7 +14,7 @@ export const theme = createTheme({
   },
   divider: 'transparent',
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       // main: '#1098AD',
       // main: '#556cd6',
@@ -88,4 +88,4 @@ export const theme = createTheme({
       }
     }
   }
-});
+})

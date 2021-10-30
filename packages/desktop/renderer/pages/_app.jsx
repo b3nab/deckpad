@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
-import { ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '../lib/theme'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -23,16 +23,18 @@ function MyApp({Component, pageProps}) {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <title>DeckPad - Board Configurator</title>
       </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <DndProvider backend={HTML5Backend}>
-          <DeckProvider>
-            <Component {...pageProps} />
-          </DeckProvider>
-        </DndProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <DndProvider backend={HTML5Backend}>
+            <DeckProvider>
+              <Component {...pageProps} />
+            </DeckProvider>
+          </DndProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </React.Fragment>
-  )
+  );
 }
 
 

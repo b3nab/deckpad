@@ -1,10 +1,10 @@
 import electron from 'electron'
 import React, { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
-import { 
+import {
   Select,
   TextField,
-} from 'formik-material-ui'
+} from 'formik-mui'
 import {
   Grid,
   Button,
@@ -18,18 +18,16 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-} from '@material-ui/core'
+} from '@mui/material'
+import { ToggleButton } from '@mui/material';
 import {
-  ToggleButton,
-} from '@material-ui/lab'
-import { 
   ToggleButtonGroup,
-} from 'formik-material-ui-lab'
+} from 'formik-mui-lab'
 import {
   RadioButtonUnchecked as CircleIcon,
   CheckBoxOutlineBlank as SquareIcon,
   Block as NoneIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import {
   ColorField,
   ImageField,
@@ -55,10 +53,10 @@ export const DeckBtnModal = ({ show, close, btnSettings, saveDeckBtn }) => {
       icon: NoneIcon
     },
   ]
-  
+
   useEffect(() => {
     if(ipc) {
-      ipc.on('plugins-list-update', (event, data) => { 
+      ipc.on('plugins-list-update', (event, data) => {
         console.log(`plugins are: ${JSON.stringify(data, null, 2)}`)
         setPlugins(data)
       })

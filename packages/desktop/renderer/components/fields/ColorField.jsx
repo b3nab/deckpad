@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { RgbaColorPicker } from 'react-colorful'
-import { Typography, Popover } from '@material-ui/core'
+import { Typography, Popover } from '@mui/material'
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
 import styled from 'styled-components'
 

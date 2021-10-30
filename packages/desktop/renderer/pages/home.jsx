@@ -2,7 +2,8 @@ import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { CssBaseline, Grid, Box } from '@material-ui/core'
+import clsx from 'clsx'
+import { CssBaseline, Grid, Box } from '@mui/material'
 
 import { useStyles } from '../lib/useStyles'
 import { useDeckPad } from '../lib/useDeckPad'
@@ -16,7 +17,7 @@ import { Settings, Extensions } from '../components/modals'
 
 function Home() {
   const classes = useStyles()
-  const { 
+  const {
     sendIPC,
     newBoard,
     loadBoard,
@@ -43,9 +44,9 @@ function Home() {
   }
 
   const serverStartStopText = serverStatus ? 'STOP ' : 'START '
-  
+
   return (
-    <Box className={classes.root} p={2}>
+    <Box className={clsx([classes.flex, classes.root])} p={2}>
       {/* <CssBaseline /> */}
       <Settings
         showSettings={showSettings}
@@ -56,47 +57,43 @@ function Home() {
         plugins={plugins}
         close={() => setShowExtensions(false) }
       />
-      <Grid container spacing={2}>
-        <Grid container item spacing={2} className={classes.content}>
-          <Grid item>
-            <DeckBar 
-              newBoard={newBoard}
-              loadBoard={loadBoard}
-              saveBoard={saveBoard}
-              saveBoardAs={saveBoardAs}
-              openSettings={() => setShowSettings(true)}
-              openExtensions={() => setShowExtensions(true)}
-              />
-            </Grid>
-          <Grid item className={classes.DeckPaper}>
-            <Deck board={board} actual={actual} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} sendIPC={sendIPC} />
-          </Grid>
-          <Grid container item>
-            <BtnConfig btn={btn} saveBtn={saveBtn} plugins={plugins} />
-          </Grid>
-        </Grid>
-        <Grid container item>
-          <Side
-            board={board}
-            actual={actual}
-            setActual={setActual}
-            addPage={addPage}
-            deletePage={deletePage}
-            maxCol={maxCol}
-            maxRow={maxRow}
-            updateCol={updateCol}
-            updateRow={updateRow}
-            updateActualDeck={updateActualDeck}
-            serverStartStop={serverStartStop}
-            serverStartStopText={serverStartStopText}
-            serverIP={serverIP}
-            stats={{
-              companionName,
-              serverStatus,
-            }}
-            plugins={plugins}
+      <Grid className={clsx([classes.flex, classes.rootGrid])}>
+        <Grid className={clsx([classes.flex, classes.rootMain])}>
+          <DeckBar
+            newBoard={newBoard}
+            loadBoard={loadBoard}
+            saveBoard={saveBoard}
+            saveBoardAs={saveBoardAs}
+            openSettings={() => setShowSettings(true)}
+            openExtensions={() => setShowExtensions(true)}
           />
+          <Deck board={board} actual={actual} updateDeck={updateActualDeck} openBtnConfig={openBtnConfig} sendIPC={sendIPC} />
+          <BtnConfig btn={btn} saveBtn={saveBtn} plugins={plugins} />
+          {/* <Grid className={clsx([classes.flex, classes.DeckPaper])}>
+          </Grid>
+          <Grid>
+          </Grid> */}
         </Grid>
+        <Side
+          board={board}
+          actual={actual}
+          setActual={setActual}
+          addPage={addPage}
+          deletePage={deletePage}
+          maxCol={maxCol}
+          maxRow={maxRow}
+          updateCol={updateCol}
+          updateRow={updateRow}
+          updateActualDeck={updateActualDeck}
+          serverStartStop={serverStartStop}
+          serverStartStopText={serverStartStopText}
+          serverIP={serverIP}
+          stats={{
+            companionName,
+            serverStatus,
+          }}
+          plugins={plugins}
+        />
       </Grid>
     </Box>
   )

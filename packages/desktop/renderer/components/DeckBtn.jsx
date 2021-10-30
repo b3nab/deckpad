@@ -3,10 +3,10 @@ import electron from 'electron'
 import {
   Typography,
   Button
-} from '@material-ui/core'
+} from '@mui/material'
 import { 
   Add,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import styled from 'styled-components'
 import { useDrag, useDrop } from 'react-dnd'
 

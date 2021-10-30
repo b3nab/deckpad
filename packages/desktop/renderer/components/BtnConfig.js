@@ -5,7 +5,8 @@ import {
   Checkbox,
   Select,
   TextField,
-} from 'formik-material-ui'
+  ToggleButtonGroup,
+} from 'formik-mui'
 import {
   Grid,
   Button,
@@ -22,18 +23,13 @@ import {
   MenuItem,
   Paper,
   Box,
-} from '@material-ui/core'
-import {
-  ToggleButton,
-} from '@material-ui/lab'
-import {
-  ToggleButtonGroup,
-} from 'formik-material-ui-lab'
+} from '@mui/material'
+import { ToggleButton } from '@mui/material';
 import {
   RadioButtonUnchecked as CircleIcon,
   CheckBoxOutlineBlank as SquareIcon,
   Block as NoneIcon
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import {
   ColorField,
   ImageField,
@@ -100,9 +96,10 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
 
 
     const wrapInput = (Comp, key, label, fieldExtras=null, childs=null) => (
-      <FormControl>
+      <FormControl key={key} className={classes.pluginInputs}>
         {label && <InputLabel htmlFor={`action.options.${key}`}>{label}</InputLabel>}
         <Field component={Comp}
+          label={label}
           name={`action.options.${key}`}
           inputProps={{
             id: `action.options.${key}`,
@@ -148,21 +145,20 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
 
               <Box display="flex" p={2} flexGrow="1">
                 <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
-                  <Grid container item alignItems="flex-start" justifyContent="flex-start">
-                    <Grid container item direction="column" alignItems="center" justifyContent="flex-start">
+                  <Grid alignItems="flex-start" justifyContent="flex-start">
+                    <Grid alignItems="center" justifyContent="flex-start">
                       <DeckBtn {...values} clickAction={() => { if(ipc) { ipc.send('open-image') } }} />
                       <Field component={ImageField}
                         name="image"
                         type="text"
                         label="Image"
                       />
-                      {/* <Typography as="h6">Shape</Typography> */}
                       <Field component={ToggleButtonGroup}
-                        id="shape"
+                        // id="shape"
                         name="shape"
                         type="checkbox"
                         label="Shape"
-                        exclusive
+                        exclusive="true"
                       >
                         <ToggleButton value="circle" aria-label="circle">
                           <CircleIcon />
@@ -175,9 +171,7 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
                         </ToggleButton>
                       </Field>
                     </Grid>
-                    <Grid container item direction="column" justifyContent="flex-start">
-                      {/* <Typography as="h6">Text</Typography> */}
-                      {/* <Typography as="h6">Colors</Typography> */}
+                    <Grid justifyContent="flex-start">
                       <Field component={ColorField}
                         name="bgColor"
                         type="text"
@@ -208,20 +202,20 @@ export const BtnConfig = ({ show, close, btn, saveBtn, plugins }) => {
                     ) : (
                       <>
                       { plugins && (
-                        <FormControl>
-                          <InputLabel htmlFor="action.plugin">Plugin</InputLabel>
+                        <FormControl margin="dense">
                           <Field
                             component={Select}
                             name="action.plugin"
+                            label="Plugin"
                             inputProps={{
                               id: 'action.plugin',
                             }}
                           >
                             {Object.entries(plugins).map(([namePlugin, plugin]) => [
-                                (<ListSubheader key={namePlugin}>{namePlugin.toUpperCase()}</ListSubheader>),
-                                ...Object.entries(plugin).map(([nameAction, action]) => (
-                                  <MenuItem key={nameAction} value={`${namePlugin}=>${nameAction}`}>{action.label}</MenuItem>
-                                ))
+                              (<ListSubheader key={namePlugin}>{namePlugin.toUpperCase()}</ListSubheader>),
+                              ...Object.entries(plugin).map(([nameAction, action]) => (
+                                <MenuItem key={nameAction} value={`${namePlugin}=>${nameAction}`}>{action.label}</MenuItem>
+                              ))
                             ])}
                           </Field>
                         </FormControl>

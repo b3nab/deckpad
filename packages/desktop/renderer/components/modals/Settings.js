@@ -8,7 +8,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent
-} from '@material-ui/core'
+} from '@mui/material'
 
 // Preventing NextJS SSR webpacking
 const ipc = electron.ipcRenderer || false

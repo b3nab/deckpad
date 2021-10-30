@@ -3,7 +3,7 @@ import {
   Grid,
   AppBar,
   Button,
-} from '@material-ui/core'
+} from '@mui/material'
 import clsx from 'clsx'
 import { useStyles } from '../lib/useStyles'
 

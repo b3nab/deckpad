@@ -18,8 +18,8 @@ import {
   TextField,
   Button,
   Popover
-} from '@material-ui/core'
-import { TabContext, TabList, TabPanel } from '@material-ui/lab'
+} from '@mui/material'
+import { TabContext, TabList, TabPanel } from '@mui/lab'
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
 import {
   Add as AddIcon,
@@ -27,7 +27,7 @@ import {
   PlayArrow as PlayArrowIcon,
   Stop as StopIcon,
   ExpandMore as ExpandMoreIcon,
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import { useStyles } from '../lib/useStyles'
 import { theme } from '../lib/theme'
 
@@ -55,17 +55,8 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
   console.log('[SIDE] plugins are => ', plugins)
 
   return (
-    <Box
-      className={classes.drawer}
-      spacing={1}
-      // variant="permanent"
-      // classes={{
-      //   paper: classes.drawerPaper,
-      // }}
-      // anchor="right"
-    >
-      <Grid container spacing={2} className={clsx(classes.toolbar, classes.fullHeight)}>
-        <Grid item className={clsx(classes.flex, classes.flexEvenly)}>
+    <Grid className={clsx(classes.flex, classes.rootSide)}>
+        <Grid className={clsx(classes.flex, classes.flexEvenly)}>
           <Button size="small" className={clsx(classes.marginRight)} variant="contained" color="primary" startIcon={serverStatus ? <StopIcon/> : <PlayArrowIcon/>} onClick={() => serverStartStop()}>{serverStartStopText}</Button>
           <PopupState variant="popover" popupId="qrcode-popup">
             {(popupState) => (
@@ -85,7 +76,7 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
                 }}
                 >
                   <Box p={2} style={{background: serverIP && 'white'}}>
-                    {serverIP ? 
+                    {serverIP ?
                       <QRCode value={serverIP} />
                       :
                       <Typography>Please start the server first.</Typography>
@@ -95,10 +86,10 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
               </Fragment>
             )}
           </PopupState>
-        </Grid>  
-        <Grid item className={clsx(classes.flex, classes.flexEvenly)}>
+        </Grid>
+        <Grid className={clsx(classes.flex, classes.flexEvenly)}>
           <Button size="small" onClick={() => {}}>
-            {!!companionName ? 
+            {!!companionName ?
               <div>
                 Connected to {companionName}
               </div> : <div>
@@ -109,7 +100,7 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
           </Button>
           {/* <Button size="small" className={clsx(classes.marginBottom, classes.marginLeft)} onClick={() => {}}>Status <CircleStatus status={serverStatus}/></Button> */}
         </Grid>
-        <Grid item className={clsx(classes.flex, classes.flexGrow, classes.flexEvenly)}>
+        <Grid className={clsx(classes.flex, classes.flexGrow, classes.flexEvenly)}>
           <Paper className={clsx(classes.flexGrow)}>
             <TabContext value={tabIndex}>
             {/* <AppBar position="static"> */}
@@ -153,10 +144,10 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
               ))}
             </TabPanel>
           </TabContext>
-        
+
           </Paper>
         </Grid>
-        {/* <Grid item>
+        {/* <Grid>
           <Paper>
             <Grid container direction={"column"} spacing={2}>
             <TextField
@@ -170,7 +161,7 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
               onChange={(e) => updateActualDeck({...board[actual], name: e.target.value})}
               // variant="filled"
             />
-              
+
             <TextField
               style={{maxWidth: 100}}
               id="page-col"
@@ -195,7 +186,7 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
               onChange={(e) => updateRow(e.target.value >= maxRow ? maxRow : (e.target.value < 0 ? 0 : e.target.value))}
               variant="filled"
             />
-            
+
             <Button onClick={() => deletePage()}>
               <DeleteIcon />
             </Button>
@@ -203,15 +194,5 @@ export const Side = ({board, actual, setActual, stats, plugins, serverStartStop,
           </Paper>
         </Grid> */}
       </Grid>
-
-      {/* <Fab 
-        color="secondary"
-        aria-label="add"
-        className={classes.fab}
-        onClick={() => addPage()}>
-        <AddIcon />
-      </Fab> */}
-    </Box>
   )
 }
-    
