@@ -12,10 +12,10 @@ import loudness from 'loudness'
 
 const audio = () => {
 
-  return ({
+  return {
     'vol-up': {
       label: 'Volume Up',
-      fire: async (data) => { loudness.setVolume(await loudness.getVolume() + (data.stepUp || 10)) },
+      fire: async (data) => { loudness.setVolume((await loudness.getVolume()) + (data.stepUp || 10)) },
       inputs: [{
         type: 'number',
         key: 'stepUp',
@@ -24,7 +24,7 @@ const audio = () => {
     },
     'vol-down': {
       label: 'Volume Down',
-      fire: async (data) => { loudness.setVolume(await loudness.getVolume() - (data.stepDown || 10)) },
+      fire: async (data) => { loudness.setVolume((await loudness.getVolume()) - (data.stepDown || 10)) },
       inputs: [{
         type: 'number',
         key: 'stepDown',
@@ -50,9 +50,9 @@ const audio = () => {
     },
     'mute-toggle': {
         label: 'Toggle Mute',
-        fire: async (data) => { loudness.setMuted(!await loudness.getMuted()) },
+        fire: async (data) => { loudness.setMuted(!(await loudness.getMuted())) },
     },
-  })
+  };
 }
 
 export default audio

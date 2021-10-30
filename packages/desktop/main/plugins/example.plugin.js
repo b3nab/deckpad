@@ -24,7 +24,7 @@ const example = () => {
     console.log('useEffect - no dep || every resolve')
   })
   
-  return ({
+  return {
     'counter': {
       label: 'state counter',
       fire: async (data) => setCounter(counter+1),
@@ -59,9 +59,9 @@ const example = () => {
     },
     'external-module': {
       label: 'toggle mute external',
-      fire: async (data) => { loudness.setMuted(!await loudness.getMuted()) },
+      fire: async (data) => { loudness.setMuted(!(await loudness.getMuted())) },
     },
-  })
+  };
 }
 
 export default example

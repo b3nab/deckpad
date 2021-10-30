@@ -4,11 +4,11 @@ import { useState, syncPage, syncLabel, dynamicBoard } from '@deckpad/sdk'
 // --
 // actions:
 //    - change-deck
-const companion = () => {  
+const companion = () => {
   const [ pages, setPages ] = useState([])
   const [ counter, setCounter ] = useState(0)
   const [ clock, setClock ] = useState({})
-  
+
   dynamicBoard((board) => {
     console.log(`[dynamicBoard] update pages for plugin`)
     let newPages = []
@@ -29,7 +29,7 @@ const companion = () => {
     const time12h = `${isAM ? hours : hours - 12}:${mins}${secs}${amORpm}`
     syncLabel(data.displayAs == '12h' ? time12h : time24h)
   }
-  
+
   return {
     'change-deck': {
       label: 'Change Deck Page',
