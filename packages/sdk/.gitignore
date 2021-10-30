@@ -1,4 +1,6 @@
 node_modules
 *.log
 dist
-lib
+# WORK AROUND - include lib in git so when building sdk is fine!
+# NEED TODO: define a build pipeline for github action release-desktop.yml
+# lib
