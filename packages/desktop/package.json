@@ -4,7 +4,7 @@
   "description": "A powerful deck board app for your streaming needs! This is the desktop app, use it as a configurator for your companion mobile app (soon DeckPad on majors Stores).",
   "author": "Benedetto Abbenanti b3nab <benedetto.abbenanti@gmail.com>",
   "homepage": "https://github.com/b3nab/deckpad",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
@@ -46,7 +46,6 @@
     "live-plugin-manager": "^0.16.0",
     "loudness": "^0.4.1",
     "material-ui-popup-state": "^1.9.3",
-    "native-sound-mixer": "^3.2.3",
     "open": "^8.4.0",
     "pluginclerk": "^4.13.0",
     "react-colorful": "^5.5.0",
