@@ -7,14 +7,14 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "dev": "yarn run start",
+    "dev": "yarn start",
     "upgrade": "expo upgrade",
     "build": "expo build:android -t app-bundle"
   },
   "dependencies": {
     "@expo-google-fonts/righteous": "^0.2.0",
-    "@react-native-async-storage/async-storage": "~1.15.0",
-    "expo": "^42.0.0",
+    "@react-native-async-storage/async-storage": "~1.15.9",
+    "expo": "^42.0.5",
     "expo-app-loading": "1.1.2",
     "expo-background-fetch": "~9.2.2",
     "expo-barcode-scanner": "~10.2.2",
@@ -28,14 +28,14 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
-    "react-native-paper": "^4.4.1",
+    "react-native-paper": "^4.9.2",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-web": "~0.13.12",
-    "socket.io-client": "^4.2.0",
-    "styled-components": "^5.2.1"
+    "react-native-web": "~0.13.18",
+    "socket.io-client": "^4.3.2",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.6"
   },
   "workspaces": {
     "nohoist": [
