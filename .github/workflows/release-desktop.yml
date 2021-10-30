@@ -38,7 +38,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [ 
+        target: [
           { 'os': 'windows-latest', 'system': 'win', 'arch': 'amd64', 'ext': 'exe' },
           { 'os': 'macos-latest', 'system': 'mac', 'arch': 'amd64', 'ext': 'dmg' },
           # { 'os': 'macos-latest', 'system': 'mac', 'arch': 'arm64', 'ext': 'dmg' },
@@ -53,9 +53,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14
-      
+
       - name: Yarn install
-        run: yarn install
+        run: yarn install --network-timeout 1000000
       - name: Yarn release - Build nextron desktop app
         run: yarn run release
 
@@ -88,7 +88,7 @@ jobs:
         release_name: Desktop ${{ needs.version.outputs.v }}
         draft: false
         prerelease: false
-        
+
   # Add all the builds as assets to the release
   add:
     runs-on: ${{ matrix.target.os }}
@@ -96,7 +96,7 @@ jobs:
     if: needs.version.outputs.new == 'true'
     strategy:
       matrix:
-        target: [ 
+        target: [
           { 'os': 'windows-latest', 'system': 'win', 'arch': 'amd64', 'ext': 'exe' },
           { 'os': 'macos-latest', 'system': 'mac', 'arch': 'amd64', 'ext': 'dmg' },
           # { 'os': 'macos-latest', 'system': 'mac', 'arch': 'arm64', 'ext': 'dmg' },
