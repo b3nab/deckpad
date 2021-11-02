@@ -26,11 +26,13 @@ jobs:
           gpg --version
           gpg --list-keys
           gpg --list-secret-keys
-          echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
+          echo "$ANDROID_KEYSTORE" > release-android.jks.asc
           gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
+        env:
+          ANDROID_KEYSTORE: ${{secrets.ANDROID_KEYSTORE}}
 
         # gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
-  
+
   # prepare multiple fail-fast strategy and wait to finish before fail all action
   # fail-fast:
   #   runs-on: ubuntu-latest
@@ -58,7 +60,7 @@ jobs:
           failBuild: false
       - name:
         run: echo "DeckPad Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
-        
+
   # export assets for expo build using turtle-cli
   export:
     name: Export assets
@@ -99,10 +101,10 @@ jobs:
       #     localDir: dist
       #     remoteDir: ${{ secrets.ASSETS_FTP_REMOTE_DIR }}
 
-  
-  # build android apk
-  apk:
-    name: Build .apk file
+
+  # build android aab
+  aab:
+    name: Build .aab file
     runs-on: ubuntu-latest
     needs: [ version, export ]
     if: needs.version.outputs.new == 'true'
@@ -119,7 +121,7 @@ jobs:
         with:
           path: ~/.turtle
           key: ${{ runner.os }}-turtle
-      
+
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v4
@@ -133,16 +135,16 @@ jobs:
           gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
           yarn install
           npm install -g turtle-cli
-          turtle build:android -o ./DeckPad_${{ needs.version.outputs.v }}_android.apk --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json -t apk
+          turtle build:android -o ./DeckPad_${{ needs.version.outputs.v }}_android.aab --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json
         env:
           EXPO_ANDROID_KEY_PASSWORD: ${{ secrets.EXPO_ANDROID_KEY_PASSWORD }}
           EXPO_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.EXPO_ANDROID_KEYSTORE_PASSWORD }}
 
-      - name: Archive .apk build
+      - name: Archive .aab build
         uses: actions/upload-artifact@v2
         with:
-          name: DeckPad_${{ needs.version.outputs.v }}_android.apk
-          path: ./packages/mobile/DeckPad_${{ needs.version.outputs.v }}_android.apk
+          name: DeckPad_${{ needs.version.outputs.v }}_android.aab
+          path: ./packages/mobile/DeckPad_${{ needs.version.outputs.v }}_android.aab
 
   # build ios ipa
   # ipa:
@@ -184,7 +186,7 @@ jobs:
   release:
     name: Create Mobile Release
     runs-on: ubuntu-latest
-    needs: [ version, export, apk ]
+    needs: [ version, export, aab ]
     if: needs.version.outputs.new == 'true'
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -202,7 +204,7 @@ jobs:
         release_name: Mobile ${{ needs.version.outputs.v }}
         draft: false
         prerelease: false
-        
+
   # Add all the builds as assets to the release
   add:
     runs-on: ${{ matrix.target.os }}
@@ -210,8 +212,8 @@ jobs:
     if: needs.version.outputs.new == 'true'
     strategy:
       matrix:
-        target: [ 
-          { 'os': 'ubuntu-latest', 'system': 'android', 'ext': 'apk' },
+        target: [
+          { 'os': 'ubuntu-latest', 'system': 'android', 'ext': 'aab' },
           # { 'os': 'macos-latest', 'system': 'ios', 'ext': 'ipa' },
         ]
     steps:
