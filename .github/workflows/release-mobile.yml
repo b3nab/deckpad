@@ -214,7 +214,7 @@ jobs:
       matrix:
         target: [
           { 'os': 'ubuntu-latest', 'system': 'android', 'ext': 'aab' },
-          # { 'os': 'macos-latest', 'system': 'ios', 'ext': 'ipa' },
+          { 'os': 'macos-latest', 'system': 'ios', 'ext': 'ipa' },
         ]
     steps:
       - uses: actions/checkout@v2
