@@ -1,7 +1,0 @@
-packages:
-  # only use docs/, packages/*, packages/plugins/*
-  - docs
-  - packages/*
-  - packages/plugins/*
-  # exclude cli templates
-  - '!**/cli/templates/**'
