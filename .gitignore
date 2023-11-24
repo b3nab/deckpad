@@ -3,6 +3,8 @@ npm-debug.*
 *.lock
 *.log
 
+.nx/
+
 # macOS
 .DS_Store
 
