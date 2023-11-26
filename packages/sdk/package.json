@@ -12,7 +12,9 @@
   "author": "b3nab <3042431+b3nab@users.noreply.github.com>",
   "homepage": "https://github.com/b3nab/deckpad#readme",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "dist/deckpad.sdk.cjs",
+  "module": "dist/deckpad.sdk.mjs",
+  "typings": "dist/deckpad.sdk.d.ts",
   "directories": {
     "lib": "lib"
   },
@@ -27,7 +29,7 @@
     "url": "git+https://github.com/b3nab/deckpad.git"
   },
   "scripts": {
-    "build": "tsc ./src/index.js --allowJs --outDir lib",
+    "build": "rollup -c",
     "dev": "tsc ./src/index.js --allowJs --outDir lib -w",
     "babel": "babel ./src --out-dir ./dist --minify --compact true"
   },
@@ -35,18 +37,28 @@
     "url": "https://github.com/b3nab/deckpad/issues"
   },
   "devDependencies": {
-    "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.8",
-    "@babel/preset-env": "^7.15.8"
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "rollup": "^4.5.1",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-sourcemaps": "^0.6.3"
   },
   "babel": {
     "presets": [
-      ["@babel/preset-env", {
-        "modules": "cjs",
-        "targets": {
-          "node": "current"
+      [
+        "@babel/preset-env",
+        {
+          "modules": "cjs",
+          "targets": {
+            "node": "current"
+          }
         }
-      }]
+      ]
     ]
   }
 }

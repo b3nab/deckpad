@@ -1,26 +1,31 @@
 // @deckpad/sdk
 // Copyright (c) b3nab
 // ---
-// --- 
+// ---
 // Hyper
 // a plugin manager system
 // deeply inspired by React.js and ReactFiber implementation
 // ---
-export default function hyperize(name, fn, {
-  ipcMain,
-  toCompanion,
-  toConfigurator,
-  hydrate,
-  commit,
-  scheduleUpdate,
-}) {
+export default function hyperize(
+  name,
+  fn,
+  {
+    ipcMain,
+    toCompanion,
+    toConfigurator,
+    toPads,
+    hydrate,
+    commit,
+    scheduleUpdate,
+  }
+) {
   console.log(`hyperize => ${name}`)
   // console.log({ hyperize: this })
   // const plugin = this.engine[name]
   let idx = 0
   let efct = 0
-  let hooks = []
-  let effects = []
+  let hooks: any = []
+  let effects: any = []
   // Hype - maybe something like (so-so) ReactFiber
   return (() => {
     // console.log(`Hype of ${name}`)
@@ -32,11 +37,11 @@ export default function hyperize(name, fn, {
           buttons: {
             [origin.pos.row]: {
               [origin.pos.col]: {
-                label: label
-              }
-            }
-          }
-        }
+                label: label,
+              },
+            },
+          },
+        },
       }
       toConfigurator('update-label', shadowLabel)
       toCompanion('update-label', shadowLabel)
@@ -50,14 +55,14 @@ export default function hyperize(name, fn, {
     // Factory of `dynamic*` functions
     // used for building:
     //    - dynamicBoard(callback)
-    const dynamic = (event) => ((cb) => {
+    const dynamic = (event) => (cb) => {
       // console.log(`[hyperize] dynamic hook for ${event}`)
       ipcMain.once(event, (event, board) => {
         cb(board)
         hydrate(name)
         commit()
       })
-    })
+    }
 
     // useEffect Hook
     // use it like React!
@@ -65,10 +70,10 @@ export default function hyperize(name, fn, {
       let hasChanged = true
       const oldDeps = hooks[idx]
       const oldCleanup = effects[efct]
-      if(oldDeps) {
+      if (oldDeps) {
         hasChanged = newDeps.some((dep, i) => !Object.is(dep, oldDeps[i]))
       }
-      if(!!!newDeps || hasChanged) {
+      if (!!!newDeps || hasChanged) {
         oldCleanup && oldCleanup()
         effects[efct] = cb()
       }
@@ -77,7 +82,7 @@ export default function hyperize(name, fn, {
       efct++
       // return [state, setState]
     }
-    
+
     // useState Hook
     // use it like React!
     const useState = (initVal) => {
@@ -93,43 +98,41 @@ export default function hyperize(name, fn, {
       return [state, setState]
     }
 
-
     // WIP HOOK: useDebounce
     // ----------------------
     const useDebounce = (value, delay = 500) => {
       // State and setters fpr debounced value
-      const [debouncedValue, setDebouncedValue] = useState(value);
-      
+      const [debouncedValue, setDebouncedValue] = useState(value)
+
       useEffect(() => {
         const handler = setTimeout(() => {
-          setDebouncedValue(value);
-        }, delay);
-        
+          setDebouncedValue(value)
+        }, delay)
+
         return () => {
-          clearTimeout(handler);
-        };
-      }, [value, delay]);
-      
-      
-      return debouncedValue;
+          clearTimeout(handler)
+        }
+      }, [value, delay])
+
+      return debouncedValue
     }
-    
+
     // WIP HOOK: useDebounce
     // ----------------------
     const useReducer = (actions) => {
       let fireAction = (key) => {
         switch (key) {
-          case value:
-            
-            break;
-        
+          // case value:
+
+          //   break;
+
           default:
-            break;
+            break
         }
       }
       return fireAction
     }
-    
+
     const resolve = () => {
       idx = 0
       efct = 0
@@ -146,7 +149,7 @@ export default function hyperize(name, fn, {
       useEffect,
       syncPage,
       syncLabel,
-      dynamicBoard: dynamic('update-board')
+      dynamicBoard: dynamic('update-board'),
     }
   })()
 }

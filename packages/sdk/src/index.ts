@@ -26,8 +26,9 @@ export {
   // SYNC PADS
   syncPage,
   syncLabel,
-  syncImage,
-  syncShape,
-  syncShowOk,
-  syncShowAlert,
+  // @todo - add new standard hooks
+  // syncImage,
+  // syncShape,
+  // syncShowOk,
+  // syncShowAlert,
 }

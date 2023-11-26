@@ -5,10 +5,12 @@
 // Quantum
 // Internal Engine
 // ---
-import Hyper from "./hyper"
+import Hyper from './hyper'
+
+type TalkToConfiguration = (...args) => void
 
 let board, virtualBoard, store, pubsub, ipcMain, epm, extensionsDir
-let toConfigurator = () => {}
+let toConfigurator: TalkToConfiguration = () => {}
 let toCompanion = () => {}
 let toPads = () => {}
 
@@ -27,36 +29,35 @@ function init(conf) {
     toCompanion(...data)
   }
   // configure Hyper and its itnernal vars
-  Hyper.configure({ipcMain, toConfigurator, toCompanion, toPads, epm, extensionsDir})
+  Hyper.configure({
+    ipcMain,
+    toConfigurator,
+    toCompanion,
+    toPads,
+    epm,
+    extensionsDir,
+  })
 
   // pubsub listener on deckServer
   // to call fire() on plugin
-  pubsub.subscribe('fire-plugin', async (event, {action, origin}) => {
-    console.log('[PUBSUB] fired with action => ',action)
+  pubsub.subscribe('fire-plugin', async (event, { action, origin }) => {
+    console.log('[PUBSUB] fired with action => ', action)
     console.log('[PUBSUB] fired from origin => ', origin)
     const { plugin, options } = action
     const [plug, act] = plugin.split('=>')
-    const pao = {p: plug,a: act,o: options}
+    const pao = { p: plug, a: act, o: options }
     Hyper.fire(pao, origin)
     Hyper.work()
   })
-  ipcMain.on('fire-plugin', async (event, {action, origin}) => {
-    console.log('[IPC] fired with action => ',action)
+  ipcMain.on('fire-plugin', async (event, { action, origin }) => {
+    console.log('[IPC] fired with action => ', action)
     console.log('[IPC] fired from origin => ', origin)
     const { plugin, options } = action
     const [plug, act] = plugin.split('=>')
-    const pao = {p: plug,a: act,o: options}
+    const pao = { p: plug, a: act, o: options }
     Hyper.fire(pao, origin)
     Hyper.work()
   })
 }
 
-export {
-  init,
-  store,
-  pubsub,
-  ipcMain,
-  toConfigurator,
-  toCompanion,
-  toPads
-}
+export { init, store, pubsub, ipcMain, toConfigurator, toCompanion, toPads }
