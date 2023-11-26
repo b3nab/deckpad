@@ -1,21 +1,30 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { AppState, Alert, Linking, Dimensions, LayoutAnimation, Text, View, StyleSheet, Image } from 'react-native'
+import {
+  AppState,
+  Alert,
+  Linking,
+  Dimensions,
+  LayoutAnimation,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+} from 'react-native'
 import * as Device from 'expo-device'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { Button, Title, TextInput } from 'react-native-paper'
-// import { useAsyncStorage } from '@react-native-async-storage/async-storage'
+import { useAsyncStorage } from '@react-native-async-storage/async-storage'
 import ioClient from 'socket.io-client'
 import { Deck } from './ui'
-import logo from './assets/icon.png'
-
+const logo = '../assets/images/icon.png'
 
 // AUTO DISCOVERY FN EXAMPLE
 // var socket;
 // for(var i=1; i<255; i++) {
 //   socket = new WebSocket('ws://192.168.1.'+i+':8080/service');
 
-//   socket.onopen = function () {   
-//     console.log('WebSocket Connected!!');   
+//   socket.onopen = function () {
+//     console.log('WebSocket Connected!!');
 //   };
 
 //   socket.onclose = function (event) {
@@ -28,71 +37,101 @@ import logo from './assets/icon.png'
 //   }
 // }
 
-
-const ConnectTo = ({ setIPLan }) => {
-  const [hasPermission, setHasPermission] = useState(null)
-  // const { getItem, setItem } = useAsyncStorage('@deckpad.address')
-  // const [ lastIP, setLastIP] = useState('')
-  const [ IP, setIP] = useState('')
-  const [ scanQR, setScanQR] = useState(false)
+const ConnectTo = ({ setIPLan }: any) => {
+  const [hasPermission, setHasPermission] = useState<boolean>()
+  const { getItem, setItem } = useAsyncStorage('@deckpad.address')
+  const [lastIP, setLastIP] = useState('')
+  const [IP, setIP] = useState('')
+  const [scanQR, setScanQR] = useState(false)
 
   useEffect(() => {
-    (async () => {
+    setLastIP(IP)
+    setItem(IP)
+  }, [IP])
+
+  useEffect(() => {
+    ;(async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync()
       setHasPermission(status === 'granted')
-      // const savedLastIP = await getItem()
-      // if (savedLastIP) setLastIP(savedLastIP)
+      const savedLastIP = await getItem()
+      if (savedLastIP) setLastIP(savedLastIP)
     })()
   }, [])
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ type, data }: any) => {
     console.log(`qrcode with type ${type} and data ${data} has been scanned!`)
     setIPLan(data)
     setScanQR(false)
   }
   const inputIPLan = () => {
-    // setItem(IP)
     setIPLan(IP)
   }
 
-  const buildIP = (ip, port=defaultPort) => {
+  const buildIP = (ip: string, port: number) => {
     return `${ip}:${port}`
   }
 
   return (
     <View style={styles.container}>
-      {scanQR &&
-        <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#000000', zIndex: 3, elevation: 3 }]}>
+      {scanQR && (
+        <View
+          style={[
+            StyleSheet.absoluteFillObject,
+            { backgroundColor: '#000000', zIndex: 3, elevation: 3 },
+          ]}
+        >
           <BarCodeScanner
             onBarCodeScanned={handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
           />
         </View>
-      }
+      )}
       {/* <Text>DeckPad - not connected</Text> */}
       {/* <Text>Companion status is: ok</Text> */}
-      <View style={{...styles.div, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Image source={logo} style={{ width: 100, height: 100 }} />
-        <Title style={{ fontFamily: 'Righteous', fontSize: 50, lineHeight: 80 }}>DeckPad</Title>
+      <View
+        style={{
+          ...styles.div,
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Image source={require(logo)} style={{ width: 100, height: 100 }} />
+        <Title
+          style={{
+            fontFamily: 'Righteous',
+            fontSize: 50,
+            lineHeight: 80,
+            color: 'white',
+          }}
+        >
+          DeckPad
+        </Title>
         <View style={styles.div}>
           <TextInput
             label="protocol://ip:port"
             value={IP}
-            onChangeText={newIP => setIP(newIP)}
+            onChangeText={(newIP) => setIP(newIP)}
           />
         </View>
-        <Button onPress={() => inputIPLan()} mode='outlined'>Connect to LAN IP</Button>
+        <Button onPress={() => inputIPLan()} mode="outlined">
+          Connect to LAN IP
+        </Button>
         <Text />
-        <Button onPress={() => setScanQR(true)} mode='contained'>Scan QR Code</Button>
+        <Button onPress={() => setScanQR(true)} mode="contained">
+          Scan QR Code
+        </Button>
       </View>
 
       <Text />
       <Text />
       <Text />
       <Text />
-      {/* {!!lastIP && 
-        <Button onPress={() => setIPLan(lastIP)} mode='contained'>Connect to last IP</Button>
-      } */}
+      {!!lastIP && (
+        <Button onPress={() => setIPLan(lastIP)} mode="contained">
+          Connect to last IP
+        </Button>
+      )}
       {/* {hasCameraPermission === null ? 
         <Text>Requesting for camera permission</Text>
         : hasCameraPermission === false ? 
@@ -112,16 +151,16 @@ const ConnectTo = ({ setIPLan }) => {
 }
 
 export default function Pad() {
-  const [ IPLan, setIPLan ] = useState(false)
-  const [ board, setBoard ] = useState()
-  const [ actual, setActual ] = useState(0)
+  const [IPLan, setIPLan] = useState<string | null>()
+  const [board, setBoard] = useState<any>()
+  const [actual, setActual] = useState<number>(0)
   const [io, setIO] = useState()
   // shadow board (on updates)
-  const [ shadowBoard, setShadowBoard ] = useState({})
+  const [shadowBoard, setShadowBoard] = useState({})
   // deepmerge(source, target)
   // source is the partial or path payload
   // target is the full object (in time it's the previous object)
-  const deepmerge = (source, target) => {
+  const deepmerge = (source: any, target: any) => {
     let final = target
     for (const [key, val] of Object.entries(source)) {
       if (val !== null && typeof val === `object`) {
@@ -135,27 +174,33 @@ export default function Pad() {
     }
     return final
   }
-  const updateShadowBoard = (partialShadow) => {
+  const updateShadowBoard = (partialShadow: any) => {
     const newShadow = deepmerge(partialShadow, shadowBoard)
     // console.log('new Shadow!', newShadow)
-    setShadowBoard({...newShadow})
+    setShadowBoard({ ...newShadow })
   }
-  
+
   const appState = useRef(AppState.currentState)
   const [appResume, setAppResume] = useState(true)
   console.log('fn AppState => ', AppState.currentState)
-  
+
   useEffect(() => {
     console.log('effect AppState => ', AppState.currentState)
-    AppState.addEventListener('change', _handleAppStateChange)
+    const subscription = AppState.addEventListener(
+      'change',
+      _handleAppStateChange
+    )
 
     return () => {
-      AppState.removeEventListener('change', _handleAppStateChange)
+      subscription.remove()
     }
   }, [])
 
-  const _handleAppStateChange = (nextAppState) => {
-    if(appState.current.match(/inactive|background/) && nextAppState === 'active') {
+  const _handleAppStateChange = (nextAppState: any) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
       console.log('Pad has come to the foreground!')
       setAppResume(true)
     }
@@ -168,10 +213,13 @@ export default function Pad() {
       console.log('[DECK] initCompanion()')
       const socket = ioClient(IPLan)
       setIO(socket)
-      
+
       console.log('[IO] build listeners')
       socket.on('connect', () => {
-        console.log('[IO] connected to socket server! Device is: ', Device.deviceName)
+        console.log(
+          '[IO] connected to socket server! Device is: ',
+          Device.deviceName
+        )
         socket.emit('companion', Device.deviceName)
       })
 
@@ -179,24 +227,24 @@ export default function Pad() {
         console.log('[IO] DeckPad io client throttling')
         !appResume && setIO()
         !appResume && setBoard()
-        !appResume && setIPLan()
+        !appResume && setIPLan(null)
         setAppResume(false)
       })
       socket.on('off', () => {
         console.log('[IO] DeckPad disconnected')
         setIO()
         setBoard()
-        setIPLan()
+        setIPLan(null)
         setAppResume(false)
       })
-      
+
       socket.on('board', (boardObject) => {
         // console.log(`[IO] update board `,{boardObject})
         setBoard(boardObject)
       })
 
       socket.on('toast', (toastObject) => {
-        console.log(`[IO] show toast `,{toastObject})
+        console.log(`[IO] show toast `, { toastObject })
         // setBoard(toastObject)
       })
 
@@ -204,7 +252,7 @@ export default function Pad() {
         // console.log('update label!', shadowLabel)
         updateShadowBoard(shadowLabel)
       })
-      
+
       return () => {
         console.log('return of effect! exit from initCompanion')
         socket.offAny()
@@ -215,26 +263,31 @@ export default function Pad() {
       }
     } catch (error) {
       console.error('Deck.initCompanion : ', error)
-      setIPLan()
+      setIPLan(null)
     }
   }
 
   useEffect(() => {
-    if(IPLan) {
+    if (IPLan) {
       setAppResume(false)
       return initCompanion()
     }
   }, [IPLan])
 
-  if(!IPLan) {
-    return (
-      <ConnectTo setIPLan={setIPLan} />
-    )
+  if (!IPLan) {
+    return <ConnectTo setIPLan={setIPLan} />
   }
 
   return (
     <View style={styles.container}>
-      <Deck board={board} shadowBoard={shadowBoard} actual={actual} setActual={setActual} io={io} goToHome={() => setIPLan(false)} />
+      <Deck
+        board={board}
+        shadowBoard={shadowBoard}
+        actual={actual}
+        setActual={setActual}
+        io={io}
+        goToHome={() => setIPLan(false)}
+      />
     </View>
   )
 }
@@ -249,7 +302,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: '#070716',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
   },
   div: {
     // flex: 1,

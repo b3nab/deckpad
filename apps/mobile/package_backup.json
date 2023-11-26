@@ -1,0 +1,46 @@
+{
+  "name": "@deckpad/mobile-old",
+  "version": "0.1.7",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "dev": "yarn start",
+    "upgrade": "expo upgrade",
+    "build": "expo build:android -t app-bundle"
+  },
+  "dependencies": {
+    "@expo-google-fonts/righteous": "^0.2.3",
+    "@react-native-async-storage/async-storage": "~1.19.5",
+    "expo": "^49.0.19",
+    "expo-app-loading": "2.1.1",
+    "expo-background-fetch": "~11.5.0",
+    "expo-barcode-scanner": "~12.7.0",
+    "expo-device": "5.6.0",
+    "expo-font": "~11.6.0",
+    "expo-haptics": "12.6.0",
+    "expo-permissions": "~14.4.0",
+    "expo-status-bar": "~1.7.1",
+    "frisbee": "^3.1.4",
+    "jsondiffpatch": "^0.5.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "^0.72.7",
+    "react-native-paper": "^5.11.1",
+    "react-native-vector-icons": "^10.0.2",
+    "react-native-web": "~0.19.9",
+    "socket.io-client": "^4.7.2",
+    "styled-components": "^6.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.23.3"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/*"
+    ]
+  },
+  "private": true
+}
