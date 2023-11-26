@@ -1,69 +1,22 @@
 import { Fragment, useState } from 'react'
 import clsx from 'clsx'
 import QRCode from 'react-qr-code'
-import { styled } from '@mui/material/styles'
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Toolbar,
-  Drawer,
-  Grid,
-  Box,
-  Typography,
-  Tab,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Paper,
-  TextField,
-  Button,
-  Popover
-} from '@mui/material'
-import { TabContext, TabList, TabPanel } from '@mui/lab'
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state'
-import {
-  Add as AddIcon,
-  Delete as DeleteIcon,
-  PlayArrow as PlayArrowIcon,
-  Stop as StopIcon,
-  ExpandMore as ExpandMoreIcon
-} from '@mui/icons-material'
-import { useStyles } from '../lib/useStyles'
-import { theme } from '../lib/theme'
+import { useDeckPad } from '@renderer/lib/useDeckPad'
 
-const CircleStatus = styled('span', {
-  name: 'CircleStatus'
-})(({ theme }) => ({
-  width: '15px',
-  height: '15px',
-  borderRadius: '15px',
-  margin: '0 10px'
-  // ${(props) =>
-  //   props.status
-  //     ? `
-  //   background: ${theme.palette.success.main};
-  //   `
-  //     : `
-  //   background: ${theme.palette.error.main};
-  //   `}
-}))
-
-export const Side = ({
-  board,
-  actual,
-  setActual,
-  plugins,
-  addPage,
-  deletePage,
-  maxCol,
-  maxRow,
-  updateCol,
-  updateRow,
-  updateActualDeck
-}) => {
-  const classes = useStyles()
+export const Side = () => {
+  const {
+    board,
+    actual,
+    setActual,
+    plugins,
+    addPage,
+    deletePage,
+    maxCol,
+    maxRow,
+    updateCol,
+    updateRow,
+    updateActualDeck
+  } = useDeckPad()
   const [tabIndex, setTabIndex] = useState('1')
 
   const handleTabChange = (event, newValue) => {
@@ -73,57 +26,42 @@ export const Side = ({
   console.log('[SIDE] plugins are => ', plugins)
 
   return (
-    <Grid className={clsx(classes.flex, classes.rootSide)}>
-      <Grid className={clsx(classes.flex, classes.flexGrow, classes.flexEvenly)}>
-        <Paper className={clsx(classes.flexGrow)}>
-          <TabContext value={tabIndex}>
-            {/* <AppBar position="static"> */}
-            <TabList onChange={handleTabChange} aria-label="DeckPad Tabs">
-              <Tab label="Pages" value="1" style={{ minWidth: 0, flex: 1 }} />
-              <Tab label="ACtions" value="2" style={{ minWidth: 0, flex: 1 }} />
-            </TabList>
-            {/* </AppBar> */}
-            <TabPanel value="1">
-              <List>
-                {board.map((page, index) => (
-                  <ListItem button key={index} onClick={() => setActual(index)}>
-                    {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-                    <ListItemText primary={page.name} />
-                  </ListItem>
-                ))}
-                <ListItem button key="add-page" onClick={() => addPage()}>
-                  <ListItemIcon>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={'New Page'} />
-                </ListItem>
-              </List>
-            </TabPanel>
-            <TabPanel value="2">
-              {Object.keys(plugins).map((plugin) => (
-                <Accordion key={`plugin-${plugin}`}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`panel${plugin}-content`}
-                    id={`panel${plugin}-header`}
-                  >
-                    <Typography className={classes.heading}>{plugin}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Grid container direction="column">
-                      {Object.keys(plugins[plugin]).map((action, i) => (
-                        <Typography key={i} paragraph>
-                          {action}
-                        </Typography>
-                      ))}
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
+    <div className="flex flex-col ml-4 gap-4">
+      {/* PAGES */}
+      <div className="flex flex-col p-6 bg-boxBack rounded-2xl">
+        <h1 className="text-2xl text-white text-center">{'PAGES'}</h1>
+        <ul className="p-4">
+          {board.map((page, index) => (
+            <h1 className="text-white text-lg cursor-pointer" onClick={() => setActual(index)}>
+              {page.name}
+            </h1>
+          ))}
+          <h1 className="text-white text-lg cursor-pointer" onClick={() => addPage()}>
+            {'+ ADD PAGE'}
+          </h1>
+        </ul>
+      </div>
+      {/* PLUGINS */}
+      <div className="flex flex-col p-6 bg-boxBack rounded-2xl overflow-scroll">
+        <h1 className="text-2xl text-white text-center">{'PLUGINS'}</h1>
+        <ul className="p-4">
+          {Object.keys(plugins).map((plugin) => (
+            <>
+              <h1 className="text-white text-lg cursor-pointer" onClick={() => setActual(index)}>
+                {plugin}
+              </h1>
+              {Object.keys(plugins[plugin]).map((action, i) => (
+                <p className="text-white">{`  - ${action}`}</p>
               ))}
-            </TabPanel>
-          </TabContext>
-        </Paper>
-      </Grid>
+            </>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+
+  return (
+    <Grid className={clsx(classes.flex, classes.rootSide)}>
       {/* <Grid>
           <Paper>
             <Grid container direction={"column"} spacing={2}>

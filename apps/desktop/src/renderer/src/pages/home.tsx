@@ -66,19 +66,7 @@ export const Home: () => JSX.Element = () => {
           <div>
           </div> */}
         </div>
-        {/* <Side
-          board={board}
-          actual={actual}
-          setActual={setActual}
-          addPage={addPage}
-          deletePage={deletePage}
-          maxCol={maxCol}
-          maxRow={maxRow}
-          updateCol={updateCol}
-          updateRow={updateRow}
-          updateActualDeck={updateActualDeck}
-          plugins={plugins}
-        /> */}
+        <Side />
       </div>
     </main>
   )

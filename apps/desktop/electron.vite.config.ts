@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   main: {
     build: {
+      watch: {},
       //@ts-ignore
       lib: {
         formats: ['es']
@@ -14,6 +15,7 @@ export default defineConfig({
   },
   preload: {
     build: {
+      watch: {},
       rollupOptions: {
         output: {
           dir: 'out/preload',
@@ -24,6 +26,9 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
+    build: {
+      watch: {}
+    },
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src')
