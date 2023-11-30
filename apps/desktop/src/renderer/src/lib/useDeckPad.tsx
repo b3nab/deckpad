@@ -1,18 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext, useContext, Context } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useIPCs } from './useIPCs'
 
 type useDeckpadOptions = {
-  maxCol: number,
+  maxCol: number
   maxRow: number
 }
 
 const ipc = window.electron.ipcRenderer || false
 
-let deckpadEngine
+export const DeckPadContext = createContext<any | null>(null)
+
+export function DeckPadContextProvider({ children }) {
+  const deckpadEngine = useDeckPadEngine({ maxCol: 15, maxRow: 10 })
+  return (
+    <DeckPadContext.Provider
+    value={{...deckpadEngine}}>
+    {children}
+    </DeckPadContext.Provider>
+  )
+}
 
 export const useDeckPad = (opts?: useDeckpadOptions) => {
-  return deckpadEngine ?? useDeckPadEngine(opts ?? {maxCol: 15, maxRow: 10})
+  const deckpadEngine = useContext(DeckPadContext)
+  if(!deckpadEngine) {
+    throw new Error(
+      "useDeckPad must be used within a DeckPadContextProvider"
+    )
+  }
+  return deckpadEngine
 }
 
 export const useDeckPadEngine = ({ maxCol, maxRow }) => {

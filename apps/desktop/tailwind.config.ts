@@ -8,8 +8,8 @@ export default {
       ...colors,
       success: '#07B39B',
       error: '#EF4E7B',
-      appBack: '#030303',
-      boxBack: '#070709'
+      appBack: '#000000',
+      boxBack: '#0f0f0f'
     },
     extend: {}
   },

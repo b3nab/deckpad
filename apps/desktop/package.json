@@ -27,6 +27,7 @@
     "@electron-toolkit/utils": "^2.0.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@headlessui/react": "^1.7.17",
     "bufferutil": "^4.0.8",
     "default-gateway": "^7.2.2",
     "detect-port": "^1.5.1",

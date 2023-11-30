@@ -1,25 +1,8 @@
-import QRCode from 'react-qr-code'
 import { useDeckPad } from '@renderer/lib/useDeckPad'
-
-const Btn = (props): JSX.Element => (
-  <button
-    {...props}
-    className={`flex gap-2 items-center text-white ${
-      props.primary ? 'text-sm bg-indigo-600' : 'text-xs bg-cyan-600'
-    } rounded-full p-3`}
-  >
-    {props.children}
-  </button>
-)
-
-const Status = (props): JSX.Element => (
-  <div className={`text-white p-3 flex gap-2 items-center`}>
-    {props.children}
-    <span
-      className={`${props.status ? 'bg-success' : 'bg-error'} inline-block w-4 h-4 rounded-full`}
-    />
-  </div>
-)
+import { Dialog, Transition } from '@headlessui/react'
+import { Fragment, useState } from 'react'
+import { Btn, Status } from '@renderer/ui'
+import { QRCodeModal } from '@renderer/components/modals'
 
 export const DeckBar = (): JSX.Element => {
   const {
@@ -34,9 +17,10 @@ export const DeckBar = (): JSX.Element => {
     serverStartStop,
     companionName
   } = useDeckPad()
+  const [showQrCode, setShowQrCode] = useState<boolean>(false)
+  const closeQrCode = () => setShowQrCode(false)
   const openSettings = () => setShowSettings(true)
   const openExtensions = () => setShowExtensions(true)
-  const showQrCode = () => alert('QRCODE POPUP NEED IMPLEMENTATION!')
   const serverStartStopText = serverStatus ? 'STOP' : 'START'
   const serverStartStopIcon = serverStatus ? (
     <svg
@@ -89,37 +73,10 @@ export const DeckBar = (): JSX.Element => {
               {serverStartStopText}
             </>
           </Btn>
-          <Btn
-            primary
-            data-popover-target="popover-click"
-            data-popover-trigger="click"
-            type="button"
-          >
+          <Btn primary onClick={() => setShowQrCode(true)}>
             QRCODE
           </Btn>
-          {/* <button
-            data-popover-target="popover-click"
-            data-popover-trigger="click"
-            type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Click popover
-          </button> */}
-          {/* <div
-            data-popover
-            id="popover-click"
-            role="tooltip"
-            className="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800"
-          >
-            <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-              <h3 className="font-semibold text-gray-900 dark:text-white">Popover click</h3>
-            </div>
-            <div className="px-3 py-2">
-              <p>And here's some amazing content. It's very engaging. Right?</p>
-              {serverIP ? <QRCode value={serverIP} /> : <p>Please start the server first.</p>}
-            </div>
-            <div data-popper-arrow></div>
-          </div> */}
+          <QRCodeModal showQrCode={showQrCode} closeQrCode={closeQrCode} />
         </div>
       </div>
       <div className="flex flex-col items-end gap-4">

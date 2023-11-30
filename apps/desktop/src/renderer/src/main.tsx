@@ -4,14 +4,15 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import './assets/index.css'
 import App from './App'
-import { DeckProvider } from './components/DeckContext'
+// import { DeckProvider } from './components/DeckContext'
+import { DeckPadContextProvider } from './lib/useDeckPad'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <DndProvider backend={HTML5Backend}>
-      <DeckProvider>
+      <DeckPadContextProvider>
         <App />
-      </DeckProvider>
+      </DeckPadContextProvider>
     </DndProvider>
   </React.StrictMode>
 )
