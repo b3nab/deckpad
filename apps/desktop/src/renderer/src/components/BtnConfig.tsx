@@ -1,37 +1,88 @@
 import { useState, useEffect } from 'react'
 import { Formik, Form, Field } from 'formik'
-import { Checkbox, Select, TextField, ToggleButtonGroup } from 'formik-mui'
-import {
-  Grid,
-  Button,
-  Typography,
-  LinearProgress,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  FormControl,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Paper,
-  Box
-} from '@mui/material'
-import { ToggleButton } from '@mui/material'
-import {
-  RadioButtonUnchecked as CircleIcon,
-  CheckBoxOutlineBlank as SquareIcon,
-  Block as NoneIcon
-} from '@mui/icons-material'
-import { ColorField, ImageField, PathField } from './fields'
+// import { Checkbox, Select, TextField, ToggleButtonGroup } from 'formik-mui'
+// import {
+//   div,
+//   Button,
+//   Typography,
+//   LinearProgress,
+//   Dialog,
+//   DialogTitle,
+//   DialogActions,
+//   DialogContent,
+//   DialogContentText,
+//   FormControl,
+//   InputLabel,
+//   ListSubheader,
+//   MenuItem,
+//   Paper,
+//   div
+// } from '@mui/material'
+// import { ToggleButton } from '@mui/material'
+// import {
+//   RadioButtonUnchecked as CircleIcon,
+//   CheckBoxOutlineBlank as SquareIcon,
+//   Block as NoneIcon
+// } from '@mui/icons-material'
+// import { ColorField, ImageField, PathField } from './fields'
 import { DeckBtn } from './DeckBtn'
-import { useStyles } from '../lib/useStyles'
+import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { Btn } from '@renderer/ui'
+// import { useStyles } from '../lib/useStyles'
 
 const ipc = window.electron.ipcRenderer || false
 
-export const BtnConfig = ({ btn, saveBtn, plugins }) => {
-  const classes = useStyles()
+const TextField = (props) => {
+  return (
+    <div className="">
+      <input {...props} />
+    </div>
+  )
+}
+const Checkbox = (props) => {
+  return (
+    <div className="">
+      <input {...props} />
+    </div>
+  )
+}
+const ColorField = (props) => {
+  return (
+    <div className="">
+      <input {...props} />
+    </div>
+  )
+}
+const PathField = (props) => {
+  return (
+    <div className="">
+      <input {...props} />
+    </div>
+  )
+}
+const Select = (props) => {
+  return (
+    <div className="">
+      <select {...props} />
+    </div>
+  )
+}
+const ImageField = (props) => {
+  return (
+    <div className="">
+      <input {...props} />
+    </div>
+  )
+}
+const ToggleButtonGroup = (props) => {
+  return <div className="flex flex-row justify-between">{props.children}</div>
+}
+const ToggleButton = (props) => {
+  return <div className="">{props.children}</div>
+}
+
+export const BtnConfig = () => {
+  const { btn, saveBtn, plugins } = useDeckPad()
 
   const missingPluginOrAction = (values) => {
     // console.log(`missingPluginOrAction - values:`, values)
@@ -56,7 +107,7 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
     const [plugin, action] = pluginAction.split('=>')
     const inputs = plugins[plugin][action].inputs
 
-    const buildInput = (v) => {
+    const buildInput = (v): JSX.Element => {
       switch (v.type) {
         case 'textarea':
           return wrapInput(TextField, v.key, null, {
@@ -79,20 +130,28 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
           const childs =
             v.extra && v.extra.options
               ? v.extra.options.map((opt) => (
-                  <MenuItem key={opt.value} value={opt.value}>
+                  <option key={opt.value} value={opt.value}>
                     {opt.label}
-                  </MenuItem>
+                  </option>
                 ))
               : null
           return wrapInput(Select, v.key, v.label, null, childs)
         case 'path':
           return wrapInput(PathField, v.key, v.label, { openFolder: v.extra?.folder })
+        default:
+          return wrapInput(TextField, v.key, 'DEFAULT CASE INPUT', null, null)
       }
     }
 
-    const wrapInput = (Comp, key, label, fieldExtras = null, childs = null) => (
-      <FormControl key={key} className={classes.pluginInputs}>
-        {label && <InputLabel htmlFor={`action.options.${key}`}>{label}</InputLabel>}
+    const wrapInput = (
+      Comp: React.FC,
+      key: string,
+      label: string | null,
+      fieldExtras: any = null,
+      childs: any = null
+    ) => (
+      <div className="flex flex-col flex-1" key={key}>
+        {label && <label htmlFor={`action.options.${key}`}>{label}</label>}
         <Field
           component={Comp}
           label={label}
@@ -104,14 +163,14 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
         >
           {childs}
         </Field>
-      </FormControl>
+      </div>
     )
 
     // console.log(`inputs =>`,inputs)
 
-    let actionInputs = []
+    let actionInputs: JSX.Element[] = []
     inputs &&
-      inputs.forEach((inp) => {
+      inputs.map((inp) => {
         actionInputs.push(buildInput(inp))
       })
 
@@ -121,7 +180,7 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
   }
 
   return (
-    <Paper className={classes.DeckPaper}>
+    <div className="flex flex-col flex-wrap bg-boxBack rounded-2xl mt-4 text-white">
       {btn ? (
         <Formik
           enableReinitialize
@@ -135,18 +194,13 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
         >
           {({ submitForm, isSubmitting, values, resetForm }) => (
             <Form>
-              <Box p={1}>
-                <Grid item>Button Preview</Grid>
+              <div className="p-1">
+                <h3 className="font-bold">Button Preview</h3>
 
-                <Box display="flex" p={2} flexGrow="1">
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                  >
-                    <Grid alignItems="flex-start" justifyContent="flex-start">
-                      <Grid alignItems="center" justifyContent="flex-start">
+                <div className="flex flex-grow p-2">
+                  <div className="flex flex-col items-start justify-start">
+                    <div className="flex items-start justify-start">
+                      <div className="flex items-center justify-start">
                         <DeckBtn
                           {...values}
                           clickAction={() => {
@@ -165,17 +219,20 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
                           exclusive="true"
                         >
                           <ToggleButton value="circle" aria-label="circle">
-                            <CircleIcon />
+                            {/* <CircleIcon /> */}
+                            <p>Circle</p>
                           </ToggleButton>
                           <ToggleButton value="square" aria-label="square">
-                            <SquareIcon />
+                            {/* <SquareIcon /> */}
+                            <p>Square</p>
                           </ToggleButton>
                           <ToggleButton value="none" aria-label="none">
-                            <NoneIcon />
+                            {/* <NoneIcon /> */}
+                            <p>None</p>
                           </ToggleButton>
                         </Field>
-                      </Grid>
-                      <Grid justifyContent="flex-start">
+                      </div>
+                      <div className="flex justify-start">
                         <Field
                           component={ColorField}
                           name="bgColor"
@@ -188,8 +245,8 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
                           type="text"
                           label="Text Color"
                         />
-                      </Grid>
-                    </Grid>
+                      </div>
+                    </div>
                     <Field
                       component={TextField}
                       name="label"
@@ -198,32 +255,17 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
                       autoFocus
                       fullWidth
                     />
-                  </Box>
+                  </div>
 
-                  <Box
-                    display="flex"
-                    p={2}
-                    flexDirection="column"
-                    flexGrow="1"
-                    justifyContent="flex-start"
-                    style={{ position: 'relative' }}
-                  >
+                  <div className="p-2 flex flex-col flex-grow justify-start relative">
                     {missingPluginOrAction(values) ? (
-                      <Box
-                        display="flex"
-                        p={2}
-                        flexDirection="column"
-                        flexGrow="1"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        style={{ position: 'absolute', top: 0, width: '100%' }}
-                      >
-                        <Typography variant="h5">Missing plugin</Typography>
-                      </Box>
+                      <div className="flex flex-col grow justify-start items-center absolute top-0 w-full">
+                        <h5>Missing plugin</h5>
+                      </div>
                     ) : (
                       <>
                         {plugins && (
-                          <FormControl margin="dense">
+                          <div className="m-1">
                             <Field
                               component={Select}
                               name="action.plugin"
@@ -233,42 +275,40 @@ export const BtnConfig = ({ btn, saveBtn, plugins }) => {
                               }}
                             >
                               {Object.entries(plugins).map(([namePlugin, plugin]) => [
-                                <ListSubheader key={namePlugin}>
-                                  {namePlugin.toUpperCase()}
-                                </ListSubheader>,
+                                <div className="uppercase" key={namePlugin}>
+                                  {namePlugin}
+                                </div>,
                                 ...Object.entries(plugin).map(([nameAction, action]) => (
-                                  <MenuItem key={nameAction} value={`${namePlugin}=>${nameAction}`}>
+                                  <option key={nameAction} value={`${namePlugin}=>${nameAction}`}>
                                     {action.label}
-                                  </MenuItem>
+                                  </option>
                                 ))
                               ])}
                             </Field>
-                          </FormControl>
+                          </div>
                         )}
                         {values.action.plugin && buildActionInputs(values.action.plugin)}
                       </>
                     )}
-                  </Box>
-                </Box>
+                  </div>
+                </div>
 
-                {isSubmitting && <LinearProgress />}
-                <Grid container justifyContent="flex-end">
-                  <Button onClick={resetForm} color="secondary">
-                    RESET
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting} color="primary">
+                {isSubmitting && <p>Submitting Button Config...</p>}
+                <div className="flex justify-end">
+                  <Btn onClick={resetForm}>RESET</Btn>
+                  <Btn type="submit" disabled={isSubmitting} primary>
                     SAVE
-                  </Button>
-                </Grid>
-              </Box>
+                  </Btn>
+                </div>
+              </div>
             </Form>
           )}
         </Formik>
       ) : (
-        <DialogContent>
-          <DialogContentText>Click a Button to start editing</DialogContentText>
-        </DialogContent>
+        <div className="flex p-8">
+          <h2>Click a Button to start editing</h2>
+        </div>
       )}
-    </Paper>
+    </div>
   )
 }

@@ -16,7 +16,7 @@ export const Home: () => JSX.Element = () => {
         <div className="flex flex-1 flex-col">
           <DeckBar />
           <Deck />
-          {/* <BtnConfig btn={btn} saveBtn={saveBtn} plugins={plugins} /> */}
+          <BtnConfig />
         </div>
         <Side />
       </div>
