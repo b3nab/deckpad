@@ -13,14 +13,21 @@ export const Select = (props) => {
       <Listbox.Button className="flex bg-black rounded-lg p-2">
         {options.find((o) => o.value === value)?.label || value || 'Choose an option..'}
       </Listbox.Button>
-      <Listbox.Options>
+      <Listbox.Options className="bg-black rounded-lg p-1">
         {options?.map((option) => (
-          <Listbox.Option
-            key={option.value}
-            value={option.value}
-            className="rounded-lg bg-black p-2"
-          >
-            {option.label}
+          <Listbox.Option key={option.value} value={option.value} className="rounded-lg bg-black">
+            {({ selected }) => (
+              <>
+                <span
+                  className={`block truncate rounded-lg p-1 hover:bg-indigo-700 ${
+                    selected ? 'font-medium bg-indigo-900' : 'font-normal'
+                  }`}
+                >
+                  {selected ? <span className="text-success">{' > '}</span> : ''}
+                  {option.label}
+                </span>
+              </>
+            )}
           </Listbox.Option>
         ))}
       </Listbox.Options>
