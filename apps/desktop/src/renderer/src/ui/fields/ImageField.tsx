@@ -1,6 +1,5 @@
 import { Fragment, useEffect } from 'react'
-import { Button } from '@mui/material'
-import { Delete as DeleteIcon } from '@mui/icons-material'
+import { Btn } from '@renderer/ui'
 
 const ipc = window.electron.ipcRenderer || false
 
@@ -32,13 +31,11 @@ export const ImageField = (props) => {
       {valueImage && (
         <Fragment>
           {/* <img src={valueImage} alt="btnImage" style={{width: '70px', height: '70px'}}/> */}
-          <Button onClick={() => removeImage()}>
-            <DeleteIcon />
-          </Button>
+          <Btn onClick={() => removeImage()}>Delete Image</Btn>
         </Fragment>
       )}
       {/* <p>{valueImage}</p> */}
-      <Button
+      <Btn
         onClick={() => {
           if (ipc) {
             ipc.send('open-image')
@@ -46,7 +43,7 @@ export const ImageField = (props) => {
         }}
       >
         {!valueImage ? 'Open image' : 'Change image'}
-      </Button>
+      </Btn>
     </div>
   )
 }

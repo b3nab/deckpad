@@ -1,8 +1,7 @@
 import { Fragment, useEffect } from 'react'
 import { Field } from 'formik'
-import { TextField } from 'formik-mui'
-import { Button } from '@mui/material'
-import { Delete as DeleteIcon } from '@mui/icons-material'
+import { Btn, TextField } from '@renderer/ui'
+// import { Delete as DeleteIcon } from '@mui/icons-material'
 
 const ipc = window.electron.ipcRenderer || false
 
@@ -35,13 +34,14 @@ export const PathField = (props) => {
       {valuePath && (
         <Fragment>
           <Field component={TextField} name={name} type="text" label="Label" autoFocus fullWidth />
-          {/* <Button onClick={() => removePath()}>
-            <DeleteIcon />
-          </Button> */}
+          <Btn onClick={() => removePath()}>
+            {/* <DeleteIcon /> */}
+            <p className="text-justify">Delete Image</p>
+          </Btn>
         </Fragment>
       )}
       {/* <p>{valuePath}</p> */}
-      <Button
+      <Btn
         onClick={() => {
           if (ipc) {
             ipc.send('get-path', openFolder)
@@ -49,7 +49,7 @@ export const PathField = (props) => {
         }}
       >
         {!valuePath ? 'Open path' : 'Change path'}
-      </Button>
+      </Btn>
     </div>
   )
 }

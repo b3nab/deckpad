@@ -21,7 +21,7 @@ import {
   CheckBoxOutlineBlank as SquareIcon,
   Block as NoneIcon
 } from '@mui/icons-material'
-import { ColorField, ImageField } from './fields'
+import { ColorField, ImageField } from '../ui/fields'
 import { DeckBtn } from './DeckBtn'
 
 // Preventing NextJS SSR webpacking
