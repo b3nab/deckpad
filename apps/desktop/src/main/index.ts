@@ -58,7 +58,7 @@ async function appReady(): Promise<void> {
 
   // ---- Start Window ----
   // ----------------------
-  const preloadScript = fileURLToPath(new URL('../preload/index.cjs', import.meta.url))
+  const preloadScript = fileURLToPath(new URL('../preload/index.mjs', import.meta.url))
   console.log('PRELOAD SCRIPT PATH => ', preloadScript)
   mainWin = await createMainWindow({
     prefs: {

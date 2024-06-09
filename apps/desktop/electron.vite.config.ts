@@ -7,21 +7,21 @@ export default defineConfig({
     build: {
       watch: {},
       //@ts-ignore
-      lib: {
-        formats: ['es']
-      }
+      // lib: {
+      //   formats: ['es']
+      // }
     },
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
     build: {
       watch: {},
-      rollupOptions: {
-        output: {
-          dir: 'out/preload',
-          entryFileNames: 'index.cjs'
-        }
-      }
+      // rollupOptions: {
+      //   output: {
+      //     dir: 'out/preload',
+      //     entryFileNames: 'index.cjs'
+      //   }
+      // }
     },
     plugins: [externalizeDepsPlugin()]
   },

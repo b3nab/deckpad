@@ -1,5 +1,5 @@
 import { Quantum } from '@deckpad/sdk'
-import { Server as WebSocketServer } from 'ws'
+import Websocket, { WebSocketServer } from 'ws'
 import { loadBoard, saveBoard } from '../helpers'
 
 const parseEvent = (e) => {
@@ -40,7 +40,7 @@ const actFast = async (ws, channel, data) => {
 }
 
 const configureWSS = async (port) => {
-  const wss = new WebSocketServer({
+  const wss = new Websocket.Server({
     path: '/deckpad',
     port: port
     // server: deckServer,

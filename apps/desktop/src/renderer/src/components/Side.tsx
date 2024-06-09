@@ -18,11 +18,6 @@ export const Side = () => {
     updateRow,
     updateActualDeck
   } = useDeckPad()
-  const [tabIndex, setTabIndex] = useState('1')
-
-  const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue)
-  }
 
   console.log('[SIDE] plugins are => ', plugins)
 
@@ -35,7 +30,7 @@ export const Side = () => {
           {board.map((page, index) => (
             <li>
               <h1 className="text-white text-lg cursor-pointer" onClick={() => setActual(index)}>
-                {page.name}
+                {index == actual ? '🔘 ' + page.name : '⚫ ' + page.name}
               </h1>
             </li>
           ))}
