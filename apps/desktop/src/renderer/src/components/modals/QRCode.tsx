@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import QRCode from 'react-qr-code'
-import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { useDeckPad } from '@renderer/hooks/useDeckPad'
 import { Fragment } from 'react'
 
 const ipc = window.electron.ipcRenderer || false

@@ -1,4 +1,4 @@
-import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { useDeckPad } from '@renderer/hooks/useDeckPad'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { Btn, Status } from '@renderer/ui'

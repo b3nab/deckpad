@@ -7,7 +7,7 @@ import { Formik, Form, Field } from 'formik'
 //   Block as NoneIcon
 // } from '@mui/icons-material'
 import { DeckBtn } from './DeckBtn'
-import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { useDeckPad } from '@renderer/hooks/useDeckPad'
 import { Btn, ColorField, ImageField, PathField, TextField, Select } from '@renderer/ui'
 
 const ipc = window.electron.ipcRenderer || false

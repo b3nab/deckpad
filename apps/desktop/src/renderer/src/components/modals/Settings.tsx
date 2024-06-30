@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { useDeckPad } from '@renderer/hooks/useDeckPad'
 
 const ipc = window.electron.ipcRenderer || false
 

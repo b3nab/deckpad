@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import clsx from 'clsx'
 import QRCode from 'react-qr-code'
-import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { useDeckPad } from '@renderer/hooks/useDeckPad'
 import { Btn } from '@renderer/ui'
 
 export const Side = () => {

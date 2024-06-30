@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { DeckBtn } from './DeckBtn'
 import { DeckBtnModal } from './DeckBtnModal'
 import pubsub from 'electron-pubsub'
-import { useDeckPad } from '@renderer/lib/useDeckPad'
+import { useDeckPad } from '@renderer/hooks/useDeckPad'
 
 const ipc = window.electron.ipcRenderer || false
 
