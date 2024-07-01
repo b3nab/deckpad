@@ -4,14 +4,20 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Extensions, Settings } from './components/modals'
 import { DeckPadContextProvider } from './hooks/useDeckPad'
 import { Home } from './pages/home'
+import { TooltipProvider } from './shadcn/ui/tooltip'
+import { ThemeProvider } from './providers/theme-provider'
 
 function Providers({ children }: { children: React.ReactElement }) {
   return (
-    <DndProvider backend={HTML5Backend}>
-      <DeckPadContextProvider>
-        {children}
-      </DeckPadContextProvider>
-    </DndProvider>
+    <ThemeProvider defaultTheme='dark' storageKey='deckpad-ui-theme'>
+      <DndProvider backend={HTML5Backend}>
+        <DeckPadContextProvider>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+        </DeckPadContextProvider>
+      </DndProvider>
+    </ThemeProvider>
   )
 }
 
