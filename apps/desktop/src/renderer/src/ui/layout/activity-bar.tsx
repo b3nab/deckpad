@@ -30,7 +30,7 @@ const ActivityBar = () => {
       setShowExtensions,
     } = useDeckPad()
   return (
-    <aside className="flex h-full flex-col border-r">
+    <aside className="flex flex-col flex-grow border-r">
       {/* <div className="border-b p-2">
             <Button variant="outline" size="icon" aria-label="Home">
               <Triangle className="size-5 fill-foreground" />

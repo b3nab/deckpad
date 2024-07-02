@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-:root {
+  :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
 
@@ -33,9 +33,9 @@
     --ring: 0 0% 3.9%;
 
     --radius: 0.5rem;
-}
+  }
 
-.dark {
+  .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
 
@@ -63,14 +63,17 @@
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
-}
+  }
 }
 
 @layer base {
-* {
+  * {
     @apply border-border;
-}
-body {
+  }
+  html, body, #root {
+    @apply w-full h-full;
+  }
+  body {
     @apply bg-background text-foreground;
-}
+  }
 }
