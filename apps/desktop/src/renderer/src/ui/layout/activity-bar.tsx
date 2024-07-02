@@ -51,7 +51,10 @@ const ActivityBar = () => {
               onClick={() => toggleSidePanel()}
               variant="ghost"
               size="icon"
-              className={cn('rounded-lg', stateSideBar.isOpen && 'bg-black')}
+              className={cn(
+                'rounded-lg',
+                stateSideBar.isOpen && 'relative before:absolute before:bg-success before:w-1 before:h-full before:-left-2',
+                stateSideBar.isOpen && 'bg-black')}
               aria-label="Pages"
             >
               <Layers className="size-5" />

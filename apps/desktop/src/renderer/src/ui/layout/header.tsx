@@ -49,7 +49,7 @@ export const Header = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6"
+      className="w-6 h-6 mr-1 text-error"
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       <path
@@ -65,7 +65,7 @@ export const Header = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6"
+      className="w-6 h-6 mr-1 text-success"
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       <path
@@ -75,6 +75,37 @@ export const Header = () => {
       />
     </svg>
   )
+  const menuItems = [
+    {
+      onClick: () => serverStartStop(),
+      inner: (
+        <>
+          {serverStartStopIcon}
+          {serverStartStopText}
+        </>
+      )
+    },
+    {
+      onClick: () => setShowQrCode(true),
+      inner: 'QRCODE'
+    },
+    {
+      onClick: () => newBoard(),
+      inner: 'New'
+    },
+    {
+      onClick: () => loadBoard(),
+      inner: 'Open..'
+    },
+    {
+      onClick: () => saveBoard(),
+      inner: 'Save'
+    },
+    {
+      onClick: () => saveBoardAs(),
+      inner: 'Save As..'
+    }
+  ]
 
   return (
     <header className="flex h-16 items-center gap-4 border-b bg-background p-4 md:px-6">
@@ -83,46 +114,17 @@ export const Header = () => {
           <Package2 className="h-6 w-6" />
           <span className="sr-only">Acme Inc</span>
         </Button> */}
-        <Button
-          onClick={() => serverStartStop()}
+        {menuItems.map(({ onClick, inner }, index) => (
+          <Button
+          variant="ghost"
+          key={index}
+          onClick={onClick}
           className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <>
-            {serverStartStopIcon}
-            {serverStartStopText}
-          </>
-        </Button>
-        <Button
-          onClick={() => setShowQrCode(true)}
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          QRCODE
-        </Button>
+          >
+            {inner}
+          </Button>
+        ))}
         <QRCodeModal showQrCode={showQrCode} closeQrCode={closeQrCode} />
-        <Button
-          onClick={() => newBoard()}
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          New
-        </Button>
-        <Button
-          onClick={() => loadBoard()}
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Open..
-        </Button>
-        <Button
-          onClick={() => saveBoard()}
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Save
-        </Button>
-        <Button
-          onClick={() => saveBoardAs()}
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Save As..
-        </Button>
       </nav>
       {/* <Sheet>
         <SheetTrigger asChild>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react'
+import { createContext, useContext, useReducer, useRef } from 'react'
 import { ImperativePanelHandle } from 'react-resizable-panels'
 
 export enum SIDE_ACTION {
@@ -62,15 +62,6 @@ export const SideBarProvider = ({ children }: { children: React.ReactNode }) => 
     isOpen: refSidePanel.current?.isExpanded() || false,
     panel: null
   })
-  // useEffect(() => {
-  //   console.log('isExpanded', refSidePanel.current?.isExpanded())
-  //   console.log('isCollapsed', refSidePanel.current?.isCollapsed())
-  //   console.log('getSize', refSidePanel.current?.getSize())
-  // }, [
-  //   refSidePanel.current?.isExpanded(),
-  //   refSidePanel.current?.isCollapsed(),
-  //   refSidePanel.current?.getSize()
-  // ])
   return (
     <SideBarContext.Provider value={{ state: stateSideBar, dispatch, ref: refSidePanel }}>
       {children}
