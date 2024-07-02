@@ -23,12 +23,20 @@ import {
   Turtle
 } from 'lucide-react'
 import { useDeckPad } from '@renderer/hooks/useDeckPad'
+import { SIDE_ACTION, useSideBar } from '@renderer/providers/side-bar.provider'
 
 const ActivityBar = () => {
-    const {
-      setShowSettings,
-      setShowExtensions,
-    } = useDeckPad()
+  const { setShowSettings, setShowExtensions } = useDeckPad()
+  const { state: stateSideBar, dispatch, ref: refSidePanel } = useSideBar()
+
+  const toggleSidePanel = () => {
+    if (stateSideBar.isOpen) {
+      dispatch({ type: SIDE_ACTION.CLOSE })
+    } else {
+      dispatch({ type: SIDE_ACTION.OPEN })
+    }
+  }
+
   return (
     <aside className="flex flex-col flex-grow border-r">
       {/* <div className="border-b p-2">
@@ -39,7 +47,13 @@ const ActivityBar = () => {
       <nav className="grid gap-1 p-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-lg bg-muted" aria-label="Pages">
+            <Button
+              onClick={() => toggleSidePanel()}
+              variant="ghost"
+              size="icon"
+              className={cn('rounded-lg', stateSideBar.isOpen && 'bg-black')}
+              aria-label="Pages"
+            >
               <Layers className="size-5" />
             </Button>
           </TooltipTrigger>

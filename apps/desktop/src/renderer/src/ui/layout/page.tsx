@@ -1,17 +1,15 @@
-import { useState } from 'react'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@renderer/shadcn/ui/resizable'
-import { cn } from '@renderer/lib/utils'
 import ActivityBar from './activity-bar'
 import { Header } from './header'
 import { SideBar } from './side-bar'
+import { useSideBar } from '@renderer/providers/side-bar.provider'
 
 interface PageProps {
   children?: React.ReactElement | React.ReactElement[] | React.ReactNode
 }
 
 const Page = ({ children }: PageProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-
+  const { ref: refSidePanel, dispatch } = useSideBar()
   return (
     <div className="h-full w-full flex flex-col relative">
       <Header />
@@ -22,11 +20,13 @@ const Page = ({ children }: PageProps) => {
           direction="horizontal"
         >
           <ResizablePanel
-            className={cn(isCollapsed && 'min-w-[200px] transition-all duration-300 ease-in-out')}
             defaultSize={180}
             collapsedSize={0}
             collapsible={true}
+            onCollapse={() => dispatch({ type: 'PRIVATE_SET_IS_OPEN', payload: false })}
+            onExpand={() => dispatch({ type: 'PRIVATE_SET_IS_OPEN', payload: true })}
             minSize={12}
+            ref={refSidePanel}
           >
             <SideBar />
           </ResizablePanel>
