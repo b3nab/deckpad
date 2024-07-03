@@ -60,7 +60,7 @@ export const SideBarProvider = ({ children }: { children: React.ReactNode }) => 
   const refSidePanel = useRef<ImperativePanelHandle>(null)
   const [stateSideBar, dispatch] = useReducer(sideBarReducer(refSidePanel), {
     isOpen: refSidePanel.current?.isExpanded() || false,
-    panel: null
+    panel: 'pages'
   })
   return (
     <SideBarContext.Provider value={{ state: stateSideBar, dispatch, ref: refSidePanel }}>

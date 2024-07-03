@@ -20,7 +20,7 @@ const Page = ({ children }: PageProps) => {
           direction="horizontal"
         >
           <ResizablePanel
-            defaultSize={0}
+            defaultSize={22}
             collapsedSize={0}
             collapsible={true}
             onCollapse={() => dispatch({ type: 'PRIVATE_SET_IS_OPEN', payload: false })}
