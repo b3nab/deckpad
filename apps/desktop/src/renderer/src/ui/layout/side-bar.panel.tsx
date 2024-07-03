@@ -26,6 +26,7 @@ const SideBarPanel = ({ title, children }: SideBarPanelProps) => {
         <h4 className="truncate text-sm font-semibold">{title}</h4>
       </Button>
       <ResizablePanel
+        id={`panel-${title}`}
         className={cn(
           'w-full',
           !isOpen && '!flex-grow-0',

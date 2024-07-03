@@ -20,12 +20,12 @@ const Page = ({ children }: PageProps) => {
           direction="horizontal"
         >
           <ResizablePanel
-            defaultSize={180}
+            defaultSize={0}
             collapsedSize={0}
             collapsible={true}
             onCollapse={() => dispatch({ type: 'PRIVATE_SET_IS_OPEN', payload: false })}
             onExpand={() => dispatch({ type: 'PRIVATE_SET_IS_OPEN', payload: true })}
-            minSize={12}
+            minSize={15}
             ref={refSidePanel}
           >
             <SideBar />

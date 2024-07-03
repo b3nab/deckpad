@@ -6,72 +6,29 @@ import { Btn } from '@renderer/ui'
 import SideBarPanel from './side-bar.panel'
 import { Button } from '@renderer/shadcn/ui/button'
 import CollapsibleButton from '../collapsible-button'
-import { ResizableHandle, ResizablePanelGroup } from '@renderer/shadcn/ui/resizable'
+import { ResizablePanelGroup } from '@renderer/shadcn/ui/resizable'
+import { useSideBar } from '@renderer/providers/side-bar.provider'
+import PagesPanel from './side-panels/pages.panel'
+import ActionsPanel from './side-panels/actions.panel'
+import ExtensionsPanel from './side-panels/extensions.panel'
 
 export const SideBar = () => {
-  const {
-    board,
-    actual,
-    setActual,
-    plugins,
-    addPage,
-    deletePage,
-    maxCol,
-    maxRow,
-    updateCol,
-    updateRow,
-    updateActualDeck
-  } = useDeckPad()
-
-  console.log('[SIDE] plugins are => ', plugins)
+  const { state: stateSideBar } = useSideBar()
+  const panels = {
+    pages: <PagesPanel />,
+    actions: <ActionsPanel />,
+    extensions: <ExtensionsPanel />
+  }
 
   return (
     <div className="relative flex flex-col h-full">
       <ResizablePanelGroup
         className="w-full"
         direction="vertical"
-        // onLayout={(sizes: number[]) => {
-        //   document.cookie = `react-resizable-panels:layout=${JSON.stringify(sizes)}`
-        // }}
       >
-        {/* PAGES */}
-        <SideBarPanel title={'PAGES'}>
-          {board.map((page, index) => (
-            <Button
-              onClick={() => setActual(index)}
-              variant="ghost"
-              size="lg"
-              className="w-full justify-start rounded-none"
-            >
-              {/* {index == actual ? '🔘 ' + page.name : '⚫ ' + page.name} */}
-              <p className="truncate">{page.name}</p>
-            </Button>
-            // <h1 className="text-white text-lg cursor-pointer" onClick={() => setActual(index)}>
-            //   {index == actual ? '🔘 ' + page.name : '⚫ ' + page.name}
-            // </h1>
-          ))}
-          <Button
-            onClick={() => addPage()}
-            variant="ghost"
-            size="lg"
-            className="w-full justify-start rounded-none px-2"
-          >
-            <h4 className='truncate font-semibold'>+ ADD PAGE</h4>
-            {/* {'+ ADD PAGE'} */}
-          </Button>
-        </SideBarPanel>
-        {/* ACTIONS */}
-        <SideBarPanel title="ACTIONS">
-          {Object.keys(plugins).map((plugin) => (
-            <CollapsibleButton title={plugin}>
-              {Object.keys(plugins[plugin]).map((action, i) => (
-                <Button variant="ghost" size="sm" className="w-full justify-start rounded-none">
-                  <p className="truncate text-sm pl-6 pr-2">{action}</p>
-                </Button>
-              ))}
-            </CollapsibleButton>
-          ))}
-        </SideBarPanel>
+        {
+          panels[stateSideBar.panel || 'default']
+        }
       </ResizablePanelGroup>
     </div>
   )

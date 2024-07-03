@@ -5,29 +5,18 @@ import { cn } from '@renderer/lib/utils'
 import { Button } from '@renderer/shadcn/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@renderer/shadcn/ui/tooltip'
 import {
-  Bird,
-  Book,
   ToyBrick,
   Blocks,
-  CornerDownLeft,
-  LifeBuoy,
-  Mic,
-  Paperclip,
-  Rabbit,
-  Settings,
   Settings2,
-  Share,
   Layers,
-  CircleUserRound,
-  Triangle,
-  Turtle
+  CircleUserRound
 } from 'lucide-react'
 import { useDeckPad } from '@renderer/hooks/useDeckPad'
 import { SIDE_ACTION, useSideBar } from '@renderer/providers/side-bar.provider'
 
 const ActivityBar = () => {
   const { setShowSettings, setShowExtensions } = useDeckPad()
-  const { state: stateSideBar, dispatch, ref: refSidePanel } = useSideBar()
+  const { state: stateSideBar, dispatch } = useSideBar()
 
   const toggleSidePanel = () => {
     if (stateSideBar.isOpen) {
@@ -37,59 +26,58 @@ const ActivityBar = () => {
     }
   }
 
+  const fireActionByPanel = (panel: string, action?: Function) => {
+    stateSideBar.panel === panel.toLowerCase()
+      ? toggleSidePanel()
+      : (
+        dispatch({ type: SIDE_ACTION.OPEN }),
+        dispatch({ type: SIDE_ACTION.SET_PANEL, panel: panel.toLowerCase() }),
+        action && action()
+      )
+  }
+
+  const menuActivityBar = [
+    {
+      name: 'Pages',
+      icon: <Layers className="size-5" />,
+    },
+    {
+      name: 'Actions',
+      icon: <ToyBrick className="size-5" />,
+    },
+    {
+      name: 'Extensions',
+      icon: <Blocks className="size-5" />,
+      action: () => setShowExtensions(true)
+    }
+  ]
+
   return (
     <aside className="flex flex-col flex-grow border-r">
-      {/* <div className="border-b p-2">
-            <Button variant="outline" size="icon" aria-label="Home">
-              <Triangle className="size-5 fill-foreground" />
-            </Button>
-          </div> */}
       <nav className="grid gap-1 p-2">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              onClick={() => toggleSidePanel()}
-              variant="ghost"
-              size="icon"
-              className={cn(
-                'rounded-lg',
-                stateSideBar.isOpen && 'relative before:absolute before:bg-success before:w-1 before:h-full before:-left-2',
-                stateSideBar.isOpen && 'bg-black')}
-              aria-label="Pages"
-            >
-              <Layers className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Pages
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-lg" aria-label="Actions">
-              <ToyBrick className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Actions
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              onClick={() => setShowExtensions(true)}
-              variant="ghost"
-              size="icon"
-              className="rounded-lg"
-              aria-label="Extensions"
-            >
-              <Blocks className="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>
-            Extensions
-          </TooltipContent>
-        </Tooltip>
+        {menuActivityBar.map((item) => (
+          <Tooltip key={item.name}>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => fireActionByPanel(item.name, item.action)}
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  'rounded-lg',
+                  stateSideBar.isOpen && stateSideBar.panel === item.name.toLowerCase() &&
+                    'bg-black relative before:absolute before:bg-success before:w-1 before:h-full before:-left-2',
+                )}
+                aria-label={item.name}
+              >
+                {item.icon}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              {item.name}
+            </TooltipContent>
+          </Tooltip>
+        ))}
+
         {/* <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-lg" aria-label="Documentation">
