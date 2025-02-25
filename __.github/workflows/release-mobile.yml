@@ -1,0 +1,234 @@
+name: DeckPad Mobile Release
+
+on: 'push'
+
+jobs:
+ # fail fast
+  fail-fast:
+    name: Fail Fast strategy - GPG decrypt key
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/mobile
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - run: |
+          gpg --version
+          gpg --list-keys
+          gpg --list-secret-keys
+          echo "$ANDROID_KEYSTORE" > release-android.jks.asc
+          gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
+        env:
+          ANDROID_KEYSTORE: ${{secrets.ANDROID_KEYSTORE}}
+
+        # gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
+
+  # prepare multiple fail-fast strategy and wait to finish before fail all action
+  # fail-fast:
+  #   runs-on: ubuntu-latest
+  #   needs: [ fail-import-gpg, fail-default-gpg, fail-restart-gpg ]
+  # check version between last tag and package.json - if version not change then the build will fail (correct way to not continue wasting build time)
+  version:
+    name: Check version updates
+    runs-on: ubuntu-latest
+    needs: fail-fast
+    outputs:
+      new: ${{ steps.version_check.outputs.versionChanged }}
+      v: v${{ steps.version_check.outputs.rawVersion }}
+      tag: ${{ steps.version_check.outputs.releaseVersion }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: git fetch --all --tags
+
+      - name: Check Release Version
+        id: version_check
+        uses: thebongy/version-check@v1
+        with:
+          file: ./packages/mobile/package.json
+          tagFormat: mobile-v${version}
+          failBuild: false
+      - name:
+        run: echo "DeckPad Mobile Version ${{steps.version_check.outputs.releaseVersion}}"
+
+  # export assets for expo build using turtle-cli
+  export:
+    name: Export assets
+    runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.new == 'true'
+    defaults:
+      run:
+        working-directory: ./packages/mobile
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - uses: expo/expo-github-action@v6
+        with:
+          expo-cache: true
+          expo-version: 4.x
+          username: ${{ secrets.EXPO_CLI_USERNAME }}
+          password: ${{ secrets.EXPO_CLI_PASSWORD }}
+
+      - name: Install & Expo export
+        run: |
+          yarn install
+          expo export --public-url ${{ secrets.ASSETS_URL }}
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/mobile/dist
+          destination_dir: ota
+
+      # - uses: sebastianpopp/ftp-action@v2.0.0
+      #   with:
+      #     host: ${{ secrets.ASSETS_FTP_HOST }}
+      #     user: ${{ secrets.ASSETS_FTP_USER }}
+      #     password: ${{ secrets.ASSETS_FTP_PASSWORD }}
+      #     localDir: dist
+      #     remoteDir: ${{ secrets.ASSETS_FTP_REMOTE_DIR }}
+
+
+  # build android aab
+  aab:
+    name: Build .aab file
+    runs-on: ubuntu-latest
+    needs: [ version, export ]
+    if: needs.version.outputs.new == 'true'
+    defaults:
+      run:
+        working-directory: ./packages/mobile
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - uses: actions/cache@v2
+        id: turtle-cache
+        with:
+          path: ~/.turtle
+          key: ${{ runner.os }}-turtle
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - run: |
+          gpg --version
+          echo "${{ secrets.ANDROID_KEYSTORE }}" > release-android.jks.asc
+          gpg -d --yes --quiet --batch release-android.jks.asc > release-android.jks
+          yarn install
+          npm install -g turtle-cli
+          turtle build:android -o ./DeckPad_${{ needs.version.outputs.v }}_android.aab --keystore-path release-android.jks --keystore-alias ${{ secrets.ANDROID_KEYSTORE_ALIAS }} --public-url ${{ secrets.ASSETS_URL }}/android-index.json
+        env:
+          EXPO_ANDROID_KEY_PASSWORD: ${{ secrets.EXPO_ANDROID_KEY_PASSWORD }}
+          EXPO_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.EXPO_ANDROID_KEYSTORE_PASSWORD }}
+
+      - name: Archive .aab build
+        uses: actions/upload-artifact@v2
+        with:
+          name: DeckPad_${{ needs.version.outputs.v }}_android.aab
+          path: ./packages/mobile/DeckPad_${{ needs.version.outputs.v }}_android.aab
+
+  # build ios ipa
+  # ipa:
+  #   name: Build .ipa file
+  #   runs-on: macos-latest
+  #   needs: export
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 14
+
+  #     - run: ./.github/scripts/decrypt_secret.sh
+  #       env:
+  #         SECRET_FILES_PASSWORD: ${{ secrets.SECRET_FILES_PASSWORD }}
+
+  #     - uses: actions/cache@v2
+  #       id: turtle-cache
+  #       with:
+  #         path: ~/.turtle
+  #         key: ${{ runner.os }}-turtle
+
+  #     - run: |
+  #         yarn install
+  #         npm install -g turtle-cli
+  #         turtle build:ios -o build.ipa --team-id ${{ secrets.APPLE_TEAM_ID }} --dist-p12-path ./secrets/cert.p12 --provisioning-profile-path ./secrets/profile.mobileprovision --public-url ${{ secrets.ASSETS_URL }}/ios-index.json
+  #       env:
+  #         EXPO_IOS_DIST_P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+  #     - name: Archive .ipa build
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: build.ipa
+  #         path: ./build.ipa
+
+
+
+  # create release tag from version
+  release:
+    name: Create Mobile Release
+    runs-on: ubuntu-latest
+    needs: [ version, export, aab ]
+    if: needs.version.outputs.new == 'true'
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create Mobile Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ needs.version.outputs.tag }}
+        release_name: Mobile ${{ needs.version.outputs.v }}
+        draft: false
+        prerelease: false
+
+  # Add all the builds as assets to the release
+  add:
+    runs-on: ${{ matrix.target.os }}
+    needs: [ version, release ]
+    if: needs.version.outputs.new == 'true'
+    strategy:
+      matrix:
+        target: [
+          { 'os': 'ubuntu-latest', 'system': 'android', 'ext': 'aab' },
+          { 'os': 'macos-latest', 'system': 'ios', 'ext': 'ipa' },
+        ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download Artifact
+        id: download
+        uses: actions/download-artifact@v2
+        with:
+          name: DeckPad_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}
+
+      - name: Upload Artifact to Mobile Release
+        uses: Fhwang0926/upload-release-asset@v1.1.17
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_name: DeckPad_${{ needs.version.outputs.v }}_${{ matrix.target.system }}.${{ matrix.target.ext }}

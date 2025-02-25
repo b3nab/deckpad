@@ -1,0 +1,91 @@
+appId: b3nab.deckpad.desktop
+productName: 'DeckPad'
+copyright: Copyright © 2021 b3nab
+
+# artifactName: ${productName}_${os}.${ext}
+
+fileAssociations:
+  - ext: board
+    name: DeckPad Board File
+    role: Editor
+
+directories:
+  buildResources: build
+files:
+  - './resources/**/*'
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+asarUnpack:
+  - resources/**
+# Windows configuration
+win:
+  executableName: 'deckpad'
+  target:
+    - "zip"
+    - "nsis"
+# Config for the windows installer
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+  oneClick: true
+  perMachine: true
+# Mac OS configuration
+mac:
+  # icon: "icon.icns"
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  notarize: false
+# Config for OSX dmg
+dmg:
+  artifactName: ${name}-${version}.${ext}
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: "link"
+      path: "/Applications"
+# Linux configuration
+linux:
+  executableName: deckpad
+  target:
+    - AppImage
+    - snap
+    - deb
+    # - "rpm"
+    # - "pacman"
+  maintainer: b3nab
+  category: Utility
+appImage:
+  artifactName: ${name}-${version}.${ext}
+# deb:
+#   depends:
+#     # --- Default START
+#     - gconf2
+#     - gconf-service
+#     - libnotify4
+#     - libappindicator1
+#     - libxtst6
+#     - libnss3
+#     # --- Default END
+#     - libsecret-1-0 # This is needed for keytar on linux
+
+
+npmRebuild: false
+
+extraResources:
+  - './resources/**'
+
+publish: null
+  # provider: generic
+  # url: https://example.com/auto-updates

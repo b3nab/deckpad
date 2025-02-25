@@ -1,6 +1,9 @@
-node_modules/**/*
+*/node_modules/**/*
 npm-debug.*
 *.lock
+*.log
+
+.nx/
 
 # macOS
 .DS_Store
@@ -9,3 +12,11 @@ npm-debug.*
 # private files
 
 *.private.*
+Design/*
+new.board
+TEST.md
+TODO.md
+node_modules
+dist
+build
+builds

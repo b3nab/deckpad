@@ -1,37 +1,50 @@
 {
   "name": "deckpad",
   "private": true,
-  "dependencies": {},
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^8.0.0",
+    "nx": "^17.1.3"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/react-native",
-      "**/react-native/**",
-      "**/expo",
-      "**/expo/**",
-      "**/expo-*",
-      "**/expo-*/**",
-      "**/jest",
-      "**/jest/**",
-      "**/next",
-      "**/next/**",
-      "**/react",
-      "**/react/**",
-      "**/nextron",
-      "**/nextron/**",
-      "**/electron",
-      "**/electron/**",
-      "**/electron-*",
-      "**/electron-*/**",
-      "**/electron-serve",
-      "**/electron-serve/**",
-      "**/electron-builder",
-      "**/electron-builder/**"
-    ]
-  }
+  "scripts": {
+    "---------- REPO MANAGEMENT ----------": "",
+    "update": "git fetch --tags -f -p && git pull --rebase --autostash",
+    "clean": "yarn dlx npkill",
+    "graph": "yarn nx graph",
+    "version:patch": "npm version patch -w plugins",
+    "build": "nx run-many -t build",
+    "---------- YARN EXEC ----------": "",
+    "desktop": "yarn workspace @deckpad/desktop exec",
+    "mobile": "yarn workspace @deckpad/mobile exec",
+    "cli": "yarn workspace @deckpad/cli exec",
+    "sdk": "yarn workspace @deckpad/sdk exec",
+    "---------- YARN DEV ----------": "",
+    "dev:desktop": "yarn workspace @deckpad/desktop dev",
+    "dev:mobile": "yarn workspace @deckpad/mobile dev",
+    "dev:cli": "yarn workspace @deckpad/cli dev",
+    "dev:sdk": "yarn workspace @deckpad/sdk dev",
+    "---------- YARN ADD ----------": "",
+    "add:desktop": "yarn workspace @deckpad/desktop add",
+    "add:mobile": "yarn workspace @deckpad/mobile add",
+    "add:cli": "yarn workspace @deckpad/cli add",
+    "add:sdk": "yarn workspace @deckpad/sdk add",
+    "---------- YARN RM ----------": "",
+    "rm:desktop": "yarn workspace @deckpad/desktop remove",
+    "rm:mobile": "yarn workspace @deckpad/mobile remove",
+    "rm:cli": "yarn workspace @deckpad/cli remove",
+    "rm:sdk": "yarn workspace @deckpad/sdk remove",
+    "---------- YARN BUILD ----------": "",
+    "build:desktop": "yarn workspace @deckpad/desktop build",
+    "build:mobile": "yarn workspace @deckpad/mobile build",
+    "build:cli": "yarn workspace @deckpad/cli build",
+    "build:sdk": "yarn workspace @deckpad/sdk build",
+    "---------- GENERAL UTILS ----------": "",
+    "delete-node-modules": "pnpm -r exec -- rm -rf node_modules || false"
+  },
+  "workspaces": [
+    "docs",
+    "apps/*",
+    "plugins/*",
+    "packages/*"
+  ],
+  "packageManager": "yarn@4.0.2"
 }

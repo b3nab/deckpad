@@ -1,0 +1,46 @@
+{
+  "name": "@deckpad/plugin-system",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Official DeckPad extension plugin to display basic system info",
+  "keywords": [
+    "deckpad",
+    "extension",
+    "deckpad-extension",
+    "deckpad-plugin"
+  ],
+  "author": "b3nab",
+  "homepage": "https://github.com/b3nab/deckpad#readme",
+  "license": "MIT",
+  "source": "src/system.js",
+  "main": "dist/system.js",
+  "directories": {
+    "dist": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b3nab/deckpad.git"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -cw"
+  },
+  "bugs": {
+    "url": "https://github.com/b3nab/deckpad/issues"
+  },
+  "dependencies": {
+    "@deckpad/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^6.0.1",
+    "rollup": "^4.5.0",
+    "rollup-plugin-preserve-shebangs": "^0.2.0"
+  }
+}
