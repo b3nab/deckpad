@@ -68,7 +68,7 @@
     "electron-plugin-manager": "^1.2.0",
     "electron-pubsub": "^0.2.2",
     "electron-store": "^8.1.0",
-    "electron-updater": "6.1.7",
+    "electron-updater": "6.3.0",
     "embla-carousel-react": "^8.1.5",
     "execa": "^8.0.1",
     "formik": "^2.4.5",
